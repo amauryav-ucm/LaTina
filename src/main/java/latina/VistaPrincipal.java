@@ -100,7 +100,7 @@ public class VistaPrincipal extends Application {
         titleBar.setStyle("-fx-background-color: " + TITLE_BAR_COLOR + ";");
         HBox.setHgrow(titleBar, Priority.ALWAYS);
 
-        Text titleText = new Text("Gestionando LaTina");
+        Text titleText = new Text("LaTina");
         titleText.setFont(Font.font("Segoe UI", FontWeight.BOLD, 20));
         titleText.setFill(TEXT_COLOR);
 
