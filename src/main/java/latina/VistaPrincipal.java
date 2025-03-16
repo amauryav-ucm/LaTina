@@ -23,6 +23,7 @@ import latina.vista.controlador.Controlador;
 import latina.vista.Eventos;
 import netscape.javascript.JSObject;
 import java.io.File;
+import java.net.URL;
 
 public class VistaPrincipal extends Application {
     private WebView webView;
@@ -42,8 +43,9 @@ public class VistaPrincipal extends Application {
         HBox titleBar = createTitleBar(primaryStage);
         webView = new WebView();
         WebEngine webEngine = webView.getEngine();
-        File htmlFile = new File("src/main/resources/latina/html/VentanaPrincipal.html");
-        webEngine.load(htmlFile.toURI().toString());
+        URL htmlFile = VistaPrincipal.class.getResource("/latina/html/ventanaPrincipal.html");
+        assert htmlFile != null;
+        webEngine.load(htmlFile.toString());
         configureJavaScriptBridge(webEngine);
 
         // Hacer que el WebView sea responsivo
@@ -219,6 +221,11 @@ public class VistaPrincipal extends Application {
                 resizeUI(stage);
             }
         });
+    }
+
+    public void changeScene(String nuevaEscena)
+    {
+        webView.getEngine().load(VistaPrincipal.class.getResource("/latina/html/" + nuevaEscena).toString());
     }
 
     public void accion(String eventoStr, Object datos) {

@@ -58,3 +58,9 @@ function cerrarMensaje() {
     popup.classList.remove("show");
     setTimeout(() => popup.style.display = "none", 300);
 }
+
+function volver(){
+    if(window.java && window.java.changeScene){
+        window.java.changeScene("ventanaPrincipal.html");
+    }
+}
