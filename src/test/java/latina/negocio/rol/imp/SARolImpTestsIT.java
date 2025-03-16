@@ -7,6 +7,7 @@ import latina.negocio.rol.Rol;
 import latina.negocio.rol.SARol;
 import latina.negocio.rol.TRol;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
@@ -15,18 +16,25 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SARolImpTestsIT {
 
+    private SARol sa;
 
-    @Test
-    public void registrarRolExitoso() {
-
-
-        SARol sa = SAFactory.getInstance().createSARol();
-
+    @BeforeEach
+    public void setUp() {
+        sa = SAFactory.getInstance().createSARol();
+        limpiarBaseDeDatos();
+    }
+    private void limpiarBaseDeDatos() {
         EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
         em.createQuery("DELETE FROM Rol").executeUpdate();
         em.getTransaction().commit();
         em.close();
+    }
+    @Test
+    public void registrarRolExitoso() {
+
+
+        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
 
@@ -39,13 +47,7 @@ public class SARolImpTestsIT {
 
     @Test
     public void registarRolRepetido() {
-        SARol sa = SAFactory.getInstance().createSARol();
-
-        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
-        em.getTransaction().begin();
-        em.createQuery("DELETE FROM Rol").executeUpdate();
-        em.getTransaction().commit();
-        em.close();
+        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
         int id = sa.altaRol(tRol);
@@ -59,13 +61,7 @@ public class SARolImpTestsIT {
 
     @Test
     public void registrarRolSalarioO() {
-        SARol sa = SAFactory.getInstance().createSARol();
-
-        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
-        em.getTransaction().begin();
-        em.createQuery("DELETE FROM Rol").executeUpdate();
-        em.getTransaction().commit();
-        em.close();
+        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
         //Salario = 0
@@ -76,13 +72,7 @@ public class SARolImpTestsIT {
 
     @Test
     public void registrarRolSalarioN() {
-        SARol sa = SAFactory.getInstance().createSARol();
-
-        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
-        em.getTransaction().begin();
-        em.createQuery("DELETE FROM Rol").executeUpdate();
-        em.getTransaction().commit();
-        em.close();
+        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
         //Salario < 0
@@ -93,16 +83,10 @@ public class SARolImpTestsIT {
 
     @Test
     public void registrarRolNombreIncorrecto() {
-        SARol sa = SAFactory.getInstance().createSARol();
-
-        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
-        em.getTransaction().begin();
-        em.createQuery("DELETE FROM Rol").executeUpdate();
-        em.getTransaction().commit();
-        em.close();
+        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
-        //Salario < 0
+
         tRol.setNombre("letrado");
         int id = sa.altaRol(tRol);
         assertEquals(-3, id);
@@ -110,16 +94,10 @@ public class SARolImpTestsIT {
 
     @Test
     public void registrarRolNombreIncorrecto2() {
-        SARol sa = SAFactory.getInstance().createSARol();
-
-        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
-        em.getTransaction().begin();
-        em.createQuery("DELETE FROM Rol").executeUpdate();
-        em.getTransaction().commit();
-        em.close();
+        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
-        //Salario < 0
+
         tRol.setNombre("CANTANTE1234");
         int id = sa.altaRol(tRol);
         assertEquals(-3, id);
@@ -127,19 +105,53 @@ public class SARolImpTestsIT {
 
     @Test
     public void registrarRolNombreIncorrecto3() {
-        SARol sa = SAFactory.getInstance().createSARol();
-
-        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
-        em.getTransaction().begin();
-        em.createQuery("DELETE FROM Rol").executeUpdate();
-        em.getTransaction().commit();
-        em.close();
+        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
-        //Salario < 0
+
         tRol.setNombre(".PIANISTA-");
         int id = sa.altaRol(tRol);
         assertEquals(-3, id);
+    }
+    @Test
+    public void registrarRolNombreVacio() {
+        limpiarBaseDeDatos();
+        TRol tRol = new TRol("", 8.00, true);
+
+        int id = sa.altaRol(tRol);
+        assertEquals(-3, id);
+    }
+    @Test
+    public void registrarRolNombreNull() {
+        TRol tRol = new TRol(null, 8.00, true);
+        int id = sa.altaRol(tRol);
+        assertEquals(-4, id);
+    }
+    /*@Test //es imposible este caso ya que registrarRol.js ya se encarga de que no pase
+    public void registrarRolNombreSoloEspacios() {
+        TRol tRol = new TRol("   ", 8.00, true);
+        int id = sa.altaRol(tRol);
+        assertEquals(-3, id);
+    }*/
+    @Test
+    public void registrarRolNulo() {
+        int id = sa.altaRol(null);
+        assertEquals(-4, id); // Asumiendo que la excepción da este código
+    }
+    @Test
+    public void verificarRollbackTrasFallo() {
+        TRol tRol1 = new TRol("LIMPIEZA", 1000, true);
+        sa.altaRol(tRol1);
+
+        TRol tRol2 = new TRol("LIMPIEZA", 1200, true); // Nombre repetido
+        int id2 = sa.altaRol(tRol2);
+        assertEquals(-1, id2);
+
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        long count = (long) em.createQuery("SELECT COUNT(r) FROM Rol r").getSingleResult();
+        em.close();
+
+        assertEquals(1, count); // Asegurar que el rollback funcionó y solo hay 1 registro
     }
 }
 
