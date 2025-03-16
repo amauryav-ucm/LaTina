@@ -233,11 +233,6 @@ public class VistaPrincipal extends Application {
         Controlador.getInstance(this).accion(evento, datos);
     }
 
-    public void changeScene(String nuevaEscena)
-    {
-        webView.getEngine().load(getClass().getResource(nuevaEscena).toExternalForm());
-
-    }
 
     public WebView getWebView() {
         return webView;
