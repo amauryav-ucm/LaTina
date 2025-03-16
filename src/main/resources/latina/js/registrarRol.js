@@ -31,6 +31,9 @@ function recogerDatos() {
 
     // Enviar los datos al backend Java (RegistrarRol.java)
     enviarAJava(rol);
+
+    // Forzar la recarga (simulando el "submit" clásico)
+    setTimeout(() => location.reload(), 200);
 }
 
 function mostrarMensaje(mensaje) {
