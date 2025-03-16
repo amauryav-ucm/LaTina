@@ -87,6 +87,64 @@ class SARolImpTest {
         // Como el salario es negativo, debería devolver -2
         assertEquals(-2, resultado);
     }
+    @Test
+    void testSalarioCero() {
+        EntityTransaction stubTransaction = mock(EntityTransaction.class);
+        EntityManager stubEntityManager = mock(EntityManager.class);
+        when(stubEntityManager.getTransaction()).thenReturn(stubTransaction);
+
+        Query stubQueryBuscarPorNombre = mock(Query.class);
+        when(stubQueryBuscarPorNombre.getResultList()).thenReturn(new ArrayList<>());
+        when(stubEntityManager.createNamedQuery("Rol.findBynombre")).thenReturn(stubQueryBuscarPorNombre);
+
+        SARolImp sa = Mockito.spy(new SARolImp());
+        doReturn(stubEntityManager).when(sa).crearEntityManager();
+
+        TRol trol = new TRol("GERENTE", 0, true);
+        int resultado = sa.altaRol(trol);
+
+        verify(stubTransaction, times(1)).rollback();
+        assertEquals(-2, resultado);
+    }
+    @Test
+    void testNombreCaracteresEspeciales() {
+        EntityTransaction stubTransaction = mock(EntityTransaction.class);
+        EntityManager stubEntityManager = mock(EntityManager.class);
+        when(stubEntityManager.getTransaction()).thenReturn(stubTransaction);
+
+        Query stubQueryBuscarPorNombre = mock(Query.class);
+        when(stubQueryBuscarPorNombre.getResultList()).thenReturn(new ArrayList<>());
+        when(stubEntityManager.createNamedQuery("Rol.findBynombre")).thenReturn(stubQueryBuscarPorNombre);
+
+        SARolImp sa = Mockito.spy(new SARolImp());
+        doReturn(stubEntityManager).when(sa).crearEntityManager();
+
+        TRol trol = new TRol("@ROL!", 15, true);
+        int resultado = sa.altaRol(trol);
+
+        verify(stubTransaction, times(1)).rollback();
+        assertEquals(-3, resultado);
+    }
+    @Test
+    void testPersistenciaFalla() {
+        EntityTransaction stubTransaction = mock(EntityTransaction.class);
+        EntityManager stubEntityManager = mock(EntityManager.class);
+        when(stubEntityManager.getTransaction()).thenReturn(stubTransaction);
+
+        Query stubQueryBuscarPorNombre = mock(Query.class);
+        when(stubQueryBuscarPorNombre.getResultList()).thenReturn(new ArrayList<>());
+        when(stubEntityManager.createNamedQuery("Rol.findBynombre")).thenReturn(stubQueryBuscarPorNombre);
+
+        SARolImp sa = Mockito.spy(new SARolImp());
+        doReturn(stubEntityManager).when(sa).crearEntityManager();
+
+        doThrow(new RuntimeException("Error en persistencia")).when(stubEntityManager).persist(any(Rol.class));
+
+        TRol trol = new TRol("SUPERVISOR", 30, true);
+        int resultado = sa.altaRol(trol);
+
+        assertEquals(-4, resultado);
+    }
 
 
     @Test
