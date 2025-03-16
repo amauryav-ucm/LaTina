@@ -17,11 +17,6 @@ import static org.mockito.Mockito.*;
 class SARolImpTest {
 
     @Test
-    void testMalo(){
-        assertEquals(1, 2);
-    }
-
-    @Test
     void testNombreRepetido() {
         // Como son test unitarios, no pueden conectarse con la base de datos ni con nada
         // de eso y se deben crear stubs para las funciones
