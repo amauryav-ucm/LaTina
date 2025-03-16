@@ -59,8 +59,8 @@ function cerrarMensaje() {
     setTimeout(() => popup.style.display = "none", 300);
 }
 
-function irAVentanaPrincipal() {
-    if (window.java && window.java.changeScene) {
-                window.java.changeScene("/latina/html/ventanaPrincipal.html");
-            }
+function volver(){
+    if(window.java && window.java.changeScene){
+        window.java.changeScene("ventanaPrincipal.html");
+    }
 }

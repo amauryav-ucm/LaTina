@@ -223,6 +223,11 @@ public class VistaPrincipal extends Application {
         });
     }
 
+    public void changeScene(String nuevaEscena)
+    {
+        webView.getEngine().load(VistaPrincipal.class.getResource("/latina/html/" + nuevaEscena).toString());
+    }
+
     public void accion(String eventoStr, Object datos) {
         Eventos evento = Eventos.valueOf(eventoStr);
         Controlador.getInstance(this).accion(evento, datos);
