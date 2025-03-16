@@ -50,11 +50,11 @@ public class SARolImp implements SARol {
         }catch (Exception e) {
             if (trans != null && trans.isActive())
                 trans.rollback();
+            return -4;
         } finally {
             if (em != null)
                 em.close();
         }
-
         return id;
     }
 

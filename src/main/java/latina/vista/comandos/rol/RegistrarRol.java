@@ -28,6 +28,7 @@ public class RegistrarRol implements Comando {
             else if (result == -1) mensaje = "Ya existe un rol con el nombre introducido";
             else if (result == -2) mensaje = "El salario debe ser un número positivo";
             else if (result == -3) mensaje = "El rol debe estar en mayúsculas y sin números";
+            else if (result == -4) mensaje = "Ha ocurrido un error al registrar el rol";
             else mensaje = "Error desconocido";
 
             WebEngine webEngine = vista.getWebView().getEngine();
