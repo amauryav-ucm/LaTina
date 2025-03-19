@@ -3,6 +3,7 @@
     position: fixed;
     top: 0;
     left: 0;
+    border-right: 3px solid #FFF4;
     width: 180px; /* Tamaño de la sidebar */
     height: 100vh;
     background-color: #333;
@@ -10,7 +11,7 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start; /* Coloca los elementos desde arriba */
-    padding-top: 20px; /* Espacio superior para el botón */
+    padding-top: 10px; /* Espacio superior para el botón */
     transition: transform 0.3s ease; /* Añadida transición para animación suave */
 }
 
@@ -27,7 +28,6 @@
     font-size: 30px;
     padding: 10px;
     cursor: pointer;
-    margin-bottom: 20px;
     text-align: right;
     width: 100%;
     position: relative; /* Necesario para mantener el botón visible */
@@ -47,6 +47,7 @@
 .sidebar a {
     padding: 15px 20px;
     text-decoration: none;
+    border-top: 1px solid #FFF4;
     color: white;
     display: block;
     transition: background 0.3s;

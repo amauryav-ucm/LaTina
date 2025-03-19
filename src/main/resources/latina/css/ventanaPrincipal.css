@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Helvetica', sans-serif;
+    font-family: sans-serif;
 }
 
 body {
@@ -10,26 +10,17 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    width: 100vw;
     margin: 0;
-    background-color: #4A90E2;
-    /*background-color: #616161;*/
+    background-color: #4A90E2CC;
 }
 
 .main-content h1 {
-    margin-left: 220px;
+    margin-left: 200px;
     margin-top: -50px;
     text-align: center;
     color: white;
     margin-bottom: 15px;
-}
-
-p{
-    margin-left: 250px;
-    margin-right: 50px;
-    text-align: justify;
-    margin-top: 50px;
-    line-height: 1.6;
-    color: white;
 }
 
 /* Contenedor principal */
@@ -37,13 +28,16 @@ p{
     flex: 1;
     justify-content:center;
     align-items: center;
+    background: linear-gradient(transparent, #3339);
+    height: 100%;
+    width: 100%
 }
 .logo_la_tina {
-    margin-top: -150px;
-    margin-left: 38%;
+    margin-top: 5vh;
+    margin-left: 35vw;
     filter: none;
-    width: 60vh;
-    height: 60vh;
+    width: 75vh;
+    height: 75vh;
 }
 
 /* Animations */

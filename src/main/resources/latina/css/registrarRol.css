@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Helvetica', sans-serif;
+    font-family: sans-serif;
 
 }
 
@@ -11,8 +11,16 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #4A90E2;
+    background-color: #4A90E2CC;
     /*background-color: #616161;*/
+}
+.form-container{
+    margin-top: 50vh;
+    margin-left: 15vh;
+    background-color: #4A90E2CC;  /* Mismo color de fondo que el primer código */
+    background: linear-gradient(transparent, #3339); /* Mantiene el degradado */
+    height: 100%;
+    width: 100%
 }
 
 form {
