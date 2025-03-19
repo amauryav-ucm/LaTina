@@ -92,6 +92,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 dateInput.value = formatDate(selectedDate);
                 calendarDropdown.classList.remove('open');
 
+                // Habilita el campo de turno cuando se selecciona una fecha
+                document.getElementById("turn").disabled = false;
                 // Actualizar la visualización del calendario
                 generateCalendar(month, year);
             });
@@ -99,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
             calendarDays.appendChild(dayElement);
         }
     }
+
 
     // Formatear la fecha para mostrar en el input
     function formatDate(date) {
@@ -110,4 +113,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Generar el calendario inicial
     generateCalendar(currentMonth, currentYear);
+});
+
+document.getElementById("name").addEventListener("input", function() {
+    let dateField = document.getElementById("dateInput");
+
+    if (this.value.trim() !== "") {
+        dateField.disabled = false; // Habilita el campo
+    } else {
+        dateField.disabled = true; // Deshabilita si está vacío
+        dateField.value = "";
+    }
+});
+
+document.getElementById("dateInput").addEventListener("input", function() {
+    let turnField = document.getElementById("turn");
+
+    if (this.value.trim() !== "") {
+        turnField.disabled = false; // Habilita el campo
+    } else {
+        turnField.disabled = true; // Deshabilita si está vacío
+    }
 });
