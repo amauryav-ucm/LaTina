@@ -1,0 +1,77 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100vh;
+    background-color: #333;
+    z-index: 1000;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+/* Personalizar la barra de desplazamiento */
+.sidebar-menu::-webkit-scrollbar {
+    width: 10px; /* Ancho de la barra de desplazamiento */
+}
+
+/* Personalizar el fondo de la barra de desplazamiento */
+.sidebar-menu::-webkit-scrollbar-track {
+    background: #444; /* Fondo de la barra */
+    border-radius: 10px; /* Bordes redondeados en el track */
+}
+
+/* Personalizar el "thumb" (el control deslizante de la barra) */
+.sidebar-menu::-webkit-scrollbar-thumb {
+    background-color: white; /* Color de la barra deslizante */
+    border-radius: 10px; /* Bordes redondeados */
+    border: 2px solid #2c3e50; /* Borde alrededor del "thumb" */
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto; /* Solo el menú tendrá scroll */
+    flex-grow: 1; /* Deja que el menú ocupe todo el espacio disponible */
+    max-height: calc(100vh - 100px); /* Calcula la altura para dejar espacio para el login */
+}
+
+.sidebar a {
+    padding: 15px 20px;
+    text-decoration: none;
+    color: white;
+    display: block;
+    transition: background 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #34495e;
+}
+
+/* Estilos para la imagen */
+.imagen-gerente {
+    width: 80%; /* Ajusta el tamaño */
+    max-width: 150px;
+    margin-top: auto;
+    margin-bottom: 0; /* Espacio antes del login */
+}
+
+/* Sección de inicio de sesión */
+.sidebar-login {
+    padding: 10px;
+    background-color: #2F2F2F; /* Diferenciar la sección */
+    text-align: center;
+    width: 100%;
+}
+
+.sidebar-login p{
+    color: white;
+    text-font: Arial;
+    text-align: left;
+    margin: 0;
+    padding-left: 10px;
+}
