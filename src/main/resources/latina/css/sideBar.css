@@ -1,19 +1,67 @@
+/* Barra lateral */
 .sidebar {
     position: fixed;
     top: 0;
     left: 0;
-    width: 200px;
+    width: 180px; /* Tamaño de la sidebar */
     height: 100vh;
     background-color: #333;
     z-index: 1000;
-
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start; /* Coloca los elementos desde arriba */
+    padding-top: 20px; /* Espacio superior para el botón */
+    transition: transform 0.3s ease; /* Añadida transición para animación suave */
 }
 
+/* Estado colapsado de la sidebar */
+.sidebar-collapsed {
+    transform: translateX(-130px); /* Deja visible solo el botón (ajusta este valor según necesites) */
+}
 
-/* Personalizar la barra de desplazamiento */
+/* Estilo para el botón dentro de la sidebar */
+.desplegar-btn {
+    background-color: #333;
+    color: white;
+    border: none;
+    font-size: 30px;
+    padding: 10px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    text-align: right;
+    width: 100%;
+    position: relative; /* Necesario para mantener el botón visible */
+    z-index: 10; /* Asegura que el botón esté siempre por encima */
+    right: 0; /* Alinea el botón a la derecha */
+}
+
+/* Menú de la sidebar */
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto; /* Solo el menú tendrá scroll */
+    flex-grow: 1; /* Deja que el menú ocupe todo el espacio disponible */
+}
+
+.sidebar a {
+    padding: 15px 20px;
+    text-decoration: none;
+    color: white;
+    display: block;
+    transition: background 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #34495e;
+}
+
+/* Ajustar el contenedor del botón para que quede visible */
+.sidebar-collapsed .desplegar-btn {
+    padding-right: 15px;
+}
+
+/* Personalización de la barra de desplazamiento */
 .sidebar-menu::-webkit-scrollbar {
     width: 10px; /* Ancho de la barra de desplazamiento */
 }
@@ -29,49 +77,4 @@
     background-color: white; /* Color de la barra deslizante */
     border-radius: 10px; /* Bordes redondeados */
     border: 2px solid #2c3e50; /* Borde alrededor del "thumb" */
-}
-
-.sidebar-menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    overflow-y: auto; /* Solo el menú tendrá scroll */
-    flex-grow: 1; /* Deja que el menú ocupe todo el espacio disponible */
-    max-height: calc(100vh - 100px); /* Calcula la altura para dejar espacio para el login */
-}
-
-.sidebar a {
-    padding: 15px 20px;
-    text-decoration: none;
-    color: white;
-    display: block;
-    transition: background 0.3s;
-}
-
-.sidebar a:hover {
-    background-color: #34495e;
-}
-
-/* Estilos para la imagen */
-.imagen-gerente {
-    width: 80%; /* Ajusta el tamaño */
-    max-width: 150px;
-    margin-top: auto;
-    margin-bottom: 0; /* Espacio antes del login */
-}
-
-/* Sección de inicio de sesión */
-.sidebar-login {
-    padding: 10px;
-    background-color: #2F2F2F; /* Diferenciar la sección */
-    text-align: center;
-    width: 100%;
-}
-
-.sidebar-login p{
-    color: white;
-    text-font: Arial;
-    text-align: left;
-    margin: 0;
-    padding-left: 10px;
 }
