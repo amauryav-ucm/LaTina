@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurante LaTina - Registrar Rol</title>
+    <link rel="stylesheet" href="../css/asignarTurnoAEmpleado.css">
+    <link rel="stylesheet" href="../css/sideBar.css">
+</head>
+<body>
+<div id="sidebar-container"></div>
+
+<div class="form-container">
+    <form>
+        <label for="name">Empleado</label>
+        <input type="text" id="name" name="name" required placeholder="Introduce el empleado">
+
+        <label for="dateInput">Fecha</label>
+        <div class="date-picker">
+            <input type="text" class="date-input" readonly placeholder="Seleccionar fecha" id="dateInput">
+
+            <div class="calendar-dropdown" id="calendarDropdown">
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button class="nav-button" id="prevMonth">&lt;</button>
+                        <div class="month-year" id="monthYear">Marzo 2025</div>
+                        <button class="nav-button" id="nextMonth">&gt;</button>
+                    </div>
+
+                    <div class="weekdays">
+                        <div class="weekday">Lu</div>
+                        <div class="weekday">Ma</div>
+                        <div class="weekday">Mi</div>
+                        <div class="weekday">Ju</div>
+                        <div class="weekday">Vi</div>
+                        <div class="weekday">Sa</div>
+                        <div class="weekday">Do</div>
+                    </div>
+
+                    <div class="days" id="calendarDays">
+                        <!-- Los días se generarán con JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <label for="turn">Turno</label>
+        <input type="text" id="turn" name="turn" required placeholder="Introduce el turno a asignar">
+
+        <div class="button-container">
+            <button type="submit" onclick="">Aceptar</button>
+        </div>
+    </form>
+</div>
+
+<!-- Popup Container -->
+<div id="popup" class="popup-overlay">
+    <div class="popup-box">
+        <p id="popup-message">Rol registrado correctamente</p>
+        <button class="popup-button" onclick="cerrarMensaje()">OK</button>
+    </div>
+</div>
+
+<script src="../js/asignarTurnoAEmpleado.js"></script>
+<script src="../js/sideBar.js"></script>
+</body>
+</html>

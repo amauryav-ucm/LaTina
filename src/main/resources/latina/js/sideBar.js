@@ -11,7 +11,7 @@ function inicializarSidebar() {
                 <li><a href="registrarTurno.html" onclick="java.changeScene('registrarTurno.html')">Registrar turno</a></li>
                 <li><a href="registrarEmpleado.html" onclick="java.changeScene('registrarEmpleado.html')">Registrar empleado</a></li>
                 <li><a href="registrarDisponibilidad.html" onclick="java.changeScene('registrarDisponibilidad.html')">Registrar disponibilidad empleado</a></li>
-                <li><a href="asignarTurno.html" onclick="java.changeScene('asignarTurno.html')">Asignar turno</a></li>
+                <li><a href="asignarTurnoAEmpleado.html" onclick="java.changeScene('asignarTurnoAEmpleado.html')">Asignar turno</a></li>
                 <li><a href="verTurnos.html" onclick="java.changeScene('verTurnos.html')">Ver turnos</a></li>
                 <li><a href="desasignarTurno.html" onclick="java.changeScene('desasignarTurno.html')">Desasignar turno</a></li>
             </ul>
