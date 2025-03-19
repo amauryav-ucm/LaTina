@@ -115,23 +115,26 @@ document.addEventListener('DOMContentLoaded', function() {
     generateCalendar(currentMonth, currentYear);
 });
 
-document.getElementById("name").addEventListener("input", function() {
-    let dateField = document.getElementById("dateInput");
+document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.getElementById('dateInput');
+    const turnoField = document.getElementById('turn');
+    const employeeSelect = document.getElementById('name');
 
-    if (this.value.trim() !== "") {
-        dateField.disabled = false; // Habilita el campo
-    } else {
-        dateField.disabled = true; // Deshabilita si está vacío
-        dateField.value = "";
-    }
+    // Evento que detecta cuando se selecciona un empleado en el combobox
+    employeeSelect.addEventListener("change", function() {
+        // Verifica si se ha seleccionado un empleado
+        if (this.value.trim() !== "") {
+            // Si se seleccionó un empleado, habilita el campo de fecha
+            dateInput.disabled = false;
+        } else {
+            // Si no se seleccionó un empleado, deshabilita el campo de fecha
+            dateInput.disabled = true;
+            dateInput.value = ""; // Limpia el campo de fecha
+            turnoField.disabled = true; // Deshabilita el campo de turno
+            turnoField.value = ""; // Limpia el campo de turno
+        }
+    });
+
 });
 
-document.getElementById("dateInput").addEventListener("input", function() {
-    let turnField = document.getElementById("turn");
 
-    if (this.value.trim() !== "") {
-        turnField.disabled = false; // Habilita el campo
-    } else {
-        turnField.disabled = true; // Deshabilita si está vacío
-    }
-});

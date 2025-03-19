@@ -12,12 +12,17 @@
 
     <div class="form-container">
         <form>
-            <label for="name">Empleado</label>
-            <input type="text" id="name" name="name" required placeholder="Introduce el empleado">
-
-            <label for="dateInput">Fecha</label>
+            <label for="name">Selecciona un empleado</label>
+            <select class="comboBox-empleado" id="name" name="name">
+                <option value=""> --Seleccionar-- </option>
+                <!--Se creará dinámicamente con js o algo así para luego conectar con la lógica de java para la bd-->
+                <option value="empleado1">Empleado 1</option>
+                <option value="empleado2">Empleado 2</option>
+                <option value="empleado3">Empleado 3</option>
+            </select>
+            <label for="dateInput">Selecciona una fecha</label>
             <div class="date-picker">
-                <input type="text" class="date-input" readonly placeholder="Seleccionar fecha" id="dateInput" disabled>
+                <input type="text" class="date-input" readonly placeholder="Selecciona un empleado antes que la fecha" id="dateInput" disabled>
 
                 <div class="calendar-dropdown" id="calendarDropdown">
                     <div class="calendar-container">
@@ -44,11 +49,11 @@
                 </div>
             </div>
 
-            <label for="turn">Turno</label>
-            <input type="text" id="turn" name="turn" required placeholder="Introduce el turno a asignar" disabled>
+            <label for="turn">Selecciona un turno</label>
+            <input type="text" id="turn" name="turn" required placeholder="Selecciona una fecha antes que el turno" disabled>
 
             <div class="button-container">
-                <button type="submit" onclick="">Aceptar</button>
+                <button class="accept-button" type="submit" onclick="">Aceptar</button>
             </div>
         </form>
     </div>
