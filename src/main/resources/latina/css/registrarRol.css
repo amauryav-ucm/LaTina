@@ -18,7 +18,7 @@ body {
     margin-top: 50vh;
     margin-left: 15vh;
     background-color: #4A90E2CC;  /* Mismo color de fondo que el primer código */
-    background: linear-gradient(transparent, #3339); /* Mantiene el degradado */
+    background: linear-gradient(transparent, #05BC);
     height: 100%;
     width: 100%
 }
@@ -73,7 +73,7 @@ input:focus {
     gap: 10px;
 }
 
-button {
+.registerButton {
     width: 48%;
     padding: 12px;
     /*background-color: #616161;*/
@@ -86,12 +86,12 @@ button {
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-button:hover {
+.registerButton:hover {
     background-color: #5c6bc0;
     transform: scale(1.05);
 }
 
-button:active {
+.registerButton:active {
     background-color: #42a5f5;
     transform: scale(1);
 }

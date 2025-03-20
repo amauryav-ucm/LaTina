@@ -11,7 +11,7 @@
     <div id="sidebar-container"></div>
 
     <div class="form-container">
-        <form>
+        <form onsubmit="return validarFormulario()">
             <label for="name">Selecciona un empleado</label>
             <select class="comboBox-empleado" id="name" name="name">
                 <option value=""> --Seleccionar-- </option>
@@ -22,7 +22,7 @@
             </select>
             <label for="dateInput">Selecciona una fecha</label>
             <div class="date-picker">
-                <input type="text" class="date-input" readonly placeholder="Selecciona un empleado antes que la fecha" id="dateInput" disabled>
+                <input type="text" class="date-input" readonly placeholder="Selecciona un empleado antes que la fecha" id="dateInput">
 
                 <div class="calendar-dropdown" id="calendarDropdown">
                     <div class="calendar-container">
@@ -53,7 +53,7 @@
             <input type="text" id="turn" name="turn" required placeholder="Selecciona una fecha antes que el turno" disabled>
 
             <div class="button-container">
-                <button class="accept-button" type="submit" onclick="">Aceptar</button>
+                <button class="accept-button" id="accept-button" type="submit">Asignar</button>
             </div>
         </form>
     </div>

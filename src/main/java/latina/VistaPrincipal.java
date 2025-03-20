@@ -67,7 +67,7 @@ public class VistaPrincipal extends Application {
         root.setPrefWidth(Region.USE_COMPUTED_SIZE);
         root.setPrefHeight(Region.USE_COMPUTED_SIZE);
 
-        Scene scene = new Scene(root, 1200, 800);
+        Scene scene = new Scene(root, 1200, 700);
 
         // Agregar listener para manejar los cambios de tamaño
         primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {

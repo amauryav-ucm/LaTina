@@ -11,16 +11,19 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    width: 100vw;
+    margin: 0;
     background-color: #4A90E2CC;
     /*background-color: #616161;*/
 }
 .form-container{
     margin-top: 30vh;
-    margin-left: 15vh;
-    background: linear-gradient(transparent, #3339); /* Mantiene el degradado */
+    margin-left: 0;
+    background: linear-gradient(transparent, #05BC);
     padding-bottom: 50px;
     height: 100vh;
     width: 100vw;
+    overflow: none;
 }
 
 form {
@@ -29,7 +32,7 @@ form {
     border-radius: 10px;
     width: 100vh;
     height: 400px;
-    margin-left: 200px;
+    margin-left: 25vw;;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     animation: fadeIn 1s ease-out;
 }
@@ -91,12 +94,18 @@ input:focus {
     transform: scale(1.05);
 }
 
-accept-button:active {
+.accept-button:active {
     background-color: #42a5f5;
     transform: scale(1);
 }
 /* Estilos para campos con error */
 input.error {
+    border: 2px solid red;
+    background-color: #ffeeee;
+}
+
+/* Estilos para campos con error */
+input.error, .comboBox-empleado.error { /* Añadido para el select */
     border: 2px solid red;
     background-color: #ffeeee;
 }
@@ -108,8 +117,14 @@ input.error {
     border: 2px solid #ddd;
     border-radius: 5px;
     font-size: 16px;
+    appearance: none;
+    cursor: pointer;
     outline: none;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.selection{
+    width: 100vw;
 }
 
 /* Contenedor para label y mensaje de error */

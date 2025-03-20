@@ -116,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector("form");
     const dateInput = document.getElementById('dateInput');
     const turnoField = document.getElementById('turn');
     const employeeSelect = document.getElementById('name');
@@ -134,7 +135,41 @@ document.addEventListener('DOMContentLoaded', function() {
             turnoField.value = ""; // Limpia el campo de turno
         }
     });
-
 });
 
+function validarFormulario() {
+    var empleadoSelect = document.getElementById("name");
+    var dateInput = document.getElementById("dateInput");
+    var turnInput = document.getElementById("turn");
+    let isValid = true; // Flag para saber si hay errores
 
+    // Validación del select de empleados
+    if (empleadoSelect.value.trim() === "") {
+        empleadoSelect.classList.add("error");
+        isValid = false;
+    } else {
+        empleadoSelect.classList.remove("error");
+    }
+
+    // Validación del input de fecha
+    if (dateInput.value.trim() === "" || empleadoSelect.value.trim() === "") {
+        dateInput.classList.add("error");
+        isValid = false;
+    } else {
+        dateInput.classList.remove("error");
+    }
+
+    // Validación del turno
+    if (turnInput.value.trim() === "" || dateInput.value.trim() === "") {
+        turnInput.classList.add("error");
+        isValid = false;
+    } else {
+        turnInput.classList.remove("error");
+    }
+
+    if (!isValid) {
+        alert("Por favor, completa todos los campos.");
+    }
+
+    return isValid;
+}
