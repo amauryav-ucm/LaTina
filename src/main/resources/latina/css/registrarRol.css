@@ -11,12 +11,13 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    width: 100vw;
     background-color: #4A90E2CC;
     /*background-color: #616161;*/
 }
 .form-container{
     margin-top: 50vh;
-    margin-left: 15vh;
+    margin-left: 0;
     background-color: #4A90E2CC;  /* Mismo color de fondo que el primer código */
     background: linear-gradient(transparent, #05BC);
     height: 100%;
