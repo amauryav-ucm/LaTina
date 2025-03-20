@@ -3,8 +3,8 @@ function inicializarSidebar() {
 
     // Crear el contenido de la sidebar mediante JavaScript
     var sidebarHTML = `
+        <button id="desplegarSidebar" class="desplegar-btn">☰</button>
         <div class="sidebar" id="sidebar">
-            <button id="desplegarSidebar" class="desplegar-btn">☰</button>
             <ul class="sidebar-menu">
                 <li><a href="ventanaPrincipal.html" onclick="java.changeScene('ventanaPrincipal.html')">Inicio</a></li>
                 <li><a href="registrarRol.html" onclick="java.changeScene('registrarRol.html')">Registrar rol</a></li>

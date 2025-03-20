@@ -3,7 +3,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    border-right: 3px solid #FFF4;
+    border-right: 1px solid #FFF4;
     width: 180px; /* Tamaño de la sidebar */
     height: 100vh;
     background-color: #333;
@@ -17,22 +17,26 @@
 
 /* Estado colapsado de la sidebar */
 .sidebar-collapsed {
-    transform: translateX(-130px); /* Deja visible solo el botón (ajusta este valor según necesites) */
+    transform: translateX(-200px);
 }
 
-/* Estilo para el botón dentro de la sidebar */
+/* Botón para desplegar la sidebar */
 .desplegar-btn {
-    background-color: #333;
+    position: fixed;  /* Fija el botón en la pantalla */
+    top: 0;        /* Lo posiciona en la parte superior */
+    left: 0;       /* Lo deja pegado al lado izquierdo */
+    background-color: #333C;
+    margin: 7px;
     color: white;
     border: none;
     font-size: 30px;
-    padding: 10px;
+    padding: 7px;
     cursor: pointer;
-    text-align: right;
-    width: 100%;
-    position: relative; /* Necesario para mantener el botón visible */
-    z-index: 10; /* Asegura que el botón esté siempre por encima */
-    right: 0; /* Alinea el botón a la derecha */
+    border-radius: 3px;
+    z-index: 1100;  /* Asegura que esté por encima de la sidebar */
+}
+.desplegar-btn:hover{
+    background-color: #34495e;
 }
 
 /* Menú de la sidebar */
@@ -40,6 +44,7 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    margin-top: 50px;
     overflow-y: auto; /* Solo el menú tendrá scroll */
     flex-grow: 1; /* Deja que el menú ocupe todo el espacio disponible */
 }
@@ -57,10 +62,6 @@
     background-color: #34495e;
 }
 
-/* Ajustar el contenedor del botón para que quede visible */
-.sidebar-collapsed .desplegar-btn {
-    padding-right: 15px;
-}
 
 /* Personalización de la barra de desplazamiento */
 .sidebar-menu::-webkit-scrollbar {
