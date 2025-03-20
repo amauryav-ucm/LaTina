@@ -1,5 +1,6 @@
 package latina.negocio.factoria;
 
+import latina.negocio.empleado.SAEmpleado;
 import latina.negocio.factoria.imp.SAFactoryImp;
 import latina.negocio.rol.SARol;
 
@@ -13,4 +14,5 @@ public abstract class SAFactory {
     }
 
     public abstract SARol createSARol();
+    public abstract SAEmpleado createSAEmpleado();
 }
