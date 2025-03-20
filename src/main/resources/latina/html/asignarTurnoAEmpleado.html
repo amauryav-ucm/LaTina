@@ -12,17 +12,16 @@
 
     <div class="form-container">
         <form onsubmit="return validarFormulario()">
-            <label for="name">Selecciona un empleado</label>
+            <label for="name">Empleado</label>
             <select class="comboBox-empleado" id="name" name="name">
-                <option value=""> --Seleccionar-- </option>
-                <!--Se creará dinámicamente con js o algo así para luego conectar con la lógica de java para la bd-->
+                <option value="" selected>Selecciona un empleado</option>
                 <option value="empleado1">Empleado 1</option>
                 <option value="empleado2">Empleado 2</option>
                 <option value="empleado3">Empleado 3</option>
             </select>
-            <label for="dateInput">Selecciona una fecha</label>
+            <label for="dateInput">Fecha</label>
             <div class="date-picker">
-                <input type="text" class="date-input" readonly placeholder="Selecciona un empleado antes que la fecha" id="dateInput">
+                <input type="text" class="date-input" readonly placeholder="Selecciona una fecha" id="dateInput">
 
                 <div class="calendar-dropdown" id="calendarDropdown">
                     <div class="calendar-container">

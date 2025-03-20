@@ -126,9 +126,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Verifica si se ha seleccionado un empleado
         if (this.value.trim() !== "") {
             // Si se seleccionó un empleado, habilita el campo de fecha
+            this.classList.add('selected');
             dateInput.disabled = false;
         } else {
             // Si no se seleccionó un empleado, deshabilita el campo de fecha
+            this.classList.remove('selected');
             dateInput.disabled = true;
             dateInput.value = ""; // Limpia el campo de fecha
             turnoField.disabled = true; // Deshabilita el campo de turno

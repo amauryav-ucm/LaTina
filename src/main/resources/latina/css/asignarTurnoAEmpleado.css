@@ -123,8 +123,26 @@ input.error, .comboBox-empleado.error { /* Añadido para el select */
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.selection{
-    width: 100vw;
+/* Hace que el texto del select sea gris cuando el valor es vacío */
+.comboBox-empleado {
+    color: gray;
+}
+
+.comboBox-empleado option:first-child {
+  color: gray;
+}
+
+.comboBox-empleado {
+  color: gray;
+}
+
+.comboBox-empleado:focus {
+  color: black;
+}
+
+/* Cuando se selecciona un valor real */
+.comboBox-empleado.selected {
+  color: black;
 }
 
 /* Contenedor para label y mensaje de error */
