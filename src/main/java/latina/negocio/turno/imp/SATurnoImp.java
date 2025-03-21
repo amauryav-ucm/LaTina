@@ -15,16 +15,13 @@ public class SATurnoImp implements SATurno {
 
     @Override
     public int asignarTurno(int idTurno, int idEmpleado) {
-        EntityManager em = null;
         EntityTransaction tx = null;
-        int result = -1;
-        try {
-            em = createEntityManager();
+        try (EntityManager em = createEntityManager()) {
             tx = em.getTransaction();
             tx.begin();
             Turno turno = em.find(Turno.class, idTurno);
             Empleado empleado = em.find(Empleado.class, idEmpleado);
-            // Primero comprobamos que el turno esta dentro de la disponibilidad del emplado
+            // Primero comprobamos que el turno está dentro de la disponibilidad del emplado
             // Usamos un algoritmo voraz para tratar de llenar el turno con las disponibilidades
             Timestamp cubiertoHasta = turno.getFechaHoraInicio();
             List<Disponibilidad> listaDisponibilidades = empleado.getDisponibilidad();
@@ -64,8 +61,6 @@ public class SATurnoImp implements SATurno {
             if (tx != null && tx.isActive())
                 tx.rollback();
             return -4;
-        } finally {
-            if (em != null) em.close();
         }
     }
 
