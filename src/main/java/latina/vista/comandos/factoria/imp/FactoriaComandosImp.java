@@ -15,7 +15,10 @@ public class FactoriaComandosImp extends FactoriaComandos {
             case REGISTRAR_ROL:
                 comando = new RegistrarRol();
                 break;
-
+            case ASIGNAR_TURNO:
+                System.out.println("evento de asignar turno");
+                //comando = new AsignarTurno();
+                //break;
             default:
                 break;
         }

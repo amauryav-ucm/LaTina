@@ -175,3 +175,71 @@ function validarFormulario() {
 
     return isValid;
 }
+//---------------------------------------------------------------
+function recogerTurno() {
+    var turno = {};
+    var empleado = document.getElementById("name");
+    var fecha = document.getElementById("dateInput");
+    var turnoSeleccionado = document.getElementById("turn");
+
+    // Limpiar errores previos y el mensaje del popup
+    empleado.classList.remove("error");
+    fecha.classList.remove("error");
+    turnoSeleccionado.classList.remove("error");
+    cerrarMensaje(); // Evitar que el mensaje predeterminado se muestre si hay error
+
+    // Verificar si los campos están vacíos
+    let hayError = false;
+
+    if (empleado.value.trim() === "") {
+        empleado.classList.add("error");
+        hayError = true;
+    }
+    if (fecha.value.trim() === "") {
+        fecha.classList.add("error");
+        hayError = true;
+    }
+    if (turnoSeleccionado.value.trim() === "") {
+        turnoSeleccionado.classList.add("error");
+        hayError = true;
+    }
+
+    // Si hay errores, no continuar con el envío
+    if (hayError) {
+        return;
+    }
+
+    // Si todos los campos son correctos, enviar los datos
+    turno.empleado = empleado.value.trim();
+    turno.fecha = fecha.value.trim();
+    turno.turno = turnoSeleccionado.value.trim();
+
+    // Enviar los datos al backend Java (AsignarTurno.java)
+    enviarTurnoAJava(turno);
+
+    // Mostrar mensaje de éxito y limpiar el formulario (si es necesario)
+    mostrarMensaje("Turno asignado correctamente.");
+
+    // Forzar la recarga o redirección si es necesario
+    setTimeout(() => location.reload(), 200);
+}
+
+function mostrarMensaje(mensaje) {
+    const popup = document.getElementById("popup");
+    popup.style.display = "flex";
+    document.getElementById("popup-message").innerText = mensaje;
+    setTimeout(() => popup.classList.add("show"), 10);
+}
+
+function cerrarMensaje() {
+    const popup = document.getElementById("popup");
+    popup.classList.remove("show");
+    setTimeout(() => popup.style.display = "none", 300);
+}
+
+function enviarTurnoAJava(turno_empleado) {
+    if (window.java && window.java.accion) {
+        window.java.accion("ASIGNAR_TURNO", turno_empleado);
+    }
+}
+

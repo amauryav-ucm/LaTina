@@ -1,5 +1,6 @@
 package latina.vista;
 
 public enum Eventos {
-    REGISTRAR_ROL
+    REGISTRAR_ROL,
+    ASIGNAR_TURNO
 }
