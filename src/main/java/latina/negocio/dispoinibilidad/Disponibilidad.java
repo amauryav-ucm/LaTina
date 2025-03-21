@@ -2,7 +2,7 @@ package latina.negocio.dispoinibilidad;
 
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
-//import latina.negocio.empleado.Empleado;
+import latina.negocio.empleado.Empleado;
 
 @Entity
 @NamedQueries({
@@ -21,6 +21,9 @@ public class Disponibilidad {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @ManyToOne
+    private Empleado empleado;
+
     @Column(nullable = false)
     private String fechaInicio; // Formato DD/MM/YY
 
@@ -37,13 +40,13 @@ public class Disponibilidad {
 
     public void setId(int id) {this.id = id;    }
 
-    /*public Empleado getEmpleado() {
+    public Empleado getEmpleado() {
         return empleado;
     }
 
     public void setEmpleado(Empleado empleado) {
         this.empleado = empleado;
-    }*/
+    }
 
     public String getFechaInicio() {return fechaInicio;    }
 
@@ -63,8 +66,8 @@ public class Disponibilidad {
 
     public Disponibilidad() { }
 
-    public Disponibilidad(/*Empleado empleado,*/ String fechaInicio, String fechaFin, String horaInicio, String horaFin) {
-        //this.empleado = empleado;
+    public Disponibilidad(Empleado empleado, String fechaInicio, String fechaFin, String horaInicio, String horaFin) {
+        this.empleado = empleado;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.horaInicio = horaInicio;
