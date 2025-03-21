@@ -1,6 +1,7 @@
 package latina.negocio.turno;
 
 import jakarta.persistence.*;
+import latina.negocio.empleado.Empleado;
 import latina.negocio.rol.Rol;
 
 import java.sql.Timestamp;
@@ -15,9 +16,22 @@ public class Turno {
 
     private Timestamp fechaHoraFin;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "rol_id")
     private Rol rol;
+
+    // Puede tener un empleado null, que significa que el tueno aun no esta asignado
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "empleado_id")
+    private Empleado empleado;
+
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }
 
     public Turno(){}
 
@@ -26,6 +40,14 @@ public class Turno {
         this.fechaHoraInicio = turno.getFechaHoraInicio();
         this.fechaHoraFin = turno.getFechaHoraFin();
         this.rol = rol;
+    }
+
+    public Turno(TTurno turno, Rol rol, Empleado empleado) {
+        this.id = turno.getIdTurno();
+        this.fechaHoraInicio = turno.getFechaHoraInicio();
+        this.fechaHoraFin = turno.getFechaHoraFin();
+        this.rol = rol;
+        this.empleado = empleado;
     }
 
     public Rol getRol() {
@@ -61,6 +83,16 @@ public class Turno {
     }
 
     public TTurno toTransfer(){
-        return new TTurno(id, rol.getId(), fechaHoraInicio, fechaHoraFin);
+        TTurno tTurno = new TTurno(id, rol.getId(), fechaHoraInicio, fechaHoraFin, -1);
+        if(estaAsignado()){
+            tTurno.setIdEmpleado(empleado.getId());
+        }
+        return tTurno;
     }
+
+    // Si empleado es null es que no se ha asignado el turno
+    public boolean estaAsignado(){
+        return empleado != null;
+    }
+
 }

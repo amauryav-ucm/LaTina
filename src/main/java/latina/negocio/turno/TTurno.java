@@ -12,11 +12,22 @@ public class TTurno {
 
     private Timestamp fechaHoraFin;
 
+    // Sera -1 cuando no esta asignado
+    private int idEmpleado;
+
     public TTurno(int idTurno, int idRol, Timestamp fechaHoraInicio, Timestamp fechaHoraFin) {
         this.idTurno = idTurno;
         this.idRol = idRol;
         this.fechaHoraInicio = fechaHoraInicio;
         this.fechaHoraFin = fechaHoraFin;
+    }
+
+    public TTurno(int idTurno, int idRol, Timestamp fechaHoraInicio, Timestamp fechaHoraFin, int idEmpleado) {
+        this.idTurno = idTurno;
+        this.idRol = idRol;
+        this.fechaHoraInicio = fechaHoraInicio;
+        this.fechaHoraFin = fechaHoraFin;
+        this.idEmpleado = idEmpleado;
     }
 
     public int getIdTurno() {
@@ -49,5 +60,17 @@ public class TTurno {
 
     public void setFechaHoraFin(Timestamp fechaHoraFin) {
         this.fechaHoraFin = fechaHoraFin;
+    }
+
+    public int getIdEmpleado() {
+        return idEmpleado;
+    }
+
+    public void setIdEmpleado(int idEmpleado) {
+        this.idEmpleado = idEmpleado;
+    }
+
+    public boolean estaAsignado(){
+        return idEmpleado != -1;
     }
 }
