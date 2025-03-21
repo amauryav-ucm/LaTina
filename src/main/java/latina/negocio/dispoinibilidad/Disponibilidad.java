@@ -1,5 +1,6 @@
 package latina.negocio.dispoinibilidad;
 
+import com.google.protobuf.Timestamp;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
 import latina.negocio.empleado.Empleado;
@@ -25,16 +26,11 @@ public class Disponibilidad {
     private Empleado empleado;
 
     @Column(nullable = false)
-    private String fechaInicio; // Formato DD/MM/YY
+    private Timestamp fechaInicio;
 
     @Column(nullable = false)
-    private String fechaFin; // Formato DD/MM/YY
+    private Timestamp fechaFin;
 
-    @Column(nullable = false)
-    private String horaInicio; // Formato HH:MM
-
-    @Column(nullable = false)
-    private String horaFin; // Formato HH:MM
 
     public int getId() {return id;   }
 
@@ -48,29 +44,20 @@ public class Disponibilidad {
         this.empleado = empleado;
     }
 
-    public String getFechaInicio() {return fechaInicio;    }
+    public Timestamp getFechaInicio() {return fechaInicio;    }
 
-    public void setFechaInicio(String fechaInicio) {this.fechaInicio = fechaInicio;    }
+    public void setFechaInicio(Timestamp fechaInicio) {this.fechaInicio = fechaInicio;    }
 
-    public String getFechaFin() {return fechaFin;    }
+    public Timestamp getFechaFin() {return fechaFin;    }
 
-    public void setFechaFin(String fechaFin) {this.fechaFin = fechaFin;    }
-
-    public String getHoraInicio() {return horaInicio;    }
-
-    public void setHoraInicio(String horaInicio) {this.horaInicio = horaInicio;    }
-
-    public String getHoraFin() {return horaFin;    }
-
-    public void setHoraFin(String horaFin) {this.horaFin = horaFin;    }
+    public void setFechaFin(Timestamp fechaFin) {this.fechaFin = fechaFin;    }
 
     public Disponibilidad() { }
 
-    public Disponibilidad(Empleado empleado, String fechaInicio, String fechaFin, String horaInicio, String horaFin) {
+    public Disponibilidad(Empleado empleado, Timestamp fechaInicio, Timestamp fechaFin) {
         this.empleado = empleado;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.horaInicio = horaInicio;
-        this.horaFin = horaFin;
+
     }
 }

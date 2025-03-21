@@ -1,13 +1,14 @@
 package latina.negocio.dispoinibilidad;
 
+import com.google.protobuf.Timestamp;
+
 public class TDisponibilidad {
 
     private int id;
     private int empleadoId;
-    private String fechaInicio; // Formato DD/MM/YY
-    private String fechaFin; // Formato DD/MM/YY
-    private String horaInicio; // Formato HH:MM
-    private String horaFin; // Formato HH:MM
+    private Timestamp fechaInicio;
+    private Timestamp fechaFin;
+
 
 
     public int getId() {return id;    }
@@ -18,30 +19,21 @@ public class TDisponibilidad {
 
     public void setEmpleadoId(int empleadoId) {this.empleadoId = empleadoId;    }
 
-    public String getFechaInicio() {return fechaInicio;    }
+    public Timestamp getFechaInicio() {return fechaInicio;    }
 
-    public void setFechaInicio(String fechaInicio) {this.fechaInicio = fechaInicio;    }
+    public void setFechaInicio(Timestamp fechaInicio) {this.fechaInicio = fechaInicio;    }
 
-    public String getFechaFin() {return fechaFin;    }
+    public Timestamp getFechaFin() {return fechaFin;    }
 
-    public void setFechaFin(String fechaFin) {this.fechaFin = fechaFin;    }
-
-    public String getHoraInicio() {return horaInicio;    }
-
-    public void setHoraInicio(String horaInicio) {this.horaInicio = horaInicio;    }
-
-    public String getHoraFin() {return horaFin;    }
-
-    public void setHoraFin(String horaFin) {this.horaFin = horaFin;    }
+    public void setFechaFin(Timestamp fechaFin) {this.fechaFin = fechaFin;    }
 
     public TDisponibilidad(){ };
 
-    public TDisponibilidad(int empleadoId, String fechaInicio, String fechaFin, String horaInicio, String horaFin){
+    public TDisponibilidad(int empleadoId, Timestamp fechaInicio, Timestamp fechaFin){
         this.empleadoId = empleadoId;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.horaInicio = horaInicio;
-        this.horaFin = horaFin;
+
     }
 
 
