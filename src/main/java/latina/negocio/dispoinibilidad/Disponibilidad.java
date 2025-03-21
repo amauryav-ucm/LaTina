@@ -1,6 +1,6 @@
 package latina.negocio.dispoinibilidad;
 
-import com.google.protobuf.Timestamp;
+import java.sql.Timestamp;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
 import latina.negocio.empleado.Empleado;

@@ -1,6 +1,6 @@
 package latina.negocio.dispoinibilidad;
 
-import com.google.protobuf.Timestamp;
+import java.sql.Timestamp;
 
 public class TDisponibilidad {
 
