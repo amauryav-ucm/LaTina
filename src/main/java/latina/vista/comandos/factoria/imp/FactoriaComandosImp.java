@@ -2,6 +2,7 @@ package latina.vista.comandos.factoria.imp;
 
 import latina.vista.Eventos;
 import latina.vista.comandos.Comando;
+import latina.vista.comandos.Turno.AsignarTurnoEmpleado;
 import latina.vista.comandos.factoria.FactoriaComandos;
 import latina.vista.comandos.rol.RegistrarRol;
 
@@ -16,9 +17,8 @@ public class FactoriaComandosImp extends FactoriaComandos {
                 comando = new RegistrarRol();
                 break;
             case ASIGNAR_TURNO:
-                System.out.println("evento de asignar turno");
-                //comando = new AsignarTurno();
-                //break;
+                comando = new AsignarTurnoEmpleado();
+                break;
             default:
                 break;
         }
