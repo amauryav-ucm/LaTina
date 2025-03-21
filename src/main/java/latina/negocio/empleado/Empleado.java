@@ -102,4 +102,19 @@ public class Empleado {
         this.activo = activo;
     }
 
+    public List<Disponibilidad> getDisponibilidad() {
+        return disponibilidad;
+    }
+
+    public void setDisponibilidad(List<Disponibilidad> disponibilidad) {
+        this.disponibilidad = disponibilidad;
+    }
+
+    public List<Turno> getTurno() {
+        return turno;
+    }
+
+    public void setTurno(List<Turno> turno) {
+        this.turno = turno;
+    }
 }
