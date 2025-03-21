@@ -1,5 +1,6 @@
 package latina.negocio.factoria;
 
+import latina.negocio.dispoinibilidad.SADisponibilidad;
 import latina.negocio.factoria.imp.SAFactoryImp;
 import latina.negocio.rol.SARol;
 
