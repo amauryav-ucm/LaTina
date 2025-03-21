@@ -13,4 +13,6 @@ public abstract class SAFactory {
     }
 
     public abstract SARol createSARol();
+
+    public abstract SADisponibilidad createSADisponibilidad();
 }
