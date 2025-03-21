@@ -25,7 +25,7 @@ public class SATurnoImp implements SATurno {
             // Usamos un algoritmo voraz para tratar de llenar el turno con las disponibilidades
             Timestamp cubiertoHasta = turno.getFechaHoraInicio();
             List<Disponibilidad> listaDisponibilidades = empleado.getDisponibilidad();
-            listaDisponibilidades.sort((d1, d2) -> d1.getHoraInicio().compareTo(d2.getHoraInicio()));
+            listaDisponibilidades.sort((d1, d2) -> d1.getFechaInicio().compareTo(d2.getFechaInicio()));
             for (Disponibilidad disponibilidad : listaDisponibilidades) {
                 // Estas deberían ser timestamps
                 /*
