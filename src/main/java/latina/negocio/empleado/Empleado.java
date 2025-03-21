@@ -1,6 +1,11 @@
 package latina.negocio.empleado;
 
 import jakarta.persistence.*;
+import latina.negocio.dispoinibilidad.Disponibilidad;
+import latina.negocio.turno.Turno;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NamedQueries({
@@ -20,6 +25,10 @@ public class Empleado {
     private String correo;
     private String telefono;
     private boolean activo;
+    @OneToMany(mappedBy = "empleado")
+    private List<Disponibilidad> disponibilidad = new ArrayList<>();
+    @OneToMany(mappedBy = "empleado")
+    private List<Turno> turno = new ArrayList<>();
 
     public Empleado() {
 
@@ -32,6 +41,8 @@ public class Empleado {
         this.correo = empleado.getCorreo();
         this.telefono = empleado.getTelefono();
         this.activo = empleado.isActivo();
+        this.disponibilidad = new ArrayList<>();
+        this.turno = new ArrayList<>();
     }
 
     public int getId() {
