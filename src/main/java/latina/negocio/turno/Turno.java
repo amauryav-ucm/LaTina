@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 public class Turno {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     private Timestamp fechaHoraInicio;
 
@@ -19,6 +19,15 @@ public class Turno {
     @JoinColumn(name = "rol_id")
     private Rol rol;
 
+    public Turno(){}
+
+    public Turno(TTurno turno, Rol rol) {
+        this.id = turno.getIdTurno();
+        this.fechaHoraInicio = turno.getFechaHoraInicio();
+        this.fechaHoraFin = turno.getFechaHoraFin();
+        this.rol = rol;
+    }
+
     public Rol getRol() {
         return rol;
     }
@@ -27,11 +36,31 @@ public class Turno {
         this.rol = rol;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
+    }
+
+    public Timestamp getFechaHoraFin() {
+        return fechaHoraFin;
+    }
+
+    public void setFechaHoraFin(Timestamp fechaHoraFin) {
+        this.fechaHoraFin = fechaHoraFin;
+    }
+
+    public Timestamp getFechaHoraInicio() {
+        return fechaHoraInicio;
+    }
+
+    public void setFechaHoraInicio(Timestamp fechaHoraInicio) {
+        this.fechaHoraInicio = fechaHoraInicio;
+    }
+
+    public TTurno toTransfer(){
+        return new TTurno(id, rol.getId(), fechaHoraInicio, fechaHoraFin);
     }
 }
