@@ -31,8 +31,10 @@ public class SATurnoImp implements SATurno {
             listaDisponibilidades.sort((d1, d2) -> d1.getFechaInicio().compareTo(d2.getFechaInicio()));
             for (Disponibilidad disponibilidad : listaDisponibilidades) {
                 // Hay un hueco que no se cubre
-                if(disponibilidad.getFechaInicio().after(cubiertoHasta)) break;
-                cubiertoHasta = disponibilidad.getFechaFin();
+                if (disponibilidad.getFechaInicio().after(cubiertoHasta) || !cubiertoHasta.before(turno.getFechaHoraFin()))
+                    break;
+                if (disponibilidad.getFechaFin().after(cubiertoHasta))
+                    cubiertoHasta = disponibilidad.getFechaFin();
             }
             assert cubiertoHasta != null;
             if (cubiertoHasta.before(turno.getFechaHoraFin())) {
@@ -83,7 +85,7 @@ public class SATurnoImp implements SATurno {
                 em.getTransaction().commit();
                 return tturnos;
             } else {
-                return null ;
+                return null;
             }
         } catch (Exception e) {
             throw e;
@@ -91,6 +93,7 @@ public class SATurnoImp implements SATurno {
 
         }
     }
+
     protected EntityManager createEntityManager() {
         return EMFContainer.getInstance().getEMF().createEntityManager();
     }
