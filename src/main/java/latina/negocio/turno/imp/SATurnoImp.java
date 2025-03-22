@@ -30,11 +30,9 @@ public class SATurnoImp implements SATurno {
             List<Disponibilidad> listaDisponibilidades = empleado.getDisponibilidad();
             listaDisponibilidades.sort((d1, d2) -> d1.getFechaInicio().compareTo(d2.getFechaInicio()));
             for (Disponibilidad disponibilidad : listaDisponibilidades) {
-                // Estas deberían ser timestamps
-                /*
-                if(disponibilidad.getHoraInicio()<=cubiertoHasta && cubiertoHasta<disponibilidad.getHoraFin())
-                    cubiertoHasta = disponibilidad.getHoraFin();
-                 */
+                // Hay un hueco que no se cubre
+                if(disponibilidad.getFechaInicio().after(cubiertoHasta)) break;
+                cubiertoHasta = disponibilidad.getFechaFin();
             }
             assert cubiertoHasta != null;
             if (cubiertoHasta.before(turno.getFechaHoraFin())) {
