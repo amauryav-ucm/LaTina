@@ -2,13 +2,16 @@ package latina.negocio.turno.imp;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import latina.integracion.emfc.EMFContainer;
 import latina.negocio.dispoinibilidad.Disponibilidad;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.turno.SATurno;
+import latina.negocio.turno.TTurno;
 import latina.negocio.turno.Turno;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SATurnoImp implements SATurno {
@@ -64,6 +67,32 @@ public class SATurnoImp implements SATurno {
         }
     }
 
+    @Override
+    public List<TTurno> listarTurnosPorDia() {
+        EntityTransaction tx = null;
+        try (EntityManager em = createEntityManager()) {
+            tx = em.getTransaction();
+            tx.begin();
+            List<TTurno> tturnos = new ArrayList<TTurno>();
+            List<Turno> turnos = new ArrayList<Turno>();
+            Query q = em.createNamedQuery("Turno.findByDia");
+            turnos = q.getResultList();
+            if (turnos != null) {
+                for (Turno turn : turnos) {
+                    Turno turnament = em.find(Turno.class, turn.getId());
+                    tturnos.add(new TTurno(turnament.getId(), turnament.getIdRol(), turnament.getFechaHoraFin(), turnament.getFechaHoraFin()));
+                }
+                em.getTransaction().commit();
+                return tturnos;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            throw e;
+        } finally {
+
+        }
+    }
     protected EntityManager createEntityManager() {
         return EMFContainer.getInstance().getEMF().createEntityManager();
     }

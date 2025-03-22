@@ -7,6 +7,11 @@ import latina.negocio.rol.Rol;
 import java.sql.Timestamp;
 
 @Entity
+
+@NamedQueries({
+        @NamedQuery(name = "Turno.findByDia", query = "SELECT t FROM Turno t WHERE DATE(t.fechaHoraInicio) = :dia")
+})
+
 public class Turno {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,6 +70,8 @@ public class Turno {
     public int getId() {
         return id;
     }
+
+    public int getIdRol(){return rol.getId();}
 
     public Timestamp getFechaHoraFin() {
         return fechaHoraFin;
