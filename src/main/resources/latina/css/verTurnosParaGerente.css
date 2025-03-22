@@ -11,6 +11,7 @@ body {
     height: 100vh;
     width: 100vw;
     background-color: #4A90E2CC;
+    overflow: hidden;
 }
 .contenedor{
     margin: 0;
