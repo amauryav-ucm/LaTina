@@ -1,25 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurante LaTina - Ver los turnos de empleado</title>
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../bootstrap/bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/verTurnosParaGerente.css">
-    <link rel="stylesheet" href="../css/sideBar.css">
-    <link href="" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
-
-</head>
+    <link rel="stylesheet" href="../css/sideBar.css"></head>
 <body>
     <div id="sidebar-container"></div>
 
-    <div class="container">
+    <div class="contenedor">
         <div class="calendar-container">
+            <!-- El contenido del calendario se integrará aquí -->
+            <div class="calendar-header">
+                <div class="calendar-nav">
+                    <button id="prev-week" class="btn btn-outline-light">
+                        <i class="bi bi-chevron-left"></i> Anterior
+                    </button>
+                    <button id="current-week" class="btn btn-outline-light">
+                        <i class="bi bi-calendar-check"></i> Hoy
+                    </button>
+                    <button id="next-week" class="btn btn-outline-light">
+                        Siguiente <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+                <h5 class="calendar-title" id="week-title">Semana del 22 al 28 de marzo, 2025</h5>
+            </div>
 
+            <!-- Contenedor de la semana -->
+            <div class="week-container" id="week-container">
+                <!-- Los días se generarán dinámicamente con JavaScript -->
+            </div>
         </div>
     </div>
 
-    <script src="../js/verTurnosParaGerente.js"></script>
+    <!-- Modal para agregar/editar turno -->
+    <div class="modal fade" id="turnoModal" tabindex="-1" aria-labelledby="turnoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="turnoModalLabel">Agregar Turno</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="turno-form">
+                        <div class="mb-3">
+                            <label for="turno-title" class="form-label">Título del Turno</label>
+                            <input type="text" class="form-control" id="turno-title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="turno-time" class="form-label">Hora</label>
+                            <input type="time" class="form-control" id="turno-time" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="turno-desc" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="turno-desc" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="save-turno">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
     <script src="../js/sideBar.js"></script>
+    <script src="../js/verTurnosParaGerente.js"></script>
 </body>
 </html>
