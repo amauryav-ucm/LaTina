@@ -2,6 +2,7 @@ package latina.negocio.turno.imp;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 import latina.integracion.emfc.EMFContainer;
 import latina.negocio.dispoinibilidad.Disponibilidad;
 import latina.negocio.empleado.Empleado;
@@ -9,6 +10,8 @@ import latina.negocio.turno.SATurno;
 import latina.negocio.turno.Turno;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 public class SATurnoImp implements SATurno {
@@ -62,6 +65,39 @@ public class SATurnoImp implements SATurno {
                 tx.rollback();
             return -4;
         }
+    }
+
+    @Override
+    public List<Turno> getTurnosSemana(Timestamp semana) {
+        EntityManager em = null;
+        List<Turno> turnos = null;
+        try {
+            em = createEntityManager();
+            // Convierte Timestamp(formato de la fecha de Turno) en LocalDateTime para manipularlo
+            LocalDateTime semanaLocalDateTime = semana.toLocalDateTime();
+            //Declara el inicio y fin de la semana
+            LocalDateTime inicio = semanaLocalDateTime.with(TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY)).toLocalDate().atStartOfDay();
+            LocalDateTime fin = semanaLocalDateTime.with(TemporalAdjusters.nextOrSame(java.time.DayOfWeek.SUNDAY)).toLocalDate().atTime(23, 59, 59);
+            // Convierte de nuevo a Timestamp
+            Timestamp inicioTimestamp = Timestamp.valueOf(inicio);
+            Timestamp finTimestamp = Timestamp.valueOf(fin);
+            //Selecciona de la tabla turno todos los que tienen horas en la semana seleccionada
+            TypedQuery<Turno> query = em.createQuery(
+                    "SELECT t FROM Turno t WHERE " + "(t.fechaHoraInicio <= :fin AND t.fechaHoraFin >= :inicio)",
+                    Turno.class
+            );
+            query.setParameter("inicio", inicioTimestamp);
+            query.setParameter("fin", finTimestamp);
+            //Guarda la lista de los turnos que cumplen la condición
+            turnos = query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        return turnos;
     }
 
     protected EntityManager createEntityManager() {
