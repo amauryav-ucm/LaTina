@@ -20,12 +20,12 @@ public class ObtenerTurnosPorDiaInterfaz implements Comando {
         if(tturnos.size() > 0)
         {
             for (TTurno turno : tturnos) {
-                // Aquí pasas cada turno por separado, no el JSON completo
-                String parametroTurno = "Inicio: " + turno.getFechaHoraInicio() + " Fin: " + turno.getFechaHoraFin();
-                webEngine.executeScript(String.format("cargarTurnosAux('%s')", parametroTurno));
+                // Aquí pasas cada turno por separado
+                String parametroTurno = "IdTurno: " + turno.getIdTurno() + " | Inicio: " + turno.getFechaHoraInicio() + " | Fin: " + turno.getFechaHoraFin() + " | IdRol: " + turno.getIdRol() ;
+                webEngine.executeScript(String.format("cargarTurnosAux('%s', %d)", parametroTurno, turno.getIdTurno()));
             }
         }
         else
-            webEngine.executeScript("cargarTurnosAux(null);");
+            webEngine.executeScript("cargarTurnosAux(null, null);");
     }
 }

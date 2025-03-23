@@ -257,10 +257,10 @@ function cargarTurnos(fecha) {
      window.java.accion("OBTENER_TURNOS_POR_DIA", fecha);
  }
 
- function cargarTurnosAux(turno) {
+ function cargarTurnosAux(turno, id) {
      if (turno) {
          let option = document.createElement("option");
-         option.value = turno.id;
+         option.value = id;
          option.textContent = turno;
          document.getElementById("turn").appendChild(option);
          document.getElementById("turn").disabled = false; // Habilitar el comboBox
