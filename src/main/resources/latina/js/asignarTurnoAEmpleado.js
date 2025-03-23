@@ -94,6 +94,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Habilita el campo de turno cuando se selecciona una fecha
                 document.getElementById("turn").disabled = false;
+
+                // Llamar a la función para cargar los turnos dinámicamente
+                cargarTurnos(dateInput.value);
+
                 // Actualizar la visualización del calendario
                 generateCalendar(month, year);
             });
@@ -242,4 +246,26 @@ function enviarTurnoAJava(turno_empleado) {
         window.java.accion("ASIGNAR_TURNO", turno_empleado);
     }
 }
+
+function cargarTurnos(fecha) {
+     if (!fecha) return; // Si no hay fecha, no hacer nada
+
+     document.getElementById("turn").innerHTML = '<option value="" selected>Selecciona un turno</option>';
+     document.getElementById("turn").disabled = true;
+
+     //Llamamos a la función de Java para obtener turnos
+     window.java.accion("OBTENER_TURNOS_POR_DIA", fecha);
+ }
+
+ function cargarTurnosAux(turno) {
+     if (turno) {
+         let option = document.createElement("option");
+         option.value = turno.id;
+         option.textContent = turno;
+         document.getElementById("turn").appendChild(option);
+         document.getElementById("turn").disabled = false; // Habilitar el comboBox
+     } else {
+         document.getElementById("turn").innerHTML = '<option value="" selected>No hay turnos disponibles</option>';
+     }
+ }
 

@@ -3,5 +3,5 @@ import java.util.List;
 public interface SATurno {
 
     public int asignarTurno(int idTurno, int idEmpleado);
-    public List<TTurno> listarTurnosPorDia();
+    public List<TTurno> listarTurnosPorDia(String fecha);
 }

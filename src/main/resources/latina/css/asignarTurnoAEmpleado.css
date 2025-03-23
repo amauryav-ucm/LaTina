@@ -105,12 +105,12 @@ input.error {
 }
 
 /* Estilos para campos con error */
-input.error, .comboBox-empleado.error { /* Añadido para el select */
+input.error, .comboBox-empleado.error, .turn.error { /* Añadido para el select */
     border: 2px solid red;
     background-color: #ffeeee;
 }
 
-.comboBox-empleado{
+.comboBox-empleado, .turn{
     width: 100%;
     padding: 12px;
     margin-bottom: 20px;
@@ -124,24 +124,24 @@ input.error, .comboBox-empleado.error { /* Añadido para el select */
 }
 
 /* Hace que el texto del select sea gris cuando el valor es vacío */
-.comboBox-empleado {
+.comboBox-empleado, .turn {
     color: gray;
 }
 
-.comboBox-empleado option:first-child {
+.comboBox-empleado option:first-child, .turn option:first-child{
   color: gray;
 }
 
-.comboBox-empleado {
+.comboBox-empleado, .turn {
   color: gray;
 }
 
-.comboBox-empleado:focus {
+.comboBox-empleado:focus, .turn:focus {
   color: black;
 }
 
 /* Cuando se selecciona un valor real */
-.comboBox-empleado.selected {
+.comboBox-empleado.selected, .turn.selected {
   color: black;
 }
 

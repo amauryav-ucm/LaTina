@@ -49,7 +49,9 @@
             </div>
 
             <label for="turn">Selecciona un turno</label>
-            <input type="text" id="turn" name="turn" required placeholder="Selecciona una fecha antes que el turno" disabled>
+            <select class="turn" id="turn" name="turn" disabled>
+                <option value="" selected>Selecciona una fecha antes que el turno</option>
+            </select>
 
             <div class="button-container">
                 <button class="accept-button" id="accept-button" type="submit"onclick="recogerTurno()">Asignar</button>
