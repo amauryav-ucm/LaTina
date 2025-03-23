@@ -7,6 +7,7 @@ import latina.VistaPrincipal;
 import latina.negocio.factoria.SAFactory;
 import latina.negocio.rol.SARol;
 import latina.negocio.rol.TRol;
+import latina.negocio.turno.SATurno;
 import latina.vista.comandos.Comando;
 import netscape.javascript.JSObject;
 import org.w3c.dom.Document;
@@ -16,16 +17,18 @@ public class AsignarTurnoEmpleado implements Comando {
     public void ejecutar(Object datos, VistaPrincipal vista) {
         try {
             //Transfer ... = parsear el JSONObject al transfer
-            //SATurno = SAFactory.getInstance().createSATurno();
-           // int result = SATurno.asignar...(t);
+
+            SATurno satur = SAFactory.getInstance().createSATurno();
+            int result = satur.asignarTurno(1, 1);
+
             String mensaje = "No implementado aun";
 
-          /*  if (result >= 0) mensaje = "Se ha registrado el rol correctamente con ID: " + result;
-            else if (result == -1) mensaje = "Ya existe un rol con el nombre introducido";
-            else if (result == -2) mensaje = "El salario debe ser un número positivo";
-            else if (result == -3) mensaje = "El rol debe estar en mayúsculas y sin números";
-            else if (result == -4) mensaje = "Ha ocurrido un error al registrar el rol";
-            else mensaje = "Error desconocido";*/
+            if (result >= 0) mensaje = "Se ha asignado el turno correctamente";
+          //  else if (result == -1) mensaje = "Ya existe un rol con el nombre introducido";
+            else if (result == -2) mensaje = "El empleado no está disponible para el turno";
+            else if (result == -3) mensaje = "El empleado ya tiene uno o más turnos que solapan con el nuevo";
+            else if (result == -4) mensaje = "Ha ocurrido un error al asignar el turno";
+            else mensaje = "Error desconocido";
 
             WebEngine webEngine = vista.getWebView().getEngine();
             String finalMensaje = mensaje;

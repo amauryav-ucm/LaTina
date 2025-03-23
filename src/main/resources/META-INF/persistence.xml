@@ -6,6 +6,9 @@
     <persistence-unit name="LaTinaCode"
                       transaction-type="RESOURCE_LOCAL">
         <class>latina.negocio.rol.Rol</class>
+        <class>latina.negocio.empleado.Empleado</class>
+        <class>latina.negocio.turno.Turno</class>
+        <class>latina.negocio.dispoinibilidad.Disponibilidad</class>
         <properties>
             <!-- Configuración de conexión a la base de datos -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
