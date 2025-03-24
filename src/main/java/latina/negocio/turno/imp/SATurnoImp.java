@@ -31,9 +31,13 @@ public class SATurnoImp implements SATurno {
 
             // Primero comprobamos que el turno está dentro de la disponibilidad del empleado
             // Usamos un algoritmo voraz para tratar de llenar el turno con las disponibilidades
-            Timestamp cubiertoHasta = turno.getFechaHoraInicio();
+           // Timestamp cubiertoHasta = turno.getFechaHoraInicio();
             List<Disponibilidad> listaDisponibilidades = empleado.getDisponibilidad();
             listaDisponibilidades.sort((d1, d2) -> d1.getFechaInicio().compareTo(d2.getFechaInicio()));
+
+            /*
+
+            En principio esto ya no hace falta, se comprueba antes para la Vista
 
             for (Disponibilidad disponibilidad : listaDisponibilidades) {
                 // Hay un hueco que no se cubre
@@ -48,7 +52,7 @@ public class SATurnoImp implements SATurno {
                 // La disponibilidad del empleado no cubre el turno
                 tx.rollback();
                 return -2;
-            }
+            }*/
 
             // Ahora comprobamos que los turnos asignados al empleado no choquen con el nuevo
             List<Turno> listaTurnos = empleado.getTurno();
