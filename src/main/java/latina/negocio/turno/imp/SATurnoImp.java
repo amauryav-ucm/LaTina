@@ -72,8 +72,7 @@ public class SATurnoImp implements SATurno {
         EntityManager em = null;
         List<Turno> turnos = null;
         try {
-            em = createEntityManager();
-            // Convierte Timestamp(formato de la fecha de Turno) en LocalDateTime para manipularlo
+            em = createEntityManager();            // Convierte Timestamp(formato de la fecha de Turno) en LocalDateTime para manipularlo
             LocalDateTime semanaLocalDateTime = semana.toLocalDateTime();
             //Declara el inicio y fin de la semana
             LocalDateTime inicio = semanaLocalDateTime.with(TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY)).toLocalDate().atStartOfDay();
