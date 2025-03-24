@@ -201,7 +201,7 @@ function recogerTurno() {
     turno.fecha = fecha.value.trim();
     turno.turno = turnoSeleccionado.value.trim();
 
-    var parametros = [turno.empleado, turno.turno];
+    var parametros = [turno.turno, turno.empleado];
 
     // Enviar los datos al backend Java (AsignarTurno.java)
     enviarTurnoAJava(parametros);

@@ -2,18 +2,14 @@ package latina.negocio.empleado.imp;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
 import latina.integracion.emfc.EMFContainer;
 import latina.negocio.dispoinibilidad.Disponibilidad;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.empleado.SAEmpleado;
 import latina.negocio.empleado.TEmpleado;
 import latina.negocio.turno.Turno;
-import java.sql.Date;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,8 +1,11 @@
 package latina.vista.comandos.Turno;
 
+import jakarta.persistence.EntityManager;
 import javafx.scene.web.WebEngine;
 import latina.VistaPrincipal;
+import latina.integracion.emfc.EMFContainer;
 import latina.negocio.factoria.SAFactory;
+import latina.negocio.rol.Rol;
 import latina.negocio.turno.SATurno;
 import latina.negocio.turno.TTurno;
 import latina.vista.comandos.Comando;
@@ -22,10 +25,17 @@ public class ObtenerTurnosPorDiaInterfaz implements Comando {
                 // Llamar a la función para cada turno individualmente
         if(!tturnos.isEmpty())
         {
-            for (TTurno turno : tturnos) {
+            try {
+                EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
 
-                String parametroTurno = "Turno " + turno.getIdTurno() + " | " + formatearHoras(turno.getFechaHoraInicio()) + " → " + formatearHoras(turno.getFechaHoraFin()) + " | Rol " + turno.getIdRol() ;
-                webEngine.executeScript(String.format("cargarTurnosAux('%s', %d)", parametroTurno, turno.getIdTurno()));
+                for (TTurno turno : tturnos) {
+                    Rol rol = em.find(Rol.class, turno.getIdRol());
+                    String parametroTurno = "Turno " + turno.getIdTurno() + " | " + formatearHoras(turno.getFechaHoraInicio()) + " → " + formatearHoras(turno.getFechaHoraFin()) + " | " + rol.getNombre();
+                    webEngine.executeScript(String.format("cargarTurnosAux('%s', %d)", parametroTurno, turno.getIdTurno()));
+                }
+            }catch(Exception e)
+            {
+                e.printStackTrace();
             }
             webEngine.executeScript("terminadoDeCargar();");
         }

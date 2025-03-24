@@ -17,9 +17,16 @@ public class AsignarTurnoEmpleado implements Comando {
     public void ejecutar(Object datos, VistaPrincipal vista) {
         try {
             //Transfer ... = parsear el JSONObject al transfer
-
             SATurno satur = SAFactory.getInstance().createSATurno();
-            int result = satur.asignarTurno(1, 1);
+            String recibido = String.valueOf(datos);
+
+            // Separar los valores por la coma
+            String[] partes = recibido.split(",");
+
+            // Convertir a enteros
+            int turno = Integer.parseInt(partes[0].trim());
+            int empleado = Integer.parseInt(partes[1].trim());
+            int result = satur.asignarTurno(turno, empleado);
 
             String mensaje = "No implementado aun";
 
