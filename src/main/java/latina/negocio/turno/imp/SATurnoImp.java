@@ -145,7 +145,7 @@ public class SATurnoImp implements SATurno {
             turnos = q.getResultList();
             if (turnos != null) {
                 for (Turno turn : turnos) {
-                    tturnos.add(new TTurno(turn.getId(), turn.getIdRol(), turn.getFechaHoraFin(), turn.getFechaHoraFin()));
+                    tturnos.add(new TTurno(turn.getId(), turn.getIdRol(), turn.getFechaHoraInicio(), turn.getFechaHoraFin()));
                 }
                 em.getTransaction().commit();
                 return tturnos;

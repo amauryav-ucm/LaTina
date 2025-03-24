@@ -117,29 +117,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Generar el calendario inicial
     generateCalendar(currentMonth, currentYear);
-});
 
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector("form");
-    const dateInput = document.getElementById('dateInput');
-    const turnoField = document.getElementById('turn');
-    const employeeSelect = document.getElementById('name');
-
-    // Evento que detecta cuando se selecciona un empleado en el combobox
-    employeeSelect.addEventListener("change", function() {
-        // Verifica si se ha seleccionado un empleado
-        if (this.value.trim() !== "") {
-            // Si se seleccionó un empleado, habilita el campo de fecha
-            this.classList.add('selected');
-            dateInput.disabled = false;
-        } else {
-            // Si no se seleccionó un empleado, deshabilita el campo de fecha
-            this.classList.remove('selected');
-            dateInput.disabled = true;
-            dateInput.value = ""; // Limpia el campo de fecha
-            turnoField.disabled = true; // Deshabilita el campo de turno
-            turnoField.value = ""; // Limpia el campo de turno
-        }
+    var comboBox = document.getElementById("turn");
+    comboBox.addEventListener("change", function(event) {
+        // Accede al valor seleccionado
+        var selectedValue = event.target.value;
+        cargarEmpleados(selectedValue);
     });
 });
 
@@ -218,8 +201,10 @@ function recogerTurno() {
     turno.fecha = fecha.value.trim();
     turno.turno = turnoSeleccionado.value.trim();
 
+    var parametros = [turno.empleado, turno.turno];
+
     // Enviar los datos al backend Java (AsignarTurno.java)
-    enviarTurnoAJava(turno);
+    enviarTurnoAJava(parametros);
 
     // Mostrar mensaje de éxito y limpiar el formulario (si es necesario)
     mostrarMensaje("Turno asignado correctamente.");
@@ -247,10 +232,40 @@ function enviarTurnoAJava(turno_empleado) {
     }
 }
 
+function cargarEmpleados(idTurno)
+{
+    if(!idTurno) return;
+    document.getElementById("name").innerHTML = '<option value="" selected>Cargando empleados disponibles...</option>';
+    document.getElementById("name").disabled = true;
+    window.java.accion("OBTENER_EMPLEADOS_DISPONIBLES", idTurno);
+}
+
+function cargarEmpleadosAux(empleado, id) {
+     if (empleado) {
+         let option = document.createElement("option");
+         option.value = id;
+         option.textContent = empleado;
+         document.getElementById("name").appendChild(option);
+     } else {
+         document.getElementById("name").innerHTML = '<option value="" selected>No hay empleados disponibles</option>';
+     }
+ }
+
+ function terminadoDeCargar2()
+  {
+     document.getElementById("name").disabled = false; // Habilitar el comboBox
+     var firstOption = document.getElementById("name").querySelector("option"); // Obtiene el primer option
+
+     if (firstOption) {
+         firstOption.textContent = "Selecciona un empleado"; // Cambiar el texto de la cabecera
+         firstOption.value = "Selecciona un empleado"; // Cambiar el valor si es necesario
+     }
+  }
+
 function cargarTurnos(fecha) {
      if (!fecha) return; // Si no hay fecha, no hacer nada
 
-     document.getElementById("turn").innerHTML = '<option value="" selected>Selecciona un turno</option>';
+     document.getElementById("turn").innerHTML = '<option value="" selected>Cargando turnos...</option>';
      document.getElementById("turn").disabled = true;
 
      //Llamamos a la función de Java para obtener turnos
@@ -263,9 +278,20 @@ function cargarTurnos(fecha) {
          option.value = id;
          option.textContent = turno;
          document.getElementById("turn").appendChild(option);
-         document.getElementById("turn").disabled = false; // Habilitar el comboBox
      } else {
          document.getElementById("turn").innerHTML = '<option value="" selected>No hay turnos disponibles</option>';
      }
  }
+
+ function terminadoDeCargar()
+ {
+    document.getElementById("turn").disabled = false; // Habilitar el comboBox
+    var firstOption = document.getElementById("turn").querySelector("option"); // Obtiene el primer option
+
+    if (firstOption) {
+        firstOption.textContent = "Selecciona un turno"; // Cambiar el texto de la cabecera
+        firstOption.value = "Selecciona un turno"; // Cambiar el valor si es necesario
+    }
+ }
+
 

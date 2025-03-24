@@ -1,6 +1,9 @@
 package latina.negocio.factoria.imp;
 
 import latina.negocio.dispoinibilidad.SADisponibilidad;
+import latina.negocio.dispoinibilidad.imp.SADisponibilidadImp;
+import latina.negocio.empleado.SAEmpleado;
+import latina.negocio.empleado.imp.SAEmpleadoImp;
 import latina.negocio.factoria.SAFactory;
 import latina.negocio.rol.SARol;
 import latina.negocio.rol.imp.SARolImp;
@@ -16,12 +19,17 @@ public class SAFactoryImp extends SAFactory{
 
     @Override
     public SADisponibilidad createSADisponibilidad() {
-        return null;
+        return new SADisponibilidadImp();
     }
 
     @Override
     public SATurno createSATurno() {
         return new SATurnoImp();
+    }
+
+    @Override
+    public SAEmpleado createSAEmpleado() {
+        return new SAEmpleadoImp();
     }
 
 }

@@ -1,4 +1,6 @@
 package latina.negocio.dispoinibilidad.imp;
 
-public class SADisponibilidadImp {
+import latina.negocio.dispoinibilidad.SADisponibilidad;
+
+public class SADisponibilidadImp implements SADisponibilidad {
 }

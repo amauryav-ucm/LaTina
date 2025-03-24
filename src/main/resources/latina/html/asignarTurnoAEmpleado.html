@@ -12,13 +12,6 @@
 
     <div class="form-container">
         <form onsubmit="return validarFormulario()">
-            <label for="name">Empleado</label>
-            <select class="comboBox-empleado" id="name" name="name">
-                <option value="" selected>Selecciona un empleado</option>
-                <option value="empleado1">1</option>
-                <option value="empleado2">2</option>
-                <option value="empleado3">3</option>
-            </select>
             <label for="dateInput">Fecha</label>
             <div class="date-picker">
                 <input type="text" class="date-input" readonly placeholder="Selecciona una fecha" id="dateInput">
@@ -51,6 +44,10 @@
             <label for="turn">Selecciona un turno</label>
             <select class="turn" id="turn" name="turn" disabled>
                 <option value="" selected>Selecciona una fecha antes que el turno</option>
+            </select>
+            <label for="name">Empleado</label>
+            <select class="comboBox-empleado" id="name" name="name" disabled>
+                <option value="" selected>Selecciona un turno antes que el empleado</option>
             </select>
 
             <div class="button-container">

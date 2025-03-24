@@ -2,6 +2,7 @@ package latina.vista.comandos.factoria.imp;
 
 import latina.vista.Eventos;
 import latina.vista.comandos.Comando;
+import latina.vista.comandos.Empleado.ObtenerEmpleadosDisponiblesInterfaz;
 import latina.vista.comandos.Turno.AsignarTurnoEmpleado;
 import latina.vista.comandos.factoria.FactoriaComandos;
 import latina.vista.comandos.rol.RegistrarRol;
@@ -22,6 +23,9 @@ public class FactoriaComandosImp extends FactoriaComandos {
                 break;
             case OBTENER_TURNOS_POR_DIA:
                 comando = new ObtenerTurnosPorDiaInterfaz();
+                break;
+            case OBTENER_EMPLEADOS_DISPONIBLES:
+                comando = new ObtenerEmpleadosDisponiblesInterfaz();
                 break;
             default:
                 break;
