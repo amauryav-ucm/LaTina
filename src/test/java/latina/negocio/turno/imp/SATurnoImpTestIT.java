@@ -36,7 +36,7 @@ public class SATurnoImpTestIT {
     public void getTurnoSemanalExitoso() {
 
      //   limpiarBaseDeDatos();
-        Timestamp semanaEspecifica = Timestamp.valueOf("2025-04-15 10:30:00");
+        Timestamp semanaEspecifica = Timestamp.valueOf("2025-03-25 10:30:00");
 
         List<Turno> lista = sa.getTurnosSemana(semanaEspecifica);
         if(lista.isEmpty()){
@@ -44,6 +44,20 @@ public class SATurnoImpTestIT {
         }
         //Exito
         assertTrue(!lista.isEmpty());
+    }
+
+    @Test
+    public void getTurnoSemanalError() {
+
+        limpiarBaseDeDatos();
+        Timestamp semanaEspecifica = Timestamp.valueOf("2025-03-25 10:30:00");
+
+        List<Turno> lista = sa.getTurnosSemana(semanaEspecifica);
+        if(lista.isEmpty()){
+            System.out.println("ERROR");
+        }
+        //Exito
+        assertTrue(lista.isEmpty());
     }
 
 
