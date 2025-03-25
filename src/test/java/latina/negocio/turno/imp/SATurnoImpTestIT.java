@@ -34,7 +34,7 @@ public class SATurnoImpTestIT {
 
     @Test
     public void getTurnoSemanalExitoso() {
-
+        //aqui habria q registrar un turno que concuerde con el turno especificado
      //   limpiarBaseDeDatos();
         Timestamp semanaEspecifica = Timestamp.valueOf("2025-03-25 10:30:00");
 
@@ -48,7 +48,7 @@ public class SATurnoImpTestIT {
 
     @Test
     public void getTurnoSemanalError() {
-
+        //aqui borramos la base de datos para que no hay turnos que listar
         limpiarBaseDeDatos();
         Timestamp semanaEspecifica = Timestamp.valueOf("2025-03-25 10:30:00");
 
