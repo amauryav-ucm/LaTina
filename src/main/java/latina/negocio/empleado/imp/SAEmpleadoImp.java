@@ -17,73 +17,23 @@ public class SAEmpleadoImp implements SAEmpleado {
     public List<TEmpleado> getEmpleadosDisponibles(int idTurno) {
         EntityManager em = null;
         List<TEmpleado> listaEmpleados = new ArrayList<>();
-
         try {
             em = crearEntityManager();
+            //Obtiene los empleados de la tabla Disponibilidad que cubran la fecha y horas completas
+
+            Query q = em.createNamedQuery("Disponibilidad.findByRangoFecha");
             Turno turno = em.find(Turno.class, idTurno);
-            if (turno == null) {
-
-                return listaEmpleados;
-            }
-
-
-
-            // Buscar TODAS las disponibilidades que INTERSECTEN con el turno
-            Query q = em.createQuery("SELECT d FROM Disponibilidad d WHERE d.fechaFin > :fechaHoraIni AND d.fechaInicio < :fechaHoraFin");
-            q.setParameter("fechaHoraIni", turno.getFechaHoraInicio());
-            q.setParameter("fechaHoraFin", turno.getFechaHoraFin());
+            q.setParameter("fechaHoraIni", Timestamp.valueOf(turno.getFechaHoraInicio().toString()));
+            q.setParameter("fechaHoraFin", Timestamp.valueOf(turno.getFechaHoraFin().toString()));
             List<Disponibilidad> disponibilidades = q.getResultList();
 
-
-
-            //  Agrupar disponibilidades por empleado
-            Map<Empleado, List<Disponibilidad>> disponibilidadPorEmpleado = new HashMap<>();
-            for (Disponibilidad disp : disponibilidades) {
-                disponibilidadPorEmpleado
-                        .computeIfAbsent(disp.getEmpleado(), k -> new ArrayList<>())
-                        .add(disp);
-            }
-
-            //  Verificar si las disponibilidades de cada empleado cubren el turno completo
-            for (Map.Entry<Empleado, List<Disponibilidad>> entry : disponibilidadPorEmpleado.entrySet()) {
-                Empleado empleado = entry.getKey();
-                List<Disponibilidad> dispEmpleado = entry.getValue();
-
-                // Ordenamos disponibilidades por fecha de inicio
-                dispEmpleado.sort(Comparator.comparing(Disponibilidad::getFechaInicio));
-
-
-
-
-                // Algoritmo para verificar cobertura completa
-                Timestamp cubiertoHasta = turno.getFechaHoraInicio();
-                boolean cubreCompleto = false;
-
-                for (Disponibilidad disp : dispEmpleado) {
-                    if (disp.getFechaInicio().after(cubiertoHasta)) {
-
-                        break; // Hay un hueco sin cobertura
-                    }
-                    if (disp.getFechaFin().after(cubiertoHasta)) {
-                        cubiertoHasta = disp.getFechaFin(); // Extendemos la cobertura
-
-                    }
-                    if (!cubiertoHasta.before(turno.getFechaHoraFin())) {
-                        cubreCompleto = true;
-                        break;
-                    }
-                }
-
-                // Si el empleado cubre el turno, lo agregamos a la lista
-                if (cubreCompleto) {
-                    TEmpleado emp = new TEmpleado(empleado.getDNI(), empleado.getNombre(), empleado.getApellidos(),
-                            empleado.getTelefono(), empleado.getCorreo(), empleado.isActivo());
-                    emp.setId(empleado.getId());
-                    listaEmpleados.add(emp);
-
-                } else {
-                   // System.out.println(" El empleado NO cubre el turno.");
-                }
+            for (Disponibilidad dispAux : disponibilidades)
+            {
+                Empleado empleadoAux = dispAux.getEmpleado();
+                TEmpleado emp = new TEmpleado(empleadoAux.getDNI(), empleadoAux.getNombre(), empleadoAux.getApellidos(), empleadoAux.getTelefono(),
+                        empleadoAux.getCorreo(), empleadoAux.isActivo());
+                emp.setId(empleadoAux.getId());
+                listaEmpleados.add(emp);
             }
 
         } catch (Exception e) {
@@ -93,7 +43,6 @@ public class SAEmpleadoImp implements SAEmpleado {
                 em.close();
             }
         }
-
         return listaEmpleados;
     }
 

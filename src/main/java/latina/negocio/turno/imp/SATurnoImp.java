@@ -57,7 +57,8 @@ public class SATurnoImp implements SATurno {
             // Ahora comprobamos que los turnos asignados al empleado no choquen con el nuevo
             List<Turno> listaTurnos = empleado.getTurno();
             for (Turno turnoEmp : listaTurnos) {
-                if (turnoEmp.getFechaHoraInicio().before(turno.getFechaHoraFin()) || turno.getFechaHoraInicio().before(turno.getFechaHoraFin())) {
+                if ((turnoEmp.getFechaHoraInicio().before(turno.getFechaHoraFin()) && turnoEmp.getFechaHoraFin().after(turno.getFechaHoraFin()))
+                        || (turno.getFechaHoraInicio().before(turnoEmp.getFechaHoraFin()) && turno.getFechaHoraInicio().after(turnoEmp.getFechaHoraInicio()) )) {
                     tx.rollback();
                     return -3;
                 }
@@ -66,6 +67,8 @@ public class SATurnoImp implements SATurno {
             // Se asigna el turno al empleado
             turno.setEmpleado(empleado);
 
+
+            /*
             // Aquí modificamos la disponibilidad del empleado, si está mal, quitar esta parte
             //------------------------------------------------------------------------------------------
             // Primero, combinamos todas las disponibilidades consecutivas
@@ -87,10 +90,14 @@ public class SATurnoImp implements SATurno {
                 }
             }
 
+            */
+
 // Ahora procesamos las disponibilidades combinadas
-            for (Disponibilidad d : listaDisponibilidades) {
-                // Verificamos si hay una superposición entre el turno y la disponibilidad
-                if (d.getFechaInicio().before(turno.getFechaHoraFin()) && d.getFechaFin().after(turno.getFechaHoraInicio())) {
+            int i = 0;
+            boolean encontrado = false;
+            while(i < listaDisponibilidades.size() && !encontrado) {
+                Disponibilidad d = listaDisponibilidades.get(i);
+                if ((d.getFechaInicio().equals(turno.getFechaHoraInicio()) || d.getFechaInicio().before(turno.getFechaHoraInicio())) && (d.getFechaFin().after(turno.getFechaHoraFin()) || d.getFechaFin().equals(turno.getFechaHoraFin()))) {
 
                     // Caso 1: La disponibilidad se cubre completamente con el turno (eliminación de la disponibilidad)
                     if (d.getFechaInicio().equals(turno.getFechaHoraInicio()) && d.getFechaFin().equals(turno.getFechaHoraFin())) {
@@ -119,10 +126,10 @@ public class SATurnoImp implements SATurno {
                         d.setFechaFin(turno.getFechaHoraInicio());
                         em.persist(d);  // Persistir la disponibilidad recortada
                     }
+                    encontrado = true;
                 }
+                i++;
             }
-
-
 
 //--------------------------------------------------------------------------------------
             tx.commit();

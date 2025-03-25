@@ -10,7 +10,9 @@ import java.util.List;
 @Entity
 @NamedQueries({
         @NamedQuery(name = "Empleado.findByDNI", query = "select obj from Empleado obj where :DNI = obj.DNI "),
-        @NamedQuery(name = "Empleado.findByCorreo", query = "select obj from Empleado obj where :correo = obj.correo ")
+        @NamedQuery(name = "Empleado.findByCorreo", query = "select obj from Empleado obj where :correo = obj.correo "),
+        @NamedQuery(name = "Disponibilidad.findByRangoFecha",
+                query = "SELECT d FROM Disponibilidad d WHERE d.fechaInicio <= :fechaHoraIni AND d.fechaFin >= :fechaHoraFin")
 })
 
 public class Empleado {
