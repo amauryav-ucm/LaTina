@@ -96,14 +96,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 let today = new Date();
                 today.setHours(0, 0, 0, 0);
                 // Llamar a la función para cargar los turnos dinámicamente
+
+                document.getElementById("name").disabled = true;
+                document.getElementById("name").innerHTML = '<option value="" selected>Selecciona un turno antes que el empleado</option>';
+
                 if (selectedDate >= today) {
                     cargarTurnos(dateInput.value);
                 }
                 else
                 {
-                    mostrarMensaje("Elige una fecha actual o posterior.");
+                    mostrarMensaje("Elige una fecha actual o posterior");
                     dateInput.value = "";
                     selectedDate = null;
+                    document.getElementById("turn").disabled = true;
+                    document.getElementById("turn").innerHTML = '<option value="" selected>Selecciona una fecha antes que el turno</option>';
                 }
 
                 // Actualizar la visualización del calendario
@@ -130,7 +136,20 @@ document.addEventListener('DOMContentLoaded', function() {
     comboBox.addEventListener("change", function(event) {
         // Accede al valor seleccionado
         var selectedValue = event.target.value;
-        cargarEmpleados(selectedValue);
+        if(selectedValue != ""){
+            document.getElementById("turn").classList.remove("error");
+            cargarEmpleados(selectedValue);
+        }
+        else{
+            document.getElementById("name").disabled = true;
+            document.getElementById("name").innerHTML = '<option value="" selected>Selecciona un turno antes que el empleado</option>';
+        }
+    });
+
+    var comboBoxEmpleados = document.getElementById("name");
+    comboBoxEmpleados.addEventListener("change", function(event){
+        if(selectedValue != "")
+            document.getElementById("name").classList.remove("error");
     });
 });
 
@@ -141,23 +160,23 @@ function validarFormulario() {
     let isValid = true; // Flag para saber si hay errores
 
     // Validación del select de empleados
-    if (empleadoSelect.value.trim() === "") {
+    if (empleadoSelect.value === "") {
         empleadoSelect.classList.add("error");
         isValid = false;
     } else {
         empleadoSelect.classList.remove("error");
     }
 
-    // Validación del input de fecha
+    /*// Validación del input de fecha
     if (dateInput.value.trim() === "" || empleadoSelect.value.trim() === "") {
-        dateInput.classList.add("error");
+        //dateInput.classList.add("error");
         isValid = false;
     } else {
         dateInput.classList.remove("error");
-    }
+    }*/
 
     // Validación del turno
-    if (turnInput.value.trim() === "" || dateInput.value.trim() === "") {
+    if (turnInput.value === "") {
         turnInput.classList.add("error");
         isValid = false;
     } else {
@@ -165,7 +184,7 @@ function validarFormulario() {
     }
 
     if (!isValid) {
-        alert("Por favor, completa todos los campos.");
+        mostrarMensaje("Por favor, completa todos los campos.");
     }
 
     return isValid;
@@ -181,7 +200,7 @@ function recogerTurno() {
     empleado.classList.remove("error");
     fecha.classList.remove("error");
     turnoSeleccionado.classList.remove("error");
-    cerrarMensaje(); // Evitar que el mensaje predeterminado se muestre si hay error
+    //cerrarMensaje(); // Evitar que el mensaje predeterminado se muestre si hay error
 
     // Verificar si los campos están vacíos
     let hayError = false;
@@ -245,7 +264,7 @@ function enviarTurnoAJava(turno_empleado) {
 function cargarEmpleados(idTurno)
 {
     if(!idTurno) return;
-    //document.getElementById("name").innerHTML = '<option value="" selected>Cargando empleados disponibles...</option>';
+    document.getElementById("name").innerHTML = '<option value="" selected>Cargando empleados disponibles...</option>';
     document.getElementById("name").disabled = true;
     window.java.accion("OBTENER_EMPLEADOS_DISPONIBLES", idTurno);
 }
@@ -268,13 +287,13 @@ function cargarEmpleadosAux(empleado, id) {
 
      if (firstOption) {
          firstOption.textContent = "Selecciona un empleado"; // Cambiar el texto de la cabecera
-         firstOption.value = "Selecciona un empleado"; // Cambiar el valor si es necesario
+         firstOption.value = ""; // Cambiar el valor si es necesario
      }
   }
 
 function cargarTurnos(fecha) {
      if (!fecha) return; // Si no hay fecha, no hacer nada
-     //document.getElementById("turn").innerHTML = '<option value="" selected>Cargando turnos...</option>';
+     document.getElementById("turn").innerHTML = '<option value="" selected>Cargando turnos...</option>';
      document.getElementById("turn").disabled = true;
 
      //Llamamos a la función de Java para obtener turnos
@@ -301,7 +320,7 @@ function cargarTurnos(fecha) {
 
     if (firstOption) {
         firstOption.textContent = "Selecciona un turno"; // Cambiar el texto de la cabecera
-        firstOption.value = "Selecciona un turno"; // Cambiar el valor si es necesario
+        firstOption.value = ""; // Cambiar el valor si es necesario
     }
  }
 
