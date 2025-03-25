@@ -92,11 +92,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 dateInput.value = formatDate(selectedDate);
                 calendarDropdown.classList.remove('open');
 
-                // Habilita el campo de turno cuando se selecciona una fecha
-                document.getElementById("turn").disabled = false;
-
+                //Consigo la fecha de hoy sin horas
+                let today = new Date();
+                today.setHours(0, 0, 0, 0);
                 // Llamar a la función para cargar los turnos dinámicamente
-                cargarTurnos(dateInput.value);
+                if (selectedDate >= today) {
+                    cargarTurnos(dateInput.value);
+                }
+                else
+                {
+                    mostrarMensaje("Elige una fecha actual o posterior.");
+                }
 
                 // Actualizar la visualización del calendario
                 generateCalendar(month, year);
