@@ -245,7 +245,7 @@ function enviarTurnoAJava(turno_empleado) {
 function cargarEmpleados(idTurno)
 {
     if(!idTurno) return;
-    document.getElementById("name").innerHTML = '<option value="" selected>Cargando empleados disponibles...</option>';
+    //document.getElementById("name").innerHTML = '<option value="" selected>Cargando empleados disponibles...</option>';
     document.getElementById("name").disabled = true;
     window.java.accion("OBTENER_EMPLEADOS_DISPONIBLES", idTurno);
 }
@@ -274,13 +274,14 @@ function cargarEmpleadosAux(empleado, id) {
 
 function cargarTurnos(fecha) {
      if (!fecha) return; // Si no hay fecha, no hacer nada
-
-     document.getElementById("turn").innerHTML = '<option value="" selected>Cargando turnos...</option>';
+     //document.getElementById("turn").innerHTML = '<option value="" selected>Cargando turnos...</option>';
      document.getElementById("turn").disabled = true;
 
      //Llamamos a la función de Java para obtener turnos
      window.java.accion("OBTENER_TURNOS_POR_DIA", fecha);
  }
+
+
 
  function cargarTurnosAux(turno, id) {
      if (turno) {
