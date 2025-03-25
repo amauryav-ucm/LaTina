@@ -51,7 +51,7 @@ public class SATurnoImpTestsIT {
      * Se persiste un turno sin asignar y se comprueba que tras asignar, el turno queda asociado al empleado y se retorna 1.
      */
     @Test
-    public void asignacionTurnoExitosa() {
+    public void asignacionTurnoExitosaDispExacta() {
         // 1. Crear y persistir un empleado.
         EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
@@ -70,9 +70,189 @@ public class SATurnoImpTestsIT {
         // Suponemos turno mañana de 10:00 a 12:00.
         Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
         Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
-        // Disponibilidad de 09:00 a 13:00.
-        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(9).withMinute(0));
-        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).withMinute(0));
+        // Disponibilidad de 10:00 a 12:00.
+        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
+        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        Disponibilidad disp = new Disponibilidad(emp, dispInicio, dispFin);
+        em.persist(disp);
+        em.getTransaction().commit();
+        em.close();
+
+        // 3. Crear y persistir un Rol (necesario para el Turno) y el Turno.
+        em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+        Rol rol = new Rol();
+        rol.setNombre("ROLTEST");
+        rol.setSalario(10);
+        rol.setActivo(true);
+        em.persist(rol);
+
+        Turno turno = new Turno();
+        turno.setFechaHoraInicio(turnoInicio);
+        turno.setFechaHoraFin(turnoFin);
+        turno.setEmpleado(null);
+        turno.setRol(rol);
+        em.persist(turno);
+        em.getTransaction().commit();
+        int turnoId = turno.getId();
+        int empId = emp.getId();
+        em.close();
+
+        // 4. Llamar al SA para asignar el turno.
+        int result = sa.asignarTurno(turnoId, empId);
+        assertEquals(1, result);
+
+        // 5. Verificar en la BD que el turno quedó asignado al empleado.
+        em = EMFContainer.getInstance().getEMF().createEntityManager();
+        Turno turnoAsignado = em.find(Turno.class, turnoId);
+        assertNotNull(turnoAsignado.getEmpleado());
+        assertEquals(empId, turnoAsignado.getEmpleado().getId());
+        em.close();
+    }
+
+    @Test
+    public void asignacionTurnoExitosaDispIzq() {
+        // 1. Crear y persistir un empleado.
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+        Empleado emp = new Empleado();
+        emp.setDNI("12345678A");  // Asignamos DNI
+        emp.setNombre("Empleado1");
+        emp.setCorreo("emp1@test.com");
+        emp.setActivo(true);
+        em.persist(emp);
+        em.getTransaction().commit();
+        em.close();
+
+        // 2. Crear y persistir una Disponibilidad que cubra el turno.
+        em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+        // Suponemos turno mañana de 10:00 a 12:00.
+        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
+        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        // Disponibilidad de 10:00 a 14:00.
+        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
+        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(14).withMinute(0));
+        Disponibilidad disp = new Disponibilidad(emp, dispInicio, dispFin);
+        em.persist(disp);
+        em.getTransaction().commit();
+        em.close();
+
+        // 3. Crear y persistir un Rol (necesario para el Turno) y el Turno.
+        em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+        Rol rol = new Rol();
+        rol.setNombre("ROLTEST");
+        rol.setSalario(10);
+        rol.setActivo(true);
+        em.persist(rol);
+
+        Turno turno = new Turno();
+        turno.setFechaHoraInicio(turnoInicio);
+        turno.setFechaHoraFin(turnoFin);
+        turno.setEmpleado(null);
+        turno.setRol(rol);
+        em.persist(turno);
+        em.getTransaction().commit();
+        int turnoId = turno.getId();
+        int empId = emp.getId();
+        em.close();
+
+        // 4. Llamar al SA para asignar el turno.
+        int result = sa.asignarTurno(turnoId, empId);
+        assertEquals(1, result);
+
+        // 5. Verificar en la BD que el turno quedó asignado al empleado.
+        em = EMFContainer.getInstance().getEMF().createEntityManager();
+        Turno turnoAsignado = em.find(Turno.class, turnoId);
+        assertNotNull(turnoAsignado.getEmpleado());
+        assertEquals(empId, turnoAsignado.getEmpleado().getId());
+        em.close();
+    }
+
+    @Test
+    public void asignacionTurnoExitosaDispDcha() {
+        // 1. Crear y persistir un empleado.
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+        Empleado emp = new Empleado();
+        emp.setDNI("12345678A");  // Asignamos DNI
+        emp.setNombre("Empleado1");
+        emp.setCorreo("emp1@test.com");
+        emp.setActivo(true);
+        em.persist(emp);
+        em.getTransaction().commit();
+        em.close();
+
+        // 2. Crear y persistir una Disponibilidad que cubra el turno.
+        em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+        // Suponemos turno mañana de 10:00 a 12:00.
+        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
+        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        // Disponibilidad de 8:00 a 12:00.
+        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(8).withMinute(0));
+        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        Disponibilidad disp = new Disponibilidad(emp, dispInicio, dispFin);
+        em.persist(disp);
+        em.getTransaction().commit();
+        em.close();
+
+        // 3. Crear y persistir un Rol (necesario para el Turno) y el Turno.
+        em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+        Rol rol = new Rol();
+        rol.setNombre("ROLTEST");
+        rol.setSalario(10);
+        rol.setActivo(true);
+        em.persist(rol);
+
+        Turno turno = new Turno();
+        turno.setFechaHoraInicio(turnoInicio);
+        turno.setFechaHoraFin(turnoFin);
+        turno.setEmpleado(null);
+        turno.setRol(rol);
+        em.persist(turno);
+        em.getTransaction().commit();
+        int turnoId = turno.getId();
+        int empId = emp.getId();
+        em.close();
+
+        // 4. Llamar al SA para asignar el turno.
+        int result = sa.asignarTurno(turnoId, empId);
+        assertEquals(1, result);
+
+        // 5. Verificar en la BD que el turno quedó asignado al empleado.
+        em = EMFContainer.getInstance().getEMF().createEntityManager();
+        Turno turnoAsignado = em.find(Turno.class, turnoId);
+        assertNotNull(turnoAsignado.getEmpleado());
+        assertEquals(empId, turnoAsignado.getEmpleado().getId());
+        em.close();
+    }
+
+    @Test
+    public void asignacionTurnoExitosaDispEntreMedias() {
+        // 1. Crear y persistir un empleado.
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+        Empleado emp = new Empleado();
+        emp.setDNI("12345678A");  // Asignamos DNI
+        emp.setNombre("Empleado1");
+        emp.setCorreo("emp1@test.com");
+        emp.setActivo(true);
+        em.persist(emp);
+        em.getTransaction().commit();
+        em.close();
+
+        // 2. Crear y persistir una Disponibilidad que cubra el turno.
+        em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+        // Suponemos turno mañana de 10:00 a 12:00.
+        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
+        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        // Disponibilidad de 8:00 a 14:00.
+        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(8).withMinute(0));
+        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(14).withMinute(0));
         Disponibilidad disp = new Disponibilidad(emp, dispInicio, dispFin);
         em.persist(disp);
         em.getTransaction().commit();

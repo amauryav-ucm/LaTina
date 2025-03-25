@@ -29,6 +29,11 @@ public class SATurnoImp implements SATurno {
             Turno turno = em.find(Turno.class, idTurno);
             Empleado empleado = em.find(Empleado.class, idEmpleado);
 
+            if (turno == null || empleado == null) {
+                tx.rollback();
+                return -4;
+            }
+
             // Primero comprobamos que el turno está dentro de la disponibilidad del empleado
             // Usamos un algoritmo voraz para tratar de llenar el turno con las disponibilidades
            // Timestamp cubiertoHasta = turno.getFechaHoraInicio();
@@ -129,6 +134,10 @@ public class SATurnoImp implements SATurno {
                     encontrado = true;
                 }
                 i++;
+            }
+
+            if(!encontrado) {
+                return -2;
             }
 
 //--------------------------------------------------------------------------------------

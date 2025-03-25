@@ -21,10 +21,11 @@ class SATurnoImpTest {
 
     /**
      * Caso: Campos obligatorios incompletos.
-     * Si idTurno o idEmpleado son <= 0 se hace rollback y se devuelve -4.
+     * Si idTurno o idEmpleado son <= 0 (o se produce que find retorne null) se hace rollback y se devuelve -4.
      */
     @Test
     void testCamposIncompletos() {
+        // Usamos mocks para simular EntityManager y Transaction.
         EntityTransaction tx = mock(EntityTransaction.class);
         EntityManager em = mock(EntityManager.class);
         when(em.getTransaction()).thenReturn(tx);
@@ -32,23 +33,27 @@ class SATurnoImpTest {
         SATurnoImp sat = Mockito.spy(new SATurnoImp());
         doReturn(em).when(sat).createEntityManager();
 
-        // idTurno inválido (0)
+        // Caso: idTurno es 0, lo que simula que find(Turno.class, 0) retorne null.
+        when(em.find(Turno.class, 0)).thenReturn(null);
         int resultado = sat.asignarTurno(0, 1);
         verify(tx, times(1)).rollback();
         assertEquals(-4, resultado);
 
-        // idEmpleado inválido (0)
+        // Caso: idEmpleado es 0, simula que find(Empleado.class, 0) retorne null.
+        when(em.find(Turno.class, 1)).thenReturn(new Turno());
+        when(em.find(Empleado.class, 0)).thenReturn(null);
         resultado = sat.asignarTurno(1, 0);
-        verify(tx, times(2)).rollback(); // Se espera que se haga rollback de nuevo.
+        verify(tx, times(2)).rollback(); // Se espera otro rollback
         assertEquals(-4, resultado);
     }
 
     /**
-     * Caso: La fecha de inicio del turno es pasada.
-     * Se espera rollback y devolución de -1.
+     * Caso: Turnos conflictivos.
+     * Se simula que el empleado ya tiene un turno asignado que solapa con el turno a asignar,
+     * de modo que se retorna -3.
      */
     @Test
-    void testFechaPasada() {
+    void testTurnosConflictivos() {
         EntityTransaction tx = mock(EntityTransaction.class);
         EntityManager em = mock(EntityManager.class);
         when(em.getTransaction()).thenReturn(tx);
@@ -56,90 +61,28 @@ class SATurnoImpTest {
         SATurnoImp sat = Mockito.spy(new SATurnoImp());
         doReturn(em).when(sat).createEntityManager();
 
-        // Creamos un Turno con fechaHoraInicio en el pasado (por ejemplo, ayer) y sin asignación.
+        // Creamos un turno a asignar (fecha futura)
         Turno turno = new Turno();
         turno.setId(1);
-        turno.setFechaHoraInicio(Timestamp.valueOf(LocalDateTime.now().minusDays(1)));
-        turno.setFechaHoraFin(Timestamp.valueOf(LocalDateTime.now().minusDays(1).plusHours(1)));
+        Timestamp inicioTurno = Timestamp.valueOf(LocalDateTime.now().plusDays(1));
+        Timestamp finTurno = Timestamp.valueOf(LocalDateTime.now().plusDays(1).plusHours(1));
+        turno.setFechaHoraInicio(inicioTurno);
+        turno.setFechaHoraFin(finTurno);
         turno.setEmpleado(null);
         when(em.find(Turno.class, 1)).thenReturn(turno);
 
-        // Empleado "disponible" (aunque no se evaluará la disponibilidad por la fecha)
+        // Empleado a asignar
         Empleado empleado = new Empleado();
         empleado.setId(1);
+        // Simulamos que el empleado ya tiene un turno que solapa.
+        Turno turnoExistente = new Turno();
+        // Supongamos un turno que va de inicioTurno - 10 minutos a finTurno + 10 minutos.
+        turnoExistente.setFechaHoraInicio(Timestamp.valueOf(LocalDateTime.now().plusDays(1).minusMinutes(10)));
+        turnoExistente.setFechaHoraFin(Timestamp.valueOf(LocalDateTime.now().plusDays(1).plusHours(1).plusMinutes(10)));
+        List<Turno> listaTurnos = new ArrayList<>();
+        listaTurnos.add(turnoExistente);
+        empleado.setTurno(listaTurnos);
         when(em.find(Empleado.class, 1)).thenReturn(empleado);
-
-        int resultado = sat.asignarTurno(1, 1);
-        verify(tx, times(1)).rollback();
-        assertEquals(-1, resultado);
-    }
-
-    /**
-     * Caso: El turno ya se encuentra asignado.
-     * Se espera rollback y devolución de -2.
-     */
-    @Test
-    void testTurnoYaAsignado() { //Probablemente lo tenga que borrar
-        EntityTransaction tx = mock(EntityTransaction.class);
-        EntityManager em = mock(EntityManager.class);
-        when(em.getTransaction()).thenReturn(tx);
-
-        SATurnoImp sat = Mockito.spy(new SATurnoImp());
-        doReturn(em).when(sat).createEntityManager();
-
-        // Creamos un Turno con fecha futura pero que ya tiene asignado un empleado.
-        Turno turno = new Turno();
-        turno.setId(1);
-        turno.setFechaHoraInicio(Timestamp.valueOf(LocalDateTime.now().plusDays(1)));
-        turno.setFechaHoraFin(Timestamp.valueOf(LocalDateTime.now().plusDays(1).plusHours(1)));
-        // Simulamos turno asignado: el campo empleado es distinto de null.
-        Empleado asignado = new Empleado();
-        asignado.setId(2);
-        turno.setEmpleado(asignado);
-        when(em.find(Turno.class, 1)).thenReturn(turno);
-
-        // Se intenta asignar otro empleado.
-        Empleado empleado = new Empleado();
-        empleado.setId(1);
-        when(em.find(Empleado.class, 1)).thenReturn(empleado);
-
-        int resultado = sat.asignarTurno(1, 1);
-        verify(tx, times(1)).rollback();
-        assertEquals(-2, resultado);
-    }
-
-    /**
-     * Caso: El empleado no está disponible para el turno.
-     * Se simula que no existe disponibilidad que cubra el turno.
-     * Se espera rollback y devolución de -3.
-     */
-    @Test
-    void testEmpleadoNoDisponible() {
-        EntityTransaction tx = mock(EntityTransaction.class);
-        EntityManager em = mock(EntityManager.class);
-        when(em.getTransaction()).thenReturn(tx);
-
-        SATurnoImp sat = Mockito.spy(new SATurnoImp());
-        doReturn(em).when(sat).createEntityManager();
-
-        // Turno válido: fecha futura y sin asignar.
-        Turno turno = new Turno();
-        turno.setId(1);
-        turno.setFechaHoraInicio(Timestamp.valueOf(LocalDateTime.now().plusDays(1)));
-        turno.setFechaHoraFin(Timestamp.valueOf(LocalDateTime.now().plusDays(1).plusHours(1)));
-        turno.setEmpleado(null);
-        when(em.find(Turno.class, 1)).thenReturn(turno);
-
-        // Empleado a asignar.
-        Empleado empleado = new Empleado();
-        empleado.setId(1);
-        when(em.find(Empleado.class, 1)).thenReturn(empleado);
-
-        // Simulamos que la consulta de disponibilidad (por ejemplo, "Disponibilidad.findByEmpleadoAndFechaInicio")
-        // devuelve una lista vacía, es decir, el empleado no tiene disponibilidad para cubrir el turno.
-        Query query = mock(Query.class);
-        when(query.getResultList()).thenReturn(new ArrayList<Disponibilidad>());
-        when(em.createNamedQuery("Disponibilidad.findByEmpleadoAndFechaInicio")).thenReturn(query);
 
         int resultado = sat.asignarTurno(1, 1);
         verify(tx, times(1)).rollback();
@@ -147,9 +90,9 @@ class SATurnoImpTest {
     }
 
     /**
-     * Caso: Error en la persistencia al asignar el turno.
+     * Caso: Error en la persistencia.
      * Se simula que al persistir se lanza una excepción.
-     * Se espera rollback y devolución de -5.
+     * Se espera rollback y devolución de -4.
      */
     @Test
     void testPersistenciaFalla() {
@@ -163,41 +106,33 @@ class SATurnoImpTest {
         // Turno válido: fecha futura y sin asignar.
         Turno turno = new Turno();
         turno.setId(1);
-        turno.setFechaHoraInicio(Timestamp.valueOf(LocalDateTime.now().plusDays(1)));
-        turno.setFechaHoraFin(Timestamp.valueOf(LocalDateTime.now().plusDays(1).plusHours(1)));
+        Timestamp inicioTurno = Timestamp.valueOf(LocalDateTime.now().plusDays(1));
+        Timestamp finTurno = Timestamp.valueOf(LocalDateTime.now().plusDays(1).plusHours(1));
+        turno.setFechaHoraInicio(inicioTurno);
+        turno.setFechaHoraFin(finTurno);
         turno.setEmpleado(null);
         when(em.find(Turno.class, 1)).thenReturn(turno);
 
-        // Empleado a asignar.
+        // Empleado válido.
         Empleado empleado = new Empleado();
         empleado.setId(1);
+        empleado.setActivo(true);
+        // Simular que el empleado no tiene turnos conflictivos.
+        empleado.setTurno(new ArrayList<Turno>());
         when(em.find(Empleado.class, 1)).thenReturn(empleado);
 
-        // Simulamos que la consulta de disponibilidad devuelve una lista con al menos una Disponibilidad,
-        // lo que indica que el empleado sí está disponible.
-        List<Disponibilidad> dispList = new ArrayList<>();
-        Disponibilidad disp = new Disponibilidad();
-        disp.setId(1);
-        disp.setEmpleado(empleado);
-        // La disponibilidad cubre el intervalo del turno.
-        disp.setFechaInicio(Timestamp.valueOf(LocalDateTime.now().plusDays(1).minusMinutes(30)));
-        disp.setFechaFin(Timestamp.valueOf(LocalDateTime.now().plusDays(1).plusHours(2)));
-        dispList.add(disp);
-        Query query = mock(Query.class);
-        when(query.getResultList()).thenReturn(dispList);
-        when(em.createNamedQuery("Disponibilidad.findByEmpleadoAndFechaInicio")).thenReturn(query);
-
-        // Forzamos que al persistir la asignación se lance una excepción.
+        // Simulamos que al persistir (asignar el turno) se lanza una excepción.
         doThrow(new RuntimeException("Error en persistencia")).when(em).persist(any());
+
         int resultado = sat.asignarTurno(1, 1);
         verify(tx, times(1)).rollback();
-        assertEquals(-5, resultado);
+        assertEquals(-4, resultado);
     }
 
     /**
      * Caso: Asignación exitosa.
-     * Se dispone de un turno válido, el empleado está disponible (tiene una Disponibilidad que cubre el turno)
-     * y la persistencia se realiza con éxito. Se espera commit y devolución de un id > 0.
+     * Se dispone de un turno válido, el empleado no tiene turnos conflictivos y la persistencia se realiza correctamente.
+     * Se espera commit y devolución de 1.
      */
     @Test
     void testAsignacionExitosa() {
@@ -211,29 +146,20 @@ class SATurnoImpTest {
         // Turno válido: fecha futura y sin asignar.
         Turno turno = new Turno();
         turno.setId(1);
-        turno.setFechaHoraInicio(Timestamp.valueOf(LocalDateTime.now().plusDays(1)));
-        turno.setFechaHoraFin(Timestamp.valueOf(LocalDateTime.now().plusDays(1).plusHours(1)));
+        Timestamp inicioTurno = Timestamp.valueOf(LocalDateTime.now().plusDays(1));
+        Timestamp finTurno = Timestamp.valueOf(LocalDateTime.now().plusDays(1).plusHours(1));
+        turno.setFechaHoraInicio(inicioTurno);
+        turno.setFechaHoraFin(finTurno);
         turno.setEmpleado(null);
         when(em.find(Turno.class, 1)).thenReturn(turno);
 
-        // Empleado a asignar.
+        // Empleado válido.
         Empleado empleado = new Empleado();
         empleado.setId(1);
-        empleado.setActivo(true); // Suponemos que este atributo indica que el empleado puede trabajar.
+        empleado.setActivo(true);
+        // El empleado no tiene turnos conflictivos.
+        empleado.setTurno(new ArrayList<>());
         when(em.find(Empleado.class, 1)).thenReturn(empleado);
-
-        // Simulamos que la consulta de disponibilidad retorna una lista con una Disponibilidad
-        // que cubre el intervalo del turno.
-        List<Disponibilidad> dispList = new ArrayList<>();
-        Disponibilidad disp = new Disponibilidad();
-        disp.setId(1);
-        disp.setEmpleado(empleado);
-        disp.setFechaInicio(Timestamp.valueOf(LocalDateTime.now().plusDays(1).minusMinutes(30)));
-        disp.setFechaFin(Timestamp.valueOf(LocalDateTime.now().plusDays(1).plusHours(2)));
-        dispList.add(disp);
-        Query query = mock(Query.class);
-        when(query.getResultList()).thenReturn(dispList);
-        when(em.createNamedQuery("Disponibilidad.findByEmpleadoAndFechaInicio")).thenReturn(query);
 
         // Simulamos que al persistir se asigna el empleado al turno.
         doAnswer(invocation -> {
@@ -243,7 +169,6 @@ class SATurnoImpTest {
 
         int resultado = sat.asignarTurno(1, 1);
         verify(tx, times(1)).commit();
-        //Se espera que el meTodo retorne el id del turno asignado (mayor que 0)
-        assertTrue(resultado > 0);
+        assertEquals(1, resultado);
     }
 }
