@@ -66,10 +66,6 @@ public class SATurnoImp implements SATurno {
                 }
             }
 
-            // Se asigna el turno al empleado
-            turno.setEmpleado(empleado);
-
-
             /*
             // Aquí modificamos la disponibilidad del empleado, si está mal, quitar esta parte
             //------------------------------------------------------------------------------------------
@@ -100,6 +96,9 @@ public class SATurnoImp implements SATurno {
             while(i < listaDisponibilidades.size() && !encontrado) {
                 Disponibilidad d = listaDisponibilidades.get(i);
                 if ((d.getFechaInicio().equals(turno.getFechaHoraInicio()) || d.getFechaInicio().before(turno.getFechaHoraInicio())) && (d.getFechaFin().after(turno.getFechaHoraFin()) || d.getFechaFin().equals(turno.getFechaHoraFin()))) {
+                   
+                    // Se asigna el turno al empleado
+                    turno.setEmpleado(empleado);
 
                     // Caso 1: La disponibilidad se cubre completamente con el turno (eliminación de la disponibilidad)
                     if (d.getFechaInicio().equals(turno.getFechaHoraInicio()) && d.getFechaFin().equals(turno.getFechaHoraFin())) {
