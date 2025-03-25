@@ -102,6 +102,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 else
                 {
                     mostrarMensaje("Elige una fecha actual o posterior.");
+                    dateInput.value = "";
+                    selectedDate = null;
                 }
 
                 // Actualizar la visualización del calendario
