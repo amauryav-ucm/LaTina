@@ -96,7 +96,7 @@ public class SATurnoImp implements SATurno {
             while(i < listaDisponibilidades.size() && !encontrado) {
                 Disponibilidad d = listaDisponibilidades.get(i);
                 if ((d.getFechaInicio().equals(turno.getFechaHoraInicio()) || d.getFechaInicio().before(turno.getFechaHoraInicio())) && (d.getFechaFin().after(turno.getFechaHoraFin()) || d.getFechaFin().equals(turno.getFechaHoraFin()))) {
-                   
+
                     // Se asigna el turno al empleado
                     turno.setEmpleado(empleado);
 
