@@ -15,8 +15,9 @@ import latina.negocio.empleado.Empleado;
                 query = "SELECT d FROM Disponibilidad d WHERE d.fechaFin = :fechaFin"),
         @NamedQuery(name = "Disponibilidad.findByEmpleadoAndFechaInicio",
                 query = "SELECT d FROM Disponibilidad d WHERE d.empleado = :empleado AND d.fechaInicio = :fechaInicio"),
+        /*
         @NamedQuery(name = "Disponibilidad.findByRangoFecha",
-                query = "SELECT d FROM Disponibilidad d WHERE d.fechaInicio <= :fechaHoraIni AND d.fechaFin >= :fechaHoraFin")
+                query = "SELECT d FROM Disponibilidad d WHERE d.fechaInicio <= :fechaHoraIni AND d.fechaFin >= :fechaHoraFin")*/
 })
 public class Disponibilidad {
 
