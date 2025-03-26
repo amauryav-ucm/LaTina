@@ -94,9 +94,12 @@ class SATurnoImpTest {
      * Se simula que al persistir se lanza una excepción.
      * Se espera rollback y devolución de -4.
      */
+
+
     @Test
     void testPersistenciaFalla() {
         EntityTransaction tx = mock(EntityTransaction.class);
+        when(tx.isActive()).thenReturn(true);
         EntityManager em = mock(EntityManager.class);
         when(em.getTransaction()).thenReturn(tx);
 
@@ -117,17 +120,26 @@ class SATurnoImpTest {
         Empleado empleado = new Empleado();
         empleado.setId(1);
         empleado.setActivo(true);
-        // Simular que el empleado no tiene turnos conflictivos.
-        empleado.setTurno(new ArrayList<Turno>());
+        // Inicializamos las colecciones para evitar problemas con lazy loading.
+        empleado.setTurno(new ArrayList<>());
+        ArrayList<Disponibilidad> disponibilidades = new ArrayList<>();
+        Disponibilidad disp = new Disponibilidad();
+        disp.setFechaInicio(inicioTurno);
+        disp.setFechaFin(finTurno);
+        disp.setEmpleado(empleado);
+        disponibilidades.add(disp);
+        empleado.setDisponibilidad(disponibilidades);
         when(em.find(Empleado.class, 1)).thenReturn(empleado);
 
-        // Simulamos que al persistir (asignar el turno) se lanza una excepción.
-        doThrow(new RuntimeException("Error en persistencia")).when(em).persist(any());
+        // Simulamos que al persistir el turno (actualización de la asignación) se lanza una excepción,
+        // lo que debería provocar rollback y retornar -4.
+        doThrow(new RuntimeException("Error en persistencia")).when(em).persist(turno);
 
         int resultado = sat.asignarTurno(1, 1);
-        verify(tx, times(1)).rollback();
         assertEquals(-4, resultado);
+        verify(tx, times(1)).rollback();
     }
+
 
     /**
      * Caso: Asignación exitosa.
@@ -135,7 +147,7 @@ class SATurnoImpTest {
      * Se espera commit y devolución de 1.
      */
     @Test
-    void testAsignacionExitosa() {
+    public void testAsignacionExitosa() {
         EntityTransaction tx = mock(EntityTransaction.class);
         EntityManager em = mock(EntityManager.class);
         when(em.getTransaction()).thenReturn(tx);
@@ -157,8 +169,17 @@ class SATurnoImpTest {
         Empleado empleado = new Empleado();
         empleado.setId(1);
         empleado.setActivo(true);
-        // El empleado no tiene turnos conflictivos.
+        // Inicializamos las colecciones para evitar problemas con lazy loading.
         empleado.setTurno(new ArrayList<>());
+        // Creamos una lista de disponibilidades que cubra el turno.
+        ArrayList<Disponibilidad> disponibilidades = new ArrayList<>();
+        Disponibilidad disp = new Disponibilidad();
+        // Suponemos que la disponibilidad comienza a la hora de inicio y termina a la hora de fin del turno.
+        disp.setFechaInicio(inicioTurno);
+        disp.setFechaFin(finTurno);
+        disp.setEmpleado(empleado);
+        disponibilidades.add(disp);
+        empleado.setDisponibilidad(disponibilidades);
         when(em.find(Empleado.class, 1)).thenReturn(empleado);
 
         // Simulamos que al persistir se asigna el empleado al turno.
@@ -168,7 +189,8 @@ class SATurnoImpTest {
         }).when(em).persist(any());
 
         int resultado = sat.asignarTurno(1, 1);
-        verify(tx, times(1)).commit();
         assertEquals(1, resultado);
+        verify(tx, times(1)).commit();
     }
+
 }

@@ -99,6 +99,7 @@ public class SATurnoImp implements SATurno {
 
                     // Se asigna el turno al empleado
                     turno.setEmpleado(empleado);
+                    em.persist(turno);
 
                     // Caso 1: La disponibilidad se cubre completamente con el turno (eliminación de la disponibilidad)
                     if (d.getFechaInicio().equals(turno.getFechaHoraInicio()) && d.getFechaFin().equals(turno.getFechaHoraFin())) {
@@ -133,6 +134,7 @@ public class SATurnoImp implements SATurno {
             }
 
             if(!encontrado) {
+                tx.rollback();
                 return -2;
             }
 
