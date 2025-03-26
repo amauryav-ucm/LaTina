@@ -3,8 +3,6 @@ package latina.negocio.turno.imp;
 import jakarta.persistence.EntityManager;
 import latina.integracion.emfc.EMFContainer;
 import latina.negocio.factoria.SAFactory;
-import latina.negocio.rol.Rol;
-import latina.negocio.rol.TRol;
 import latina.negocio.turno.SATurno;
 import latina.negocio.turno.Turno;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,6 +57,7 @@ public class SATurnoImpTestIT {
         //Exito
         assertTrue(lista.isEmpty());
     }
+
 
 
 }
