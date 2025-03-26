@@ -136,7 +136,7 @@ class SATurnoImpTest {
         doThrow(new RuntimeException("Error en persistencia")).when(em).persist(turno);
 
         int resultado = sat.asignarTurno(1, 1);
-        assertEquals(-4, resultado);
+        assertEquals(-5, resultado);
         verify(tx, times(1)).rollback();
     }
 
@@ -147,7 +147,7 @@ class SATurnoImpTest {
      * Se espera commit y devolución de 1.
      */
     @Test
-    public void testAsignacionExitosa() {
+    public void testAsignacionExitosaExacta() {
         EntityTransaction tx = mock(EntityTransaction.class);
         EntityManager em = mock(EntityManager.class);
         when(em.getTransaction()).thenReturn(tx);
@@ -192,5 +192,210 @@ class SATurnoImpTest {
         assertEquals(1, resultado);
         verify(tx, times(1)).commit();
     }
+
+    @Test
+    public void testAsignacionExitosaIzq() {
+        // Disponibilidad: de 10:00 a 13:00
+        // Turno: de 11:00 a 13:00
+        EntityTransaction tx = mock(EntityTransaction.class);
+        EntityManager em = mock(EntityManager.class);
+        when(em.getTransaction()).thenReturn(tx);
+
+        SATurnoImp sat = Mockito.spy(new SATurnoImp());
+        doReturn(em).when(sat).createEntityManager();
+
+        // Crear turno: de 11:00 a 13:00
+        Turno turno = new Turno();
+        turno.setId(1);
+        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(11).withMinute(0));
+        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).withMinute(0));
+        turno.setFechaHoraInicio(turnoInicio);
+        turno.setFechaHoraFin(turnoFin);
+        turno.setEmpleado(null);
+        when(em.find(Turno.class, 1)).thenReturn(turno);
+
+        // Crear empleado con disponibilidad de 10:00 a 13:00
+        Empleado empleado = new Empleado();
+        empleado.setId(1);
+        empleado.setActivo(true);
+        empleado.setTurno(new ArrayList<>());
+        ArrayList<Disponibilidad> disponibilidades = new ArrayList<>();
+        Disponibilidad disp = new Disponibilidad();
+        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
+        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).withMinute(0));
+        disp.setFechaInicio(dispInicio);
+        disp.setFechaFin(dispFin);
+        disp.setEmpleado(empleado);
+        disponibilidades.add(disp);
+        empleado.setDisponibilidad(disponibilidades);
+        when(em.find(Empleado.class, 1)).thenReturn(empleado);
+
+        // Simular persist del turno (se asigna el empleado) y de la disponibilidad (caso 3: recortar la parte final)
+        doAnswer(invocation -> {
+            turno.setEmpleado(empleado);
+            return null;
+        }).when(em).persist(turno);
+
+        int resultado = sat.asignarTurno(1, 1);
+        assertEquals(1, resultado);
+        verify(tx, times(1)).commit();
+    }
+
+    @Test
+    public void testAsignacionExitosaDcha() {
+        // Disponibilidad: de 10:00 a 13:00
+        // Turno: de 10:00 a 12:00
+        EntityTransaction tx = mock(EntityTransaction.class);
+        EntityManager em = mock(EntityManager.class);
+        when(em.getTransaction()).thenReturn(tx);
+
+        SATurnoImp sat = Mockito.spy(new SATurnoImp());
+        doReturn(em).when(sat).createEntityManager();
+
+        // Crear turno: de 10:00 a 12:00
+        Turno turno = new Turno();
+        turno.setId(1);
+        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
+        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        turno.setFechaHoraInicio(turnoInicio);
+        turno.setFechaHoraFin(turnoFin);
+        turno.setEmpleado(null);
+        when(em.find(Turno.class, 1)).thenReturn(turno);
+
+        // Crear empleado con disponibilidad de 10:00 a 13:00
+        Empleado empleado = new Empleado();
+        empleado.setId(1);
+        empleado.setActivo(true);
+        empleado.setTurno(new ArrayList<>());
+        ArrayList<Disponibilidad> disponibilidades = new ArrayList<>();
+        Disponibilidad disp = new Disponibilidad();
+        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
+        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).withMinute(0));
+        disp.setFechaInicio(dispInicio);
+        disp.setFechaFin(dispFin);
+        disp.setEmpleado(empleado);
+        disponibilidades.add(disp);
+        empleado.setDisponibilidad(disponibilidades);
+        when(em.find(Empleado.class, 1)).thenReturn(empleado);
+
+        // Simular persist (Caso 2: recortar la parte inicial, es decir, se modifica la disponibilidad para que inicie en turnoFin)
+        doAnswer(invocation -> {
+            turno.setEmpleado(empleado);
+            return null;
+        }).when(em).persist(turno);
+
+        int resultado = sat.asignarTurno(1, 1);
+        assertEquals(1, resultado);
+        verify(tx, times(1)).commit();
+    }
+
+    @Test
+    public void testAsignacionExitosaEntreMedias() {
+        // Disponibilidad: de 9:00 a 13:00
+        // Turno: de 10:00 a 12:00
+        EntityTransaction tx = mock(EntityTransaction.class);
+        EntityManager em = mock(EntityManager.class);
+        when(em.getTransaction()).thenReturn(tx);
+
+        SATurnoImp sat = Mockito.spy(new SATurnoImp());
+        doReturn(em).when(sat).createEntityManager();
+
+        // Crear turno: de 10:00 a 12:00
+        Turno turno = new Turno();
+        turno.setId(1);
+        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
+        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        turno.setFechaHoraInicio(turnoInicio);
+        turno.setFechaHoraFin(turnoFin);
+        turno.setEmpleado(null);
+        when(em.find(Turno.class, 1)).thenReturn(turno);
+
+        // Crear empleado con disponibilidad de 9:00 a 13:00
+        Empleado empleado = new Empleado();
+        empleado.setId(1);
+        empleado.setActivo(true);
+        empleado.setTurno(new ArrayList<>());
+        ArrayList<Disponibilidad> disponibilidades = new ArrayList<>();
+        Disponibilidad disp = new Disponibilidad();
+        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(9).withMinute(0));
+        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).withMinute(0));
+        disp.setFechaInicio(dispInicio);
+        disp.setFechaFin(dispFin);
+        disp.setEmpleado(empleado);
+        disponibilidades.add(disp);
+        empleado.setDisponibilidad(disponibilidades);
+        when(em.find(Empleado.class, 1)).thenReturn(empleado);
+
+        // Simular persist (Caso 4: dividir la disponibilidad en dos partes)
+        doAnswer(invocation -> {
+            turno.setEmpleado(empleado);
+            return null;
+        }).when(em).persist(turno);
+
+        int resultado = sat.asignarTurno(1, 1);
+        assertEquals(1, resultado);
+        verify(tx, times(1)).commit();
+    }
+
+
+    @Test
+    public void asignacionTurnoEmpleadoNoExiste() {
+        // Simulamos EntityManager y Transaction
+        EntityTransaction tx = mock(EntityTransaction.class);
+        EntityManager em = mock(EntityManager.class);
+        when(em.getTransaction()).thenReturn(tx);
+
+        // Creamos un spy del SATurnoImp para inyectar nuestro EntityManager mockeado
+        SATurnoImp sat = Mockito.spy(new SATurnoImp());
+        doReturn(em).when(sat).createEntityManager();
+
+        // Simulamos que el turno existe
+        Turno turno = new Turno();
+        turno.setId(1);
+        Timestamp inicioTurno = Timestamp.valueOf(LocalDateTime.now().plusDays(1));
+        Timestamp finTurno = Timestamp.valueOf(LocalDateTime.now().plusDays(1).plusHours(1));
+        turno.setFechaHoraInicio(inicioTurno);
+        turno.setFechaHoraFin(finTurno);
+        turno.setEmpleado(null);
+        when(em.find(Turno.class, 1)).thenReturn(turno);
+
+        // Simulamos que el empleado NO existe
+        when(em.find(Empleado.class, 1)).thenReturn(null);
+
+        // Llamamos al SA y verificamos que retorne -4 y se haga rollback
+        int resultado = sat.asignarTurno(1, 1);
+        assertEquals(-4, resultado);
+        verify(tx, times(1)).rollback();
+    }
+
+    @Test
+    public void asignacionTurnoTurnoNoExiste() {
+        // Simulamos EntityManager y Transaction
+        EntityTransaction tx = mock(EntityTransaction.class);
+        EntityManager em = mock(EntityManager.class);
+        when(em.getTransaction()).thenReturn(tx);
+
+        // Creamos un spy del SATurnoImp para inyectar nuestro EntityManager mockeado
+        SATurnoImp sat = Mockito.spy(new SATurnoImp());
+        doReturn(em).when(sat).createEntityManager();
+
+        // Simulamos que el turno NO existe
+        when(em.find(Turno.class, 1)).thenReturn(null);
+
+        // Simulamos que el empleado existe
+        Empleado empleado = new Empleado();
+        empleado.setId(1);
+        empleado.setActivo(true);
+        // Inicializamos las colecciones para evitar problemas de lazy loading en test.
+        empleado.setTurno(new ArrayList<>());
+        empleado.setDisponibilidad(new ArrayList<>());
+        when(em.find(Empleado.class, 1)).thenReturn(empleado);
+
+        // Llamamos al SA y verificamos que retorne -4 y se haga rollback
+        int resultado = sat.asignarTurno(1, 1);
+        assertEquals(-4, resultado);
+        verify(tx, times(1)).rollback();
+    }
+
 
 }

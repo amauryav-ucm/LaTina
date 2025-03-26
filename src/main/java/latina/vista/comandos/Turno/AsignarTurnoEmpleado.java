@@ -48,7 +48,8 @@ public class AsignarTurnoEmpleado implements Comando {
            //  else if (result == -1) mensaje = "Ya existe un rol con el nombre introducido";
            // else if (result == -2) mensaje = "El empleado no está disponible para el turno";
             else if (result == -3) mensaje = "El empleado ya tiene uno o más turnos que solapan con el nuevo";
-            else if (result == -4) mensaje = "Ha ocurrido un error al asignar el turno";
+            else if (result == -4) mensaje = "El empleado o el turno no existe";
+            else if (result == -5) mensaje = "La persistencia ha fallado";
             else mensaje = "Error desconocido";
 
             WebEngine webEngine = vista.getWebView().getEngine();

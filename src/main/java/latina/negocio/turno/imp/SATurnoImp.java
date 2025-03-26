@@ -143,7 +143,7 @@ public class SATurnoImp implements SATurno {
             return 1; // Operación exitosa
         } catch (Exception e) {
             if (tx != null && tx.isActive()) tx.rollback();
-            return -4; // Error
+            return -5; // Error
         }
     }
 
