@@ -27,9 +27,9 @@ public class Empleado {
     private String correo;
     private String telefono;
     private boolean activo;
-    @OneToMany(mappedBy = "empleado")
+    @OneToMany(mappedBy = "empleado", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Disponibilidad> disponibilidad = new ArrayList<>();
-    @OneToMany(mappedBy = "empleado")
+    @OneToMany(mappedBy = "empleado", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Turno> turno = new ArrayList<>();
 
     public Empleado() {
