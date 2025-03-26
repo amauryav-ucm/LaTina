@@ -14,13 +14,14 @@ body {
     width: 100vw;
     margin: 0;
     overflow: hidden;
-    background-color: #4A90E2CC;
+    /*background-color: #4A90E2CC;*/
+    background: #DDD;
     /*background-color: #616161;*/
 }
 .form-container{
     margin-top: 30vh;
     margin-left: 0;
-    background: linear-gradient(transparent, #05BC);
+    /*background: linear-gradient(transparent, #05BC);*/
     padding-bottom: 50px;
     height: 100vh;
     width: 100vw;
@@ -81,7 +82,7 @@ input:focus {
     width: 48%;
     padding: 12px;
     /*background-color: #616161;*/
-    background-color: #4A90E2;
+    background-color: #333;
     color: white;
     font-size: 18px;
     border: none;
