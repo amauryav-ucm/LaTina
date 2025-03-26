@@ -15,17 +15,17 @@
             <!-- El contenido del calendario se integrará aquí -->
             <div class="calendar-header">
                 <div class="calendar-nav">
-                    <button id="prev-week" class="btn btn-outline-light">
-                        <i class="bi bi-chevron-left"></i> Anterior
-                    </button>
                     <button id="current-week" class="btn btn-outline-light">
-                        <i class="bi bi-calendar-check"></i> Hoy
+                        <img src="../images/icono-calendario.png" alt="Hoy" width="25" height="25" class="me-2"> Hoy
+                    </button>
+                    <button id="prev-week" class="btn btn-outline-light">
+                        <i class="bi bi-chevron-left"></i> <
                     </button>
                     <button id="next-week" class="btn btn-outline-light">
-                        Siguiente <i class="bi bi-chevron-right"></i>
+                        > <i class="bi bi-chevron-right"></i>
                     </button>
                 </div>
-                <h5 class="calendar-title" id="week-title">Semana del 22 al 28 de marzo, 2025</h5>
+                <h5 class="calendar-title" id="week-title">Semanas</h5>
             </div>
 
             <!-- Contenedor de la semana -->
@@ -34,35 +34,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal para agregar/editar turno -->
-    <div class="modal fade" id="turnoModal" tabindex="-1" aria-labelledby="turnoModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="turnoModalLabel">Agregar Turno</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="turno-form">
-                        <div class="mb-3">
-                            <label for="turno-start-time" class="form-label">Hora de inicio</label>
-                            <input type="text" class="form-control time-input" id="turno-start-time" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]" placeholder="HH:MM" required>
-
-                            <label for="turno-end-time" class="form-label">Hora de fin</label>
-                            <input type="text" class="form-control time-input" id="turno-end-time" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]" placeholder="HH:MM" required>
-                            <div id="error-message" class="error-message"></div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="save-turno">Guardar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="../bootstrap/js/bootstrap.min.js"></script>
     <script src="../js/sideBar.js"></script>
     <script src="../js/verTurnosParaGerente.js"></script>
