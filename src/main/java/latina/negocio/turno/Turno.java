@@ -100,4 +100,14 @@ public class Turno {
         return empleado != null;
     }
 
+    /**
+     * @param inicio el inicio de la ventana a comparar
+     * @param fin el final de la ventana a comparar, debe ser posterior a inicio
+     * @returns true si el turno solapa con la ventana definida por inicio y fin
+     */
+    public boolean solapaCon(Timestamp inicio, Timestamp fin){
+        // Se presupone que las horas estan bien cronologicamente
+        return !(fechaHoraInicio.after(fin) || fechaHoraFin.before(inicio) || fechaHoraInicio.equals(fin) || fechaHoraFin.equals(inicio));
+    }
+
 }

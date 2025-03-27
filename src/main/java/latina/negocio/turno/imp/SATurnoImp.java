@@ -31,65 +31,17 @@ public class SATurnoImp implements SATurno {
                 tx.rollback();
                 return -4;
             }
-
-            // Primero comprobamos que el turno está dentro de la disponibilidad del empleado
-            // Usamos un algoritmo voraz para tratar de llenar el turno con las disponibilidades
-           // Timestamp cubiertoHasta = turno.getFechaHoraInicio();
             List<Disponibilidad> listaDisponibilidades = empleado.getDisponibilidad();
             listaDisponibilidades.sort((d1, d2) -> d1.getFechaInicio().compareTo(d2.getFechaInicio()));
-
-            /*
-
-            En principio esto ya no hace falta, se comprueba antes para la Vista
-
-            for (Disponibilidad disponibilidad : listaDisponibilidades) {
-                // Hay un hueco que no se cubre
-                if (disponibilidad.getFechaInicio().after(cubiertoHasta) || !cubiertoHasta.before(turno.getFechaHoraFin()))
-                    break;
-                if (disponibilidad.getFechaFin().after(cubiertoHasta))
-                    cubiertoHasta = disponibilidad.getFechaFin();
-            }
-
-            assert cubiertoHasta != null;
-            if (cubiertoHasta.before(turno.getFechaHoraFin())) {
-                // La disponibilidad del empleado no cubre el turno
-                tx.rollback();
-                return -2;
-            }*/
 
             // Ahora comprobamos que los turnos asignados al empleado no choquen con el nuevo
             List<Turno> listaTurnos = empleado.getTurno();
             for (Turno turnoEmp : listaTurnos) {
-                if ((turnoEmp.getFechaHoraInicio().before(turno.getFechaHoraFin()) && turnoEmp.getFechaHoraFin().after(turno.getFechaHoraFin()))
-                        || (turno.getFechaHoraInicio().before(turnoEmp.getFechaHoraFin()) && turno.getFechaHoraInicio().after(turnoEmp.getFechaHoraInicio()) )) {
+                if (turnoEmp.solapaCon(turno.getFechaHoraInicio(),turno.getFechaHoraFin())) {
                     tx.rollback();
                     return -3;
                 }
             }
-
-            /*
-            // Aquí modificamos la disponibilidad del empleado, si está mal, quitar esta parte
-            //------------------------------------------------------------------------------------------
-            // Primero, combinamos todas las disponibilidades consecutivas
-            for (int i = 0; i < listaDisponibilidades.size() - 1; i++) {
-                Disponibilidad d1 = listaDisponibilidades.get(i);
-                Disponibilidad d2 = listaDisponibilidades.get(i + 1);
-
-                // Comprobar si las disponibilidades son consecutivas y se pueden combinar
-                while (d1.getFechaFin().equals(d2.getFechaInicio())) {
-                    // Combinar las dos disponibilidades en una
-                    d1.setFechaFin(d2.getFechaFin());  // El final de la primera disponibilidad es el final de la segunda
-                    em.remove(d2);  // Eliminar la segunda disponibilidad que se ha combinado con la primera
-                    listaDisponibilidades.remove(i + 1);  // Eliminar de la lista la segunda disponibilidad
-                    if (i + 1 < listaDisponibilidades.size()) {
-                        d2 = listaDisponibilidades.get(i + 1); // Obtener la siguiente disponibilidad para seguir combinando
-                    } else {
-                        break;
-                    }
-                }
-            }
-
-            */
 
 // Ahora procesamos las disponibilidades combinadas
             int i = 0;
