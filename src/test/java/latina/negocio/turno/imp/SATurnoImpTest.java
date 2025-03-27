@@ -2,18 +2,15 @@ package latina.negocio.turno.imp;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Query;
 import latina.negocio.turno.Turno;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.dispoinibilidad.Disponibilidad;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,8 +127,8 @@ class SATurnoImpTest {
         empleado.setTurno(new ArrayList<>());
         ArrayList<Disponibilidad> disponibilidades = new ArrayList<>();
         Disponibilidad disp = new Disponibilidad();
-        disp.setFechaInicio(inicioTurno);
-        disp.setFechaFin(finTurno);
+        disp.setFechaHoraInicio(inicioTurno);
+        disp.setFechaHoraFin(finTurno);
         disp.setEmpleado(empleado);
         disponibilidades.add(disp);
         empleado.setDisponibilidad(disponibilidades);
@@ -181,8 +178,8 @@ class SATurnoImpTest {
         ArrayList<Disponibilidad> disponibilidades = new ArrayList<>();
         Disponibilidad disp = new Disponibilidad();
         // Suponemos que la disponibilidad comienza a la hora de inicio y termina a la hora de fin del turno.
-        disp.setFechaInicio(inicioTurno);
-        disp.setFechaFin(finTurno);
+        disp.setFechaHoraInicio(inicioTurno);
+        disp.setFechaHoraFin(finTurno);
         disp.setEmpleado(empleado);
         disponibilidades.add(disp);
         empleado.setDisponibilidad(disponibilidades);
@@ -229,8 +226,8 @@ class SATurnoImpTest {
         Disponibilidad disp = new Disponibilidad();
         Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
         Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).truncatedTo(ChronoUnit.HOURS));
-        disp.setFechaInicio(dispInicio);
-        disp.setFechaFin(dispFin);
+        disp.setFechaHoraInicio(dispInicio);
+        disp.setFechaHoraFin(dispFin);
         disp.setEmpleado(empleado);
         disponibilidades.add(disp);
         empleado.setDisponibilidad(disponibilidades);
@@ -281,8 +278,8 @@ class SATurnoImpTest {
         Disponibilidad disp = new Disponibilidad();
         Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
         Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).truncatedTo(ChronoUnit.HOURS));
-        disp.setFechaInicio(dispInicio);
-        disp.setFechaFin(dispFin);
+        disp.setFechaHoraInicio(dispInicio);
+        disp.setFechaHoraFin(dispFin);
         disp.setEmpleado(empleado);
         disponibilidades.add(disp);
         empleado.setDisponibilidad(disponibilidades);
@@ -329,8 +326,8 @@ class SATurnoImpTest {
         Disponibilidad disp = new Disponibilidad();
         Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(9).truncatedTo(ChronoUnit.HOURS));
         Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).truncatedTo(ChronoUnit.HOURS));
-        disp.setFechaInicio(dispInicio);
-        disp.setFechaFin(dispFin);
+        disp.setFechaHoraInicio(dispInicio);
+        disp.setFechaHoraFin(dispFin);
         disp.setEmpleado(empleado);
         disponibilidades.add(disp);
         empleado.setDisponibilidad(disponibilidades);

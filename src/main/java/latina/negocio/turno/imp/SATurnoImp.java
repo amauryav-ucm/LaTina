@@ -7,7 +7,6 @@ import latina.integracion.emfc.EMFContainer;
 import latina.negocio.dispoinibilidad.Disponibilidad;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.turno.SATurno;
-import latina.negocio.turno.TTurno;
 import latina.negocio.turno.TTurnoRolEmpleado;
 import latina.negocio.turno.Turno;
 import java.time.LocalDate;
@@ -32,7 +31,7 @@ public class SATurnoImp implements SATurno {
                 return -4;
             }
             List<Disponibilidad> listaDisponibilidades = empleado.getDisponibilidad();
-            listaDisponibilidades.sort((d1, d2) -> d1.getFechaInicio().compareTo(d2.getFechaInicio()));
+            listaDisponibilidades.sort((d1, d2) -> d1.getFechaHoraInicio().compareTo(d2.getFechaHoraInicio()));
 
             // Ahora comprobamos que los turnos asignados al empleado no choquen con el nuevo
             List<Turno> listaTurnos = empleado.getTurno();
@@ -48,37 +47,37 @@ public class SATurnoImp implements SATurno {
             boolean encontrado = false;
             while(i < listaDisponibilidades.size() && !encontrado) {
                 Disponibilidad d = listaDisponibilidades.get(i);
-                if ((d.getFechaInicio().equals(turno.getFechaHoraInicio()) || d.getFechaInicio().before(turno.getFechaHoraInicio())) && (d.getFechaFin().after(turno.getFechaHoraFin()) || d.getFechaFin().equals(turno.getFechaHoraFin()))) {
+                if ((d.getFechaHoraInicio().equals(turno.getFechaHoraInicio()) || d.getFechaHoraInicio().before(turno.getFechaHoraInicio())) && (d.getFechaHoraFin().after(turno.getFechaHoraFin()) || d.getFechaHoraFin().equals(turno.getFechaHoraFin()))) {
 
                     // Se asigna el turno al empleado
                     turno.setEmpleado(empleado);
                     em.persist(turno);
 
                     // Caso 1: La disponibilidad se cubre completamente con el turno (eliminación de la disponibilidad)
-                    if (d.getFechaInicio().equals(turno.getFechaHoraInicio()) && d.getFechaFin().equals(turno.getFechaHoraFin())) {
+                    if (d.getFechaHoraInicio().equals(turno.getFechaHoraInicio()) && d.getFechaHoraFin().equals(turno.getFechaHoraFin())) {
                         em.remove(d);  // Elimina la disponibilidad completamente ocupada por el turno
                     }
                     // Caso 2: El turno solo ocupa la parte del inicio de la disponibilidad (recortar la parte inicial)
-                    else if (d.getFechaInicio().equals(turno.getFechaHoraInicio())) {
-                        d.setFechaInicio(turno.getFechaHoraFin());  // Recorta la parte de la disponibilidad que se cubre al principio
+                    else if (d.getFechaHoraInicio().equals(turno.getFechaHoraInicio())) {
+                        d.setFechaHoraInicio(turno.getFechaHoraFin());  // Recorta la parte de la disponibilidad que se cubre al principio
                         em.persist(d);  // Persistir la disponibilidad recortada
                     }
                     // Caso 3: El turno solo ocupa la parte final de la disponibilidad (recortar la parte final)
-                    else if (d.getFechaFin().equals(turno.getFechaHoraFin())) {
-                        d.setFechaFin(turno.getFechaHoraInicio());  // Recorta la parte de la disponibilidad que se cubre al final
+                    else if (d.getFechaHoraFin().equals(turno.getFechaHoraFin())) {
+                        d.setFechaHoraFin(turno.getFechaHoraInicio());  // Recorta la parte de la disponibilidad que se cubre al final
                         em.persist(d);  // Persistir la disponibilidad recortada
                     }
                     // Caso 4: El turno ocupa una parte intermedia de la disponibilidad (dividir la disponibilidad)
                     else {
                         // Creamos una nueva disponibilidad para la parte posterior al turno
                         Disponibilidad nuevaDisponibilidad = new Disponibilidad();
-                        nuevaDisponibilidad.setFechaInicio(turno.getFechaHoraFin());
-                        nuevaDisponibilidad.setFechaFin(d.getFechaFin());
+                        nuevaDisponibilidad.setFechaHoraInicio(turno.getFechaHoraFin());
+                        nuevaDisponibilidad.setFechaHoraFin(d.getFechaHoraFin());
                         nuevaDisponibilidad.setEmpleado(empleado);
                         em.persist(nuevaDisponibilidad);
 
                         // Recortamos la disponibilidad original hasta el inicio del turno
-                        d.setFechaFin(turno.getFechaHoraInicio());
+                        d.setFechaHoraFin(turno.getFechaHoraInicio());
                         em.persist(d);  // Persistir la disponibilidad recortada
                     }
                     encontrado = true;
