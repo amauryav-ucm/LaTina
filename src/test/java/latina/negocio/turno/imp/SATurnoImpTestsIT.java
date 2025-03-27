@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,11 +69,11 @@ public class SATurnoImpTestsIT {
         em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
         // Suponemos turno mañana de 10:00 a 12:00.
-        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
-        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
+        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).truncatedTo(ChronoUnit.HOURS));
         // Disponibilidad de 10:00 a 12:00.
-        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
-        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
+        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).truncatedTo(ChronoUnit.HOURS));
         Disponibilidad disp = new Disponibilidad(emp, dispInicio, dispFin);
         em.persist(disp);
         em.getTransaction().commit();
@@ -128,11 +129,11 @@ public class SATurnoImpTestsIT {
         em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
         // Suponemos turno mañana de 10:00 a 12:00.
-        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
-        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
+        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).truncatedTo(ChronoUnit.HOURS));
         // Disponibilidad de 10:00 a 14:00.
-        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
-        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(14).withMinute(0));
+        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
+        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(14).truncatedTo(ChronoUnit.HOURS));
         Disponibilidad disp = new Disponibilidad(emp, dispInicio, dispFin);
         em.persist(disp);
         em.getTransaction().commit();
@@ -188,11 +189,11 @@ public class SATurnoImpTestsIT {
         em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
         // Suponemos turno mañana de 10:00 a 12:00.
-        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
-        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
+        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).truncatedTo(ChronoUnit.HOURS));
         // Disponibilidad de 8:00 a 12:00.
-        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(8).withMinute(0));
-        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(8).truncatedTo(ChronoUnit.HOURS));
+        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).truncatedTo(ChronoUnit.HOURS));
         Disponibilidad disp = new Disponibilidad(emp, dispInicio, dispFin);
         em.persist(disp);
         em.getTransaction().commit();
@@ -248,11 +249,11 @@ public class SATurnoImpTestsIT {
         em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
         // Suponemos turno mañana de 10:00 a 12:00.
-        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
-        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
+        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).truncatedTo(ChronoUnit.HOURS));
         // Disponibilidad de 8:00 a 14:00.
-        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(8).withMinute(0));
-        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(14).withMinute(0));
+        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(8).truncatedTo(ChronoUnit.HOURS));
+        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(14).truncatedTo(ChronoUnit.HOURS));
         Disponibilidad disp = new Disponibilidad(emp, dispInicio, dispFin);
         em.persist(disp);
         em.getTransaction().commit();
@@ -313,11 +314,11 @@ public class SATurnoImpTestsIT {
         em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
         // Turno de 10:00 a 12:00.
-        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
-        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
+        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).truncatedTo(ChronoUnit.HOURS));
         // Disponibilidad de 09:00 a 11:00 (no alcanza a cubrir hasta 12:00).
-        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(9).withMinute(0));
-        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(11).withMinute(0));
+        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(9).truncatedTo(ChronoUnit.HOURS));
+        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(11).truncatedTo(ChronoUnit.HOURS));
         Disponibilidad disp = new Disponibilidad(emp, dispInicio, dispFin);
         em.persist(disp);
         em.getTransaction().commit();
@@ -373,8 +374,8 @@ public class SATurnoImpTestsIT {
         // Crear y persistir una Disponibilidad amplia.
         em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
-        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(8).withMinute(0));
-        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(18).withMinute(0));
+        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(8).truncatedTo(ChronoUnit.HOURS));
+        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(18).truncatedTo(ChronoUnit.HOURS));
         Disponibilidad disp = new Disponibilidad(emp, dispInicio, dispFin);
         em.persist(disp);
         em.getTransaction().commit();
@@ -383,8 +384,8 @@ public class SATurnoImpTestsIT {
         // Crear dos turnos: uno ya asignado (de 10:00 a 12:00) y otro nuevo que solapa (de 11:00 a 13:00).
         em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
-        Timestamp turno1Inicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
-        Timestamp turno1Fin   = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        Timestamp turno1Inicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
+        Timestamp turno1Fin   = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).truncatedTo(ChronoUnit.HOURS));
         Turno turno1 = new Turno();
         turno1.setFechaHoraInicio(turno1Inicio);
         turno1.setFechaHoraFin(turno1Fin);
@@ -392,8 +393,8 @@ public class SATurnoImpTestsIT {
         turno1.setRol(rol);
         em.persist(turno1);
         // Nuevo turno conflictivo: de 11:00 a 13:00.
-        Timestamp turno2Inicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(11).withMinute(0));
-        Timestamp turno2Fin   = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).withMinute(0));
+        Timestamp turno2Inicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(11).truncatedTo(ChronoUnit.HOURS));
+        Timestamp turno2Fin   = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).truncatedTo(ChronoUnit.HOURS));
         Turno turno2 = new Turno();
         turno2.setFechaHoraInicio(turno2Inicio);
         turno2.setFechaHoraFin(turno2Fin);
@@ -448,8 +449,8 @@ public class SATurnoImpTestsIT {
         rol.setSalario(10);
         rol.setActivo(true);
         em.persist(rol);
-        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
-        Timestamp turnoFin   = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
+        Timestamp turnoFin   = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).truncatedTo(ChronoUnit.HOURS));
         Turno turno = new Turno();
         turno.setFechaHoraInicio(turnoInicio);
         turno.setFechaHoraFin(turnoFin);
