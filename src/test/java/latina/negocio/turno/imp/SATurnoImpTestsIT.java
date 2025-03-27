@@ -3,6 +3,7 @@ package latina.negocio.turno.imp;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import latina.integracion.emfc.EMFContainer;
+import latina.integracion.emfc.imp.EMFContainerImpTest;
 import latina.negocio.dispoinibilidad.Disponibilidad;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.factoria.SAFactory;
@@ -12,6 +13,7 @@ import latina.negocio.turno.Turno;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -24,26 +26,16 @@ public class SATurnoImpTestsIT {
 
     @BeforeEach
     public void setUp() {
+        // Base de datos exclusiva para tests, se crean las tablas antes de cada test y se borran despues
+        // Hace falta crear un nuevo esquema llamado bdlatinatest
+        try {
+            Field instancia = EMFContainer.class.getDeclaredField("emfc");
+            instancia.setAccessible(true);
+            instancia.set(null, new EMFContainerImpTest());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         sa = SAFactory.getInstance().createSATurno();
-        limpiarBaseDeDatos();
-    }
-
-    /**
-     * Se borran todas las entidades involucradas.
-     */
-    private void limpiarBaseDeDatos() {
-        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
-        // Primero borramos Turno (porque referencia a Empleado)
-        em.createQuery("DELETE FROM Turno").executeUpdate();
-        // Luego Disponibilidad y Empleado
-        em.createQuery("DELETE FROM Disponibilidad").executeUpdate();
-        em.createQuery("DELETE FROM Empleado").executeUpdate();
-        // Opcionalmente, borrar Rol si lo necesitamos
-        em.createQuery("DELETE FROM Rol").executeUpdate();
-        tx.commit();
-        em.close();
     }
 
     /**
