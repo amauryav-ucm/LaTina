@@ -71,8 +71,6 @@ public class Turno {
         return id;
     }
 
-    public int getIdRol(){return rol.getId();}
-
     public Timestamp getFechaHoraFin() {
         return fechaHoraFin;
     }

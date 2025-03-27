@@ -57,5 +57,9 @@ public class Rol {
         this.activo = rol.isActivo();
     }
 
+    public TRol toTransfer(){
+        return new TRol(id, nombre, salario, activo);
+    }
+
 
 }

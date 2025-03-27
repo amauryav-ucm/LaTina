@@ -8,6 +8,7 @@ import latina.negocio.dispoinibilidad.Disponibilidad;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.turno.SATurno;
 import latina.negocio.turno.TTurno;
+import latina.negocio.turno.TTurnoRolEmpleado;
 import latina.negocio.turno.Turno;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -149,12 +150,12 @@ public class SATurnoImp implements SATurno {
 
 
     @Override
-    public List<TTurno> listarTurnosPorDia(String fecha) {
+    public List<TTurnoRolEmpleado> listarTurnosPorDia(String fecha) {
         EntityTransaction tx = null;
         try (EntityManager em = createEntityManager()) {
             tx = em.getTransaction();
             tx.begin();
-            List<TTurno> tturnos = new ArrayList<TTurno>();
+            List<TTurnoRolEmpleado> tturnos = new ArrayList<TTurnoRolEmpleado>();
             List<Turno> turnos = new ArrayList<Turno>();
             Query q = em.createNamedQuery("Turno.findByDia");
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -163,7 +164,7 @@ public class SATurnoImp implements SATurno {
             turnos = q.getResultList();
             if (turnos != null) {
                 for (Turno turn : turnos) {
-                    tturnos.add(new TTurno(turn.getId(), turn.getIdRol(), turn.getFechaHoraInicio(), turn.getFechaHoraFin()));
+                    tturnos.add(new TTurnoRolEmpleado(turn.toTransfer(), turn.getRol().toTransfer()));
                 }
                 em.getTransaction().commit();
                 return tturnos;

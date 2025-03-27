@@ -17,8 +17,6 @@
             <property name="jakarta.persistence.jdbc.user" value="root" />
             <property name="jakarta.persistence.jdbc.password" value="root" />
 
-            <!-- Propiedad para la generación de DDL (especificada como 'create-or-extend-tables' por si deseas crear/modificar tablas) -->
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>  <!-- Keeps existing data -->
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
