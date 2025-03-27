@@ -10,11 +10,11 @@ import latina.negocio.empleado.Empleado;
         @NamedQuery(name = "Disponibilidad.findByEmpleado",
                 query = "SELECT d FROM Disponibilidad d WHERE d.empleado = :empleado"),
         @NamedQuery(name = "Disponibilidad.findByFechaInicio",
-                query = "SELECT d FROM Disponibilidad d WHERE d.fechaInicio = :fechaInicio"),
+                query = "SELECT d FROM Disponibilidad d WHERE d.fechaHoraInicio = :fechaInicio"),
         @NamedQuery(name = "Disponibilidad.findByFechaFin",
-                query = "SELECT d FROM Disponibilidad d WHERE d.fechaFin = :fechaFin"),
+                query = "SELECT d FROM Disponibilidad d WHERE d.fechaHoraFin = :fechaFin"),
         @NamedQuery(name = "Disponibilidad.findByEmpleadoAndFechaInicio",
-                query = "SELECT d FROM Disponibilidad d WHERE d.empleado = :empleado AND d.fechaInicio = :fechaInicio"),
+                query = "SELECT d FROM Disponibilidad d WHERE d.empleado = :empleado AND d.fechaHoraInicio = :fechaInicio"),
         /*
         @NamedQuery(name = "Disponibilidad.findByRangoFecha",
                 query = "SELECT d FROM Disponibilidad d WHERE d.fechaInicio <= :fechaHoraIni AND d.fechaFin >= :fechaHoraFin")*/
@@ -29,10 +29,10 @@ public class Disponibilidad {
     private Empleado empleado;
 
     @Column(nullable = false)
-    private Timestamp fechaInicio;
+    private Timestamp fechaHoraInicio;
 
     @Column(nullable = false)
-    private Timestamp fechaFin;
+    private Timestamp fechaHoraFin;
 
 
     public int getId() {return id;   }
@@ -47,20 +47,30 @@ public class Disponibilidad {
         this.empleado = empleado;
     }
 
-    public Timestamp getFechaInicio() {return fechaInicio;    }
+    public Timestamp getFechaHoraInicio() {return fechaHoraInicio;    }
 
-    public void setFechaInicio(Timestamp fechaInicio) {this.fechaInicio = fechaInicio;    }
+    public void setFechaHoraInicio(Timestamp fechaInicio) {this.fechaHoraInicio = fechaInicio;    }
 
-    public Timestamp getFechaFin() {return fechaFin;    }
+    public Timestamp getFechaHoraFin() {return fechaHoraFin;    }
 
-    public void setFechaFin(Timestamp fechaFin) {this.fechaFin = fechaFin;    }
+    public void setFechaHoraFin(Timestamp fechaFin) {this.fechaHoraFin = fechaFin;    }
 
     public Disponibilidad() { }
 
-    public Disponibilidad(Empleado empleado, Timestamp fechaInicio, Timestamp fechaFin) {
+    public Disponibilidad(Empleado empleado, Timestamp fechaHoraInicio, Timestamp fechaHoraFin) {
         this.empleado = empleado;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
+        this.fechaHoraInicio = fechaHoraInicio;
+        this.fechaHoraFin = fechaHoraFin;
 
+    }
+
+    /**
+     * @param inicio el inicio de la ventana a comparar
+     * @param fin el final de la ventana a comparar, debe ser posterior a inicio
+     * @returns true si el turno solapa con la ventana definida por inicio y fin
+     */
+    public boolean solapaCon(Timestamp inicio, Timestamp fin){
+        // Se presupone que las horas estan bien cronologicamente
+        return !(fechaHoraInicio.after(fin) || fechaHoraFin.before(inicio) || fechaHoraInicio.equals(fin) || fechaHoraFin.equals(inicio));
     }
 }
