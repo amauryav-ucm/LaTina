@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class EMFContainerImp extends EMFContainer {
+public class EMFContainerImp extends EMFContainer implements AutoCloseable {
 
     private EntityManagerFactory emf;
 
@@ -20,5 +20,10 @@ public class EMFContainerImp extends EMFContainer {
     @Override
     public EntityManagerFactory getEMF() {
         return emf;
+    }
+
+    @Override
+    public void close() throws Exception {
+        emf.close();
     }
 }
