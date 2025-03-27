@@ -1,13 +1,9 @@
-package latina.vista.comandos.Turno;
+package latina.vista.comandos.turno;
 
-import jakarta.persistence.EntityManager;
 import javafx.scene.web.WebEngine;
 import latina.VistaPrincipal;
-import latina.integracion.emfc.EMFContainer;
 import latina.negocio.factoria.SAFactory;
-import latina.negocio.rol.Rol;
 import latina.negocio.turno.SATurno;
-import latina.negocio.turno.TTurno;
 import latina.negocio.turno.TTurnoRolEmpleado;
 import latina.vista.comandos.Comando;
 

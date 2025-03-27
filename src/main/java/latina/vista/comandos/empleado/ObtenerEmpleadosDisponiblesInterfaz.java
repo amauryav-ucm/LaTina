@@ -1,4 +1,4 @@
-package latina.vista.comandos.Empleado;
+package latina.vista.comandos.empleado;
 
 import javafx.scene.web.WebEngine;
 import latina.VistaPrincipal;

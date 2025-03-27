@@ -1,4 +1,4 @@
-package latina.vista.comandos.Turno;
+package latina.vista.comandos.turno;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
