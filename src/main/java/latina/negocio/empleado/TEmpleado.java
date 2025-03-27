@@ -19,6 +19,17 @@ public class TEmpleado {
         this.activo = activo;
     }
 
+    public TEmpleado(int id, String DNI, String nombre, String apellidos, String correo, String telefono, boolean activo)
+    {
+        this.id = id;
+        this.DNI = DNI;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.correo = correo;
+        this.telefono = telefono;
+        this.activo = activo;
+    }
+
     public int getId() {
         return id;
     }

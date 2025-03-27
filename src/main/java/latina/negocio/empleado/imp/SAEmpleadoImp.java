@@ -23,17 +23,13 @@ public class SAEmpleadoImp implements SAEmpleado {
 
             Query q = em.createNamedQuery("Disponibilidad.findByRangoFecha");
             Turno turno = em.find(Turno.class, idTurno);
-            q.setParameter("fechaHoraIni", Timestamp.valueOf(turno.getFechaHoraInicio().toString()));
-            q.setParameter("fechaHoraFin", Timestamp.valueOf(turno.getFechaHoraFin().toString()));
+            q.setParameter("fechaHoraIni", turno.getFechaHoraInicio());
+            q.setParameter("fechaHoraFin", turno.getFechaHoraFin());
             List<Disponibilidad> disponibilidades = q.getResultList();
 
             for (Disponibilidad dispAux : disponibilidades)
             {
-                Empleado empleadoAux = dispAux.getEmpleado();
-                TEmpleado emp = new TEmpleado(empleadoAux.getDNI(), empleadoAux.getNombre(), empleadoAux.getApellidos(), empleadoAux.getTelefono(),
-                        empleadoAux.getCorreo(), empleadoAux.isActivo());
-                emp.setId(empleadoAux.getId());
-                listaEmpleados.add(emp);
+                listaEmpleados.add(dispAux.getEmpleado().toTransfer());
             }
 
         } catch (Exception e) {
