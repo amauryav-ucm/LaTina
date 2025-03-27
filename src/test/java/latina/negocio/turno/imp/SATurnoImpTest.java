@@ -9,6 +9,7 @@ import latina.negocio.dispoinibilidad.Disponibilidad;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -72,6 +73,14 @@ class SATurnoImpTest {
         turno.setFechaHoraFin(finTurno);
         turno.setEmpleado(null);
         when(em.find(Turno.class, 1)).thenReturn(turno);
+        Turno turno2 = new Turno();
+        turno2.setId(2);
+        Timestamp inicioTurno2 = Timestamp.valueOf(LocalDateTime.now().plusDays(1).minusHours(1));
+        Timestamp finTurno2 = Timestamp.valueOf(LocalDateTime.now().plusDays(1).plusHours(2));
+        turno2.setFechaHoraInicio(inicioTurno2);
+        turno2.setFechaHoraFin(finTurno2);
+        turno.setEmpleado(null);
+        when(em.find(Turno.class, 2)).thenReturn(turno2);
 
         // Empleado a asignar
         Empleado empleado = new Empleado();
@@ -87,6 +96,10 @@ class SATurnoImpTest {
         when(em.find(Empleado.class, 1)).thenReturn(empleado);
 
         int resultado = sat.asignarTurno(1, 1);
+        verify(tx, times(1)).rollback();
+        assertEquals(-3, resultado);
+
+        resultado = sat.asignarTurno(2, 1);
         verify(tx, times(1)).rollback();
         assertEquals(-3, resultado);
     }
