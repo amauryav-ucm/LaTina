@@ -11,6 +11,8 @@ import org.mockito.Mockito;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -207,8 +209,8 @@ class SATurnoImpTest {
         // Crear turno: de 11:00 a 13:00
         Turno turno = new Turno();
         turno.setId(1);
-        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(11).withMinute(0));
-        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).withMinute(0));
+        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(11).truncatedTo(ChronoUnit.HOURS));
+        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).truncatedTo(ChronoUnit.HOURS));
         turno.setFechaHoraInicio(turnoInicio);
         turno.setFechaHoraFin(turnoFin);
         turno.setEmpleado(null);
@@ -221,8 +223,8 @@ class SATurnoImpTest {
         empleado.setTurno(new ArrayList<>());
         ArrayList<Disponibilidad> disponibilidades = new ArrayList<>();
         Disponibilidad disp = new Disponibilidad();
-        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
-        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).withMinute(0));
+        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
+        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).truncatedTo(ChronoUnit.HOURS));
         disp.setFechaInicio(dispInicio);
         disp.setFechaFin(dispFin);
         disp.setEmpleado(empleado);
@@ -255,8 +257,12 @@ class SATurnoImpTest {
         // Crear turno: de 10:00 a 12:00
         Turno turno = new Turno();
         turno.setId(1);
-        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
-        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        LocalDateTime a = LocalDateTime.now();
+        LocalDateTime b = a.plusDays(1);
+        LocalDateTime c = b.withHour(10);
+        LocalDateTime d = c.truncatedTo(ChronoUnit.HOURS);
+        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
+        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).truncatedTo(ChronoUnit.HOURS));
         turno.setFechaHoraInicio(turnoInicio);
         turno.setFechaHoraFin(turnoFin);
         turno.setEmpleado(null);
@@ -269,8 +275,8 @@ class SATurnoImpTest {
         empleado.setTurno(new ArrayList<>());
         ArrayList<Disponibilidad> disponibilidades = new ArrayList<>();
         Disponibilidad disp = new Disponibilidad();
-        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
-        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).withMinute(0));
+        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
+        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).truncatedTo(ChronoUnit.HOURS));
         disp.setFechaInicio(dispInicio);
         disp.setFechaFin(dispFin);
         disp.setEmpleado(empleado);
@@ -303,8 +309,8 @@ class SATurnoImpTest {
         // Crear turno: de 10:00 a 12:00
         Turno turno = new Turno();
         turno.setId(1);
-        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).withMinute(0));
-        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).withMinute(0));
+        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
+        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).truncatedTo(ChronoUnit.HOURS));
         turno.setFechaHoraInicio(turnoInicio);
         turno.setFechaHoraFin(turnoFin);
         turno.setEmpleado(null);
@@ -317,8 +323,8 @@ class SATurnoImpTest {
         empleado.setTurno(new ArrayList<>());
         ArrayList<Disponibilidad> disponibilidades = new ArrayList<>();
         Disponibilidad disp = new Disponibilidad();
-        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(9).withMinute(0));
-        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).withMinute(0));
+        Timestamp dispInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(9).truncatedTo(ChronoUnit.HOURS));
+        Timestamp dispFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).truncatedTo(ChronoUnit.HOURS));
         disp.setFechaInicio(dispInicio);
         disp.setFechaFin(dispFin);
         disp.setEmpleado(empleado);
