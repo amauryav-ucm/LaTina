@@ -3,6 +3,7 @@ package latina.negocio.disponibilidad;
 import java.sql.Timestamp;
 import jakarta.persistence.*;
 import jakarta.persistence.Id;
+import jdk.jfr.Name;
 import latina.negocio.empleado.Empleado;
 
 @Entity
@@ -15,6 +16,7 @@ import latina.negocio.empleado.Empleado;
                 query = "SELECT d FROM Disponibilidad d WHERE d.fechaHoraFin = :fechaFin"),
         @NamedQuery(name = "Disponibilidad.findByEmpleadoAndFechaInicio",
                 query = "SELECT d FROM Disponibilidad d WHERE d.empleado = :empleado AND d.fechaHoraInicio = :fechaInicio"),
+        @NamedQuery(name = "Disponibilidad.delete", query = "DELETE FROM Disponibilidad d WHERE d.id = :id")
         /*
         @NamedQuery(name = "Disponibilidad.findByRangoFecha",
                 query = "SELECT d FROM Disponibilidad d WHERE d.fechaInicio <= :fechaHoraIni AND d.fechaFin >= :fechaHoraFin")*/

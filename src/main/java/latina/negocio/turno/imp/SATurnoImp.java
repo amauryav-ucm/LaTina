@@ -55,7 +55,10 @@ public class SATurnoImp implements SATurno {
 
                     // Caso 1: La disponibilidad se cubre completamente con el turno (eliminación de la disponibilidad)
                     if (d.getFechaHoraInicio().equals(turno.getFechaHoraInicio()) && d.getFechaHoraFin().equals(turno.getFechaHoraFin())) {
-                        em.remove(d);  // Elimina la disponibilidad completamente ocupada por el turno
+                        //em.remove(d);  // Elimina la disponibilidad completamente ocupada por el turno
+                        Query q = em.createNamedQuery("Disponibilidad.delete");
+                        q.setParameter("id", d.getId());
+                        q.executeUpdate();
                     }
                     // Caso 2: El turno solo ocupa la parte del inicio de la disponibilidad (recortar la parte inicial)
                     else if (d.getFechaHoraInicio().equals(turno.getFechaHoraInicio())) {
@@ -94,6 +97,7 @@ public class SATurnoImp implements SATurno {
             tx.commit();
             return 1; // Operación exitosa
         } catch (Exception e) {
+            e.printStackTrace();
             if (tx != null && tx.isActive()) tx.rollback();
             return -5; // Error
         }
