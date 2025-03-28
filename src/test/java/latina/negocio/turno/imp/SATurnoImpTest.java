@@ -68,7 +68,7 @@ class SATurnoImpTest {
         empleado.setId(1);
         // Simulamos que el empleado ya tiene un turno que solapa.
         Turno turnoExistente = new Turno();
-        // Supongamos un turno que va de inicioTurno - 10 minutos a finTurno + 10 minutos.
+        // Supongamos un turno que va de 16 a 20
         turnoExistente.setFechaHoraInicio(Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(16).truncatedTo(ChronoUnit.HOURS)));
         turnoExistente.setFechaHoraFin(Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(20).truncatedTo(ChronoUnit.HOURS)));
         List<Turno> listaTurnos = new ArrayList<>();
