@@ -9,7 +9,7 @@
         <class>latina.negocio.rol.Rol</class>
         <class>latina.negocio.empleado.Empleado</class>
         <class>latina.negocio.turno.Turno</class>
-        <class>latina.negocio.dispoinibilidad.Disponibilidad</class>
+        <class>latina.negocio.disponibilidad.Disponibilidad</class>
         <properties>
             <!-- Configuración de conexión a la base de datos -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
@@ -46,7 +46,7 @@
         <class>latina.negocio.rol.Rol</class>
         <class>latina.negocio.empleado.Empleado</class>
         <class>latina.negocio.turno.Turno</class>
-        <class>latina.negocio.dispoinibilidad.Disponibilidad</class>
+        <class>latina.negocio.disponibilidad.Disponibilidad</class>
         <properties>
             <!-- Configuración de conexión a la base de datos -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
@@ -59,6 +59,7 @@
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>  <!-- Keeps existing data -->
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.use_sql_comments" value="true"/>
         </properties>
     </persistence-unit>
 

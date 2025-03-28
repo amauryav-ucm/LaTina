@@ -1,10 +1,9 @@
 package latina.negocio.turno.imp;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import latina.integracion.emfc.EMFContainer;
 import latina.integracion.emfc.imp.EMFContainerImpTest;
-import latina.negocio.dispoinibilidad.Disponibilidad;
+import latina.negocio.disponibilidad.Disponibilidad;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.factoria.SAFactory;
 import latina.negocio.rol.Rol;
@@ -98,6 +97,8 @@ public class SATurnoImpTestsIT {
         // 5. Verificar en la BD que el turno quedó asignado al empleado.
         em = EMFContainer.getInstance().getEMF().createEntityManager();
         Turno turnoAsignado = em.find(Turno.class, turnoId);
+        // Deberia quedarse sin disponibilidad
+        assertEquals(0, turnoAsignado.getEmpleado().getDisponibilidad().size());
         assertNotNull(turnoAsignado.getEmpleado());
         assertEquals(empId, turnoAsignado.getEmpleado().getId());
         em.close();

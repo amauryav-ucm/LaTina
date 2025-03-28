@@ -4,7 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 import latina.integracion.emfc.EMFContainer;
-import latina.negocio.dispoinibilidad.Disponibilidad;
+import latina.negocio.disponibilidad.Disponibilidad;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.turno.SATurno;
 import latina.negocio.turno.TTurnoRolEmpleado;

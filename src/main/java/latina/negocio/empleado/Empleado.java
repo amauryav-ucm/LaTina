@@ -1,7 +1,7 @@
 package latina.negocio.empleado;
 
 import jakarta.persistence.*;
-import latina.negocio.dispoinibilidad.Disponibilidad;
+import latina.negocio.disponibilidad.Disponibilidad;
 import latina.negocio.turno.Turno;
 
 import java.util.ArrayList;

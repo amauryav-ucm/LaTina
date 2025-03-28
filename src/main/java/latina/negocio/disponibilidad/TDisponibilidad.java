@@ -1,4 +1,4 @@
-package latina.negocio.dispoinibilidad;
+package latina.negocio.disponibilidad;
 
 import java.sql.Timestamp;
 

@@ -4,7 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import latina.negocio.turno.Turno;
 import latina.negocio.empleado.Empleado;
-import latina.negocio.dispoinibilidad.Disponibilidad;
+import latina.negocio.disponibilidad.Disponibilidad;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
