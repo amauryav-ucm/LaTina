@@ -97,7 +97,7 @@ public class SATurnoImpTestsIT {
         // 5. Verificar en la BD que el turno quedó asignado al empleado.
         em = EMFContainer.getInstance().getEMF().createEntityManager();
         Turno turnoAsignado = em.find(Turno.class, turnoId);
-        // Deberia quedarse sin disponibilidad
+        // Deberia quedarse sin disponibilidad, pero el remove no funciona
         assertEquals(0, turnoAsignado.getEmpleado().getDisponibilidad().size());
         assertNotNull(turnoAsignado.getEmpleado());
         assertEquals(empId, turnoAsignado.getEmpleado().getId());
