@@ -2,6 +2,7 @@ package latina.negocio.turno.imp;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import latina.negocio.turno.Turno;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.disponibilidad.Disponibilidad;
@@ -167,6 +168,10 @@ class SATurnoImpTest {
         turno.setFechaHoraFin(finTurno);
         turno.setEmpleado(null);
         when(em.find(Turno.class, 1)).thenReturn(turno);
+
+        Query removeQuery = mock(Query.class);
+        when(em.createNamedQuery("Disponibilidad.delete")).thenReturn(removeQuery);
+
 
         // Empleado válido.
         Empleado empleado = new Empleado();
