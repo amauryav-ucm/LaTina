@@ -52,29 +52,20 @@
             <input type="text" class="time-input" id="campo-hora-inicio" readonly onclick="openTimePicker()"
                    placeholder="Selecciona la hora de inicio">
 
-            <div class="dropdown-hora" id="hora-inicio">
+            <div class="dropdown-hora" id="tiempo-inicio">
                 <div class="time-container">
-                    <select id="popup-hour" >
-                        <script>
-                            let hourSelect = document.getElementById("popup-hour");
-                            for (let h = 1; h <= 12; h++) {
-                                let option = document.createElement("option");
-                                option.value = h;
-                                option.textContent = h;
-                                hourSelect.appendChild(option);
-                            }
-                        </script>
+                    <select id="hora-inicio" >
                     </select>
                     :
-                    <select id="popup-minute" >
+                    <select id="minuto-inicio" >
                         <option value="00">00</option>
                         <option value="30">30</option>
                     </select>
-                    <select id="popup-ampm" >
+                    <select id="ampm-inicio" >
                         <option value="AM">AM</option>
                         <option value="PM">PM</option>
                     </select>
-                    <button type="button" onclick="setTime()">OK</button>
+                    <button type="button" id="boton-hora-inicio">OK</button>
                 </div>
             </div>
         </div>
@@ -104,6 +95,29 @@
                     <div class="days" id="calendarDays">
                         <!-- Los días se generarán con JavaScript -->
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <label for="campo-hora-inicio">Select Time:</label>
+        <div class="date-picker">
+            <input type="text" class="time-input" id="campo-hora-fin" readonly onclick="openTimePicker()"
+                   placeholder="Selecciona la hora de inicio">
+
+            <div class="dropdown-hora" id="tiempo-fin">
+                <div class="time-container">
+                    <select id="hora-fin" >
+                    </select>
+                    :
+                    <select id="minuto-fin" >
+                        <option value="00">00</option>
+                        <option value="30">30</option>
+                    </select>
+                    <select id="ampm-fin" >
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                    </select>
+                    <button type="button" id="boton-hora-fin">OK</button>
                 </div>
             </div>
         </div>

@@ -16,9 +16,29 @@ document.addEventListener('DOMContentLoaded', function() {
         mes_ant: document.getElementById('prevMonth'),
         mes_sig: document.getElementById('nextMonth')
     };
+    
+    const horaInicio = {
+        campo: document.getElementById('campo-hora-inicio'),
+        dropdown: document.getElementById('tiempo-inicio'),
+        hora: document.getElementById('hora-inicio'),
+        minuto: document.getElementById('minuto-inicio'),
+        ampm: document.getElementById('ampm-inicio'),
+        boton: document.getElementById('boton-hora-inicio')
+    };
+
+    const horaFin = {
+        campo: document.getElementById('campo-hora-fin'),
+        dropdown: document.getElementById('tiempo-fin'),
+        hora: document.getElementById('hora-fin'),
+        minuto: document.getElementById('minuto-fin'),
+        ampm: document.getElementById('ampm-fin'),
+        boton: document.getElementById('boton-hora-fin')
+    };
 
     configCalendario(fechaInicio);
     configCalendario(fechaFin);
+    configHora(horaInicio);
+    configHora(horaFin);
 
     document.getElementById('campo-hora-inicio').addEventListener('click', function () {
         document.getElementById('hora-inicio').classList.toggle('open')
@@ -166,4 +186,31 @@ function generateCalendar(selector, month, year) {
 
         selector.dias.appendChild(dayElement);
     }
+}
+
+function configHora(selector){
+
+    for (let h = 1; h <= 12; h++) {
+        let option = document.createElement("option");
+        option.value = h;
+        option.textContent = h;
+        selector.hora.appendChild(option);
+    }
+
+    selector.campo.addEventListener('click', function () {
+        selector.dropdown.classList.toggle('open');
+    })
+
+    selector.boton.addEventListener('click', function (){
+        let hour = selector.hora.value;
+        let minute = selector.minuto.value;
+        let ampm = selector.ampm.value;
+        selector.campo.value = `${hour}:${minute} ${ampm}`;
+        selector.dropdown.classList.remove('open');
+    })
+
+    document.addEventListener('click', function (e){
+        if(!selector.campo.contains(e.target) && !selector.dropdown.contains(e.target))
+            selector.dropdown.classList.remove('open');
+    })
 }

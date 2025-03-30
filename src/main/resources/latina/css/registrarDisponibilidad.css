@@ -339,7 +339,7 @@ input.error, .comboBox-empleado.error { /* Añadido para el select */
     left: 0;
     width: 100%;
     z-index: 10;
-    display: block;
+    display: none;
 }
 
 .time-container {
