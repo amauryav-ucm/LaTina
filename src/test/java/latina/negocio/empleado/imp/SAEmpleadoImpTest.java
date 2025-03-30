@@ -201,12 +201,31 @@ class SAEmpleadoImpTest {
 
     @Test
     void testCorreoFormatoIncorrecto() {
-        TEmpleado stubEmpleado = new TEmpleado("12345678C", "Shin", "Chan", "correo_invalido", "654987321", true);
+        // Crear un empleado con teléfono en formato incorrecto
+        TEmpleado stubEmpleado = new TEmpleado("12345678C", "Hola", "Adios McDonal", "correo_incorrecto", "123456789", true);
 
-        SAEmpleadoImp saEmpleado = new SAEmpleadoImp();
-        int resultado = saEmpleado.altaEmpleado(stubEmpleado);
+        // Configurar mock para que las consultas devuelvan listas vacías
+        Query stubQuery = mock(Query.class);
+        when(stubQuery.setParameter(anyString(), anyString())).thenReturn(stubQuery);
+        when(stubQuery.getResultList()).thenReturn(new ArrayList<>());
 
-        assertEquals(-7, resultado); // Asegura que se devuelve el código de error correcto
+        // Mockear EntityManager y Transaction
+        EntityTransaction stubTransaction = mock(EntityTransaction.class);
+        EntityManager stubEntityManager = mock(EntityManager.class);
+        when(stubEntityManager.createNamedQuery(anyString())).thenReturn(stubQuery);
+        when(stubEntityManager.getTransaction()).thenReturn(stubTransaction);
+
+        // Configurar el SAEmpleadoImp para usar el EntityManager mockeado
+        SAEmpleadoImp sa = Mockito.spy(new SAEmpleadoImp());
+        doReturn(stubEntityManager).when(sa).crearEntityManager();
+
+        // Ejecutar el método a probar
+        int resultado = sa.altaEmpleado(stubEmpleado);
+
+        // Verificar el resultado
+        assertEquals(-7, resultado);
+        verify(stubTransaction).begin();
+        verify(stubTransaction).rollback();
     }
 
     @Test
