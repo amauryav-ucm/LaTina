@@ -61,7 +61,7 @@ public class SAEmpleadoImp implements SAEmpleado {
             }
 
             Query q2 = em.createNamedQuery("Empleado.findByCORREO");
-            q2.setParameter("CORREO", emp.getDNI());
+            q2.setParameter("CORREO", emp.getCorreo());
             List<Empleado> empleados2 = q2.getResultList();
             if(!empleados2.isEmpty()){
                 trans.rollback();
@@ -78,7 +78,7 @@ public class SAEmpleadoImp implements SAEmpleado {
             Empleado employee = new Empleado(emp);
             em.persist(employee);
             trans.commit();
-             id = employee.getId();
+            id = employee.getId();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
