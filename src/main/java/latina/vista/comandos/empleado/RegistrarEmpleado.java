@@ -15,10 +15,11 @@ public class RegistrarEmpleado implements Comando {
     @Override
     public void ejecutar(Object datos, VistaPrincipal vista) {
         try {
-            TEmpleado tEmpleado = new TEmpleado(((JSObject)datos).getMember("DNI").toString(),
+            TEmpleado tEmpleado = new TEmpleado(
+                    ((JSObject)datos).getMember("dni").toString(),
                     ((JSObject)datos).getMember("nombre").toString(),
                     ((JSObject)datos).getMember("apellidos").toString(),
-                    ((JSObject)datos).getMember("correo").toString(),
+                    ((JSObject)datos).getMember("email").toString(),
                     ((JSObject)datos).getMember("telefono").toString(),
                     true);
             SAEmpleado sae = SAFactory.getInstance().createSAEmpleado();
