@@ -85,12 +85,19 @@ public class SAEmpleadoImp implements SAEmpleado {
                 trans.rollback();
                 return -6;//Solo se permiten letras(incluyendo ñ y tildes) y espacios
             }
+            if (!emp.getCorreo().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+                trans.rollback();
+                return -7; // CORREO EN FORMATO INCORRECTO
+            }
             Empleado employee = new Empleado(emp);
             em.persist(employee);
             trans.commit();
             id = employee.getId();
         } catch (Exception e) {
-            e.printStackTrace();
+            if (trans != null && trans.isActive()) {
+                trans.rollback();
+            }
+            return -8;
         } finally {
             if (em != null) {
                 em.close();

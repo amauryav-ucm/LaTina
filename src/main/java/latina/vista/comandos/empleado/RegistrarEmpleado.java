@@ -28,10 +28,11 @@ public class RegistrarEmpleado implements Comando {
             if (result >= 0) mensaje = "Se ha registrado el empleado correctamente con ID: " + result;
             else if (result == -1) mensaje = "Ya existe un empleado con el DNI introducido";
             else if (result == -2) mensaje = "Ya existe un empleado con el correo introducido";
-            else if (result == -3) mensaje = "Formato del DNI erroneo";
-            else if (result == -4) mensaje = "El campo telefono solo permite numeros de 9 digitos";
+            else if (result == -3) mensaje = "Formato del DNI erróneo";
+            else if (result == -4) mensaje = "El campo teléfono solo permite números de 9 dígitos";
             else if (result == -5) mensaje = "El campo nombre solo permite letras y espacios";
             else if (result == -6) mensaje = "El campo apellidos solo permite letras y espacios";
+            else if (result == -7) mensaje = "El campo correo debe tener un formato válido, por ejemplo: usuario@ejemplo.com";
             else mensaje = "Error desconocido";
 
             WebEngine webEngine = vista.getWebView().getEngine();
