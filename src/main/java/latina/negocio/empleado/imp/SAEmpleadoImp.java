@@ -75,6 +75,16 @@ public class SAEmpleadoImp implements SAEmpleado {
                 trans.rollback();
                 return -4; // NUM TELEFONO EN FORMATO INCORRECTO
             }
+            if (!emp.getNombre().matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"))
+            {
+                trans.rollback();
+                return -5;//Solo se permiten letras(incluyendo ñ y tildes) y espacios
+            }
+            if (!emp.getApellidos().matches("[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"))
+            {
+                trans.rollback();
+                return -6;//Solo se permiten letras(incluyendo ñ y tildes) y espacios
+            }
             Empleado employee = new Empleado(emp);
             em.persist(employee);
             trans.commit();
