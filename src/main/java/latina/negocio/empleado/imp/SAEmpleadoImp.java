@@ -60,8 +60,8 @@ public class SAEmpleadoImp implements SAEmpleado {
                 return -1; //YA HAY EMPLEADEOS CON ESE DNI
             }
 
-            Query q2 = em.createNamedQuery("Empleado.findByCORREO");
-            q2.setParameter("CORREO", emp.getCorreo());
+            Query q2 = em.createNamedQuery("Empleado.findByCorreo");
+            q2.setParameter("correo", emp.getCorreo());
             List<Empleado> empleados2 = q2.getResultList();
             if(!empleados2.isEmpty()){
                 trans.rollback();
