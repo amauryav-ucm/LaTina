@@ -1,0 +1,84 @@
+function recogerDatos() {
+
+    var empleado = {};
+    var dni = document.getElementById("dni");
+    var nombre = document.getElementById("nombre");
+    var apellidos = document.getElementById("apellidos");
+    var email = document.getElementById("email");
+    var telefono = document.getElementById("telefono");
+
+    // Limpiar errores previos y el mensaje del popup
+    dni.classList.remove("error");
+    nombre.classList.remove("error");
+    apellidos.classList.remove("error");
+    email.classList.remove("error");
+    telefono.classList.remove("error");
+    cerrarMensaje(); // Evitar que el mensaje predeterminado se muestre si hay error
+
+    // Verificar si los campos están vacíos o son inválidos
+    let hayError = false;
+
+    if (dni.value.trim() === "" /*|| !/^\d{8}[A-Z]$/.test(dni.value.trim())*/) {
+        dni.classList.add("error");  // Agregar clase de error
+        hayError = true;
+    }
+
+    if (nombre.value.trim() === "") {
+        nombre.classList.add("error");  // Agregar clase de error
+        hayError = true;
+    }
+
+    if (apellidos.value.trim() === "") {
+        apellidos.classList.add("error");  // Agregar clase de error
+        hayError = true;
+    }
+
+    if (email.value.trim() === "" /*|| !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())*/) {
+        email.classList.add("error");  // Agregar clase de error
+        hayError = true;
+    }
+
+    if (telefono.value.trim() === "" /*|| !/^\d{9}$/.test(telefono.value.trim())*/) {
+        telefono.classList.add("error");  // Agregar clase de error
+        hayError = true;
+    }
+
+    // Si hay errores, no continuar con el envío
+    if (hayError) {
+        return;
+    }
+
+
+    empleado.dni = dni.value.trim();
+    empleado.nombre = nombre.value.trim();
+    empleado.apellidos = apellidos.value.trim();
+    empleado.email = email.value.trim();
+    empleado.telefono = telefono.value.trim();
+
+
+    enviarAJava(empleado);
+
+
+    setTimeout(() => location.reload(), 200);
+
+
+}
+
+function mostrarMensaje(mensaje) {
+   }
+
+function cerrarMensaje() {
+    const popup = document.getElementById("popup");
+    popup.classList.remove("show");
+    setTimeout(() => popup.style.display = "none", 300);
+}
+
+function enviarAJava(empleado) {
+
+}
+
+function volver() {
+    if (window.java && window.java.changeScene) {
+        window.java.changeScene("ventanaPrincipal.html");
+    }
+}
