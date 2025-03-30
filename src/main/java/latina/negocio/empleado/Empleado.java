@@ -1,6 +1,7 @@
 package latina.negocio.empleado;
 
 import jakarta.persistence.*;
+import latina.integracion.emfc.EMFContainer;
 import latina.negocio.disponibilidad.Disponibilidad;
 import latina.negocio.turno.Turno;
 
@@ -12,7 +13,8 @@ import java.util.List;
         @NamedQuery(name = "Empleado.findByDNI", query = "select obj from Empleado obj where :DNI = obj.DNI "),
         @NamedQuery(name = "Empleado.findByCorreo", query = "select obj from Empleado obj where :correo = obj.correo "),
         @NamedQuery(name = "Disponibilidad.findByRangoFecha",
-                query = "SELECT d FROM Disponibilidad d WHERE d.fechaHoraInicio <= :fechaHoraIni AND d.fechaHoraFin >= :fechaHoraFin")
+                query = "SELECT d FROM Disponibilidad d WHERE d.fechaHoraInicio <= :fechaHoraIni AND d.fechaHoraFin >= :fechaHoraFin"),
+        @NamedQuery(name = "Empleado.findAll", query = "select e from Empleado e")
 })
 
 public class Empleado {
@@ -122,5 +124,31 @@ public class Empleado {
 
     public TEmpleado toTransfer(){
         return new TEmpleado(id, DNI, nombre, apellidos, correo, telefono, activo);
+    }
+
+
+
+    /// @return Una lista de empleados, una lista vacía si no existen, o null si se produce una excepción
+    public List<TEmpleado> buscarEmpleados(){
+        EntityTransaction tx = null;
+        try (EntityManager em = crearEntityManager()) {
+            tx = em.getTransaction();
+            tx.begin();
+            Query queryBuscarEmpleados = em.createNamedQuery("Empleado.findAll");
+            List<Empleado> empleados = (List<Empleado>) queryBuscarEmpleados.getResultList();
+            List<TEmpleado> resultado = new ArrayList<>();
+            for (Empleado e : empleados)
+                resultado.add(e.toTransfer());
+            return resultado;
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null && tx.isActive())
+                tx.rollback();
+            return null;
+        }
+    }
+
+    protected EntityManager crearEntityManager() {
+        return EMFContainer.getInstance().getEMF().createEntityManager();
     }
 }
