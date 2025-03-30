@@ -65,7 +65,11 @@ function recogerDatos() {
 }
 
 function mostrarMensaje(mensaje) {
-   }
+    const popup = document.getElementById("popup");
+    popup.style.display = "flex";
+    document.getElementById("popup-message").innerText = mensaje;
+    setTimeout(() => popup.classList.add("show"), 10);
+}
 
 function cerrarMensaje() {
     const popup = document.getElementById("popup");
@@ -74,7 +78,9 @@ function cerrarMensaje() {
 }
 
 function enviarAJava(empleado) {
-
+     if (window.java && window.java.accion) {
+            window.java.accion("REGISTRAR_EMPLEADO", empleado);
+     }
 }
 
 function volver() {
