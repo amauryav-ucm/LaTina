@@ -262,7 +262,7 @@ function recogerDisponibilidad() {
         hayError = true;
     }
     if (dateOutput.value.trim() === "") {
-            dateOutput.classList.add("error");
+            dateInput.classList.add("error");
             hayError = true;
     }
     if (startHourInput.value.trim() === "") {
@@ -276,7 +276,7 @@ function recogerDisponibilidad() {
 
     // Si hay algún error, mostramos el mensaje y detenemos el envío
     if (hayError) {
-        mostrarMensaje("Por favor, completa todos los campos.");
+//        mostrarMensaje("Por favor, completa todos los campos.");
         return;
     }
 
@@ -292,6 +292,65 @@ function recogerDisponibilidad() {
     // Mostrar mensaje de éxito y recargar (o redirigir) si es necesario
     mostrarMensaje("Disponibilidad registrada correctamente.");
     setTimeout(() => location.reload(), 200);
+}
+
+function validarFormulario() {
+     var employeeSelect = document.getElementById("empleado");
+     var dateInput = document.getElementById("campo-fecha-inicio");
+     var startHourInput = document.getElementById("campo-hora-inicio");
+     var dateOutput = document.getElementById("dateInput");
+     var endHourInput = document.getElementById("campo-hora-fin");
+     let isValid = true; // Flag para saber si hay errores
+
+    // Validación del select de empleados
+    if (employeeSelect.value === "") {
+        employeeSelect.classList.add("error");
+        isValid = false;
+    } else {
+        employeeSelect.classList.remove("error");
+    }
+
+    // Validación del fecha ini
+    if (dateInput.value === "") {
+        dateInput.classList.add("error");
+        isValid = false;
+    } else {
+        dateInput.classList.remove("error");
+    }
+
+    //hora ini
+    if (startHourInput.value === "") {
+        startHourInput.classList.add("error");
+        isValid = false;
+    }
+    else {
+        startHourInput.classList.remove("error");
+    }
+
+    //fecha fin
+    if (dateOutput.value === "") {
+        dateOutput.classList.add("error");
+        isValid = false;
+    }
+    else {
+        dateOutput.classList.remove("error");
+    }
+
+    //hora fin
+    if (endHourInput.value === "") {
+        endHourInput.classList.add("error");
+        isValid = false;
+    }
+    else {
+        endHourInput.classList.remove("error");
+    }
+
+
+    if (!isValid) {
+        mostrarMensaje("Por favor, completa todos los campos.");
+    }
+
+    return isValid;
 }
 
 function mostrarMensaje(mensaje) {
