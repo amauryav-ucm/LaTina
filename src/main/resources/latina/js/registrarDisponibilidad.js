@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+    cargarEmpleados();
+
     const fechaInicio = {
         campo: document.getElementById('campo-fecha-inicio'),
         calendario: document.getElementById('calendario-inicio'),
@@ -65,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     })
 
-    cargarEmpleados();
+
 
 });
 
@@ -118,7 +120,6 @@ function configCalendario(selector){
         }
         generateCalendar(selector, currentMonth, currentYear);
     });
-
 }
 
 // Formatear la fecha para mostrar en el input
@@ -234,8 +235,24 @@ function cargarEmpleados() {
     empleadoSelect.innerHTML = '<option value="" selected>Cargando empleados...</option>';
     empleadoSelect.disabled = true;
 
+
+
     //Llamamos a la función de Java para obtener empleados
-    window.java.accion("OBTENER_TODOS_LOS_EMPLEADOS", null);
+
+    waitForJavaBridge(() => {
+        console.log("Java bridge is ready!");
+        window.java.accion("OBTENER_TODOS_LOS_EMPLEADOS", null);
+    });
+
+}
+
+function waitForJavaBridge(callback) {
+    if (window.java && window.java.accion) {
+        callback();
+    } else {
+        console.log("Waiting for Java bridge...");
+        setTimeout(() => waitForJavaBridge(callback), 100);
+    }
 }
 
 function cargarEmpleadosAux(empleado, id) {

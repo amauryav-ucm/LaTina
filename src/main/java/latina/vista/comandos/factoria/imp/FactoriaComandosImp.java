@@ -31,8 +31,10 @@ public class FactoriaComandosImp extends FactoriaComandos {
                 break;
             case OBTENER_TODOS_LOS_EMPLEADOS:
                 comando = new RellenarEmpleadosRegistrarDisponibildad();
+                break;
             case REGISTRAR_DISPONIBILIDAD:
                 comando = new RegistrarDisponibilidad();
+                break;
             default:
                 break;
         }
