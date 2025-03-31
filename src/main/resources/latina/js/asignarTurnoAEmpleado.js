@@ -233,8 +233,6 @@ function recogerTurno() {
     // Enviar los datos al backend Java (AsignarTurno.java)
     enviarTurnoAJava(parametros);
 
-
-
     // Mostrar mensaje de éxito y limpiar el formulario (si es necesario)
     mostrarMensaje("Turno asignado correctamente.");
 

@@ -169,6 +169,14 @@ function generateCalendar(selector, month, year) {
             let today = new Date();
             today.setHours(0, 0, 0, 0);
 
+            if (selectedDate < today) {
+                mostrarMensaje("Elige una fecha actual o posterior");
+                //dateInput.value = "";
+                //campo-fecha-inicio.value = "";
+                selector.campo.value = "";
+                selectedDate = null;
+            }
+
             // Actualizar la visualización del calendario
             generateCalendar(selector, month, year);
         });
