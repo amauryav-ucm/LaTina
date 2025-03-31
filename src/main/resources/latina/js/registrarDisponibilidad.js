@@ -47,21 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const timeInput = document.getElementById('time-picker');
     const timeInputPopup = document.getElementById('time-picker-popup');
 
-
-
-
-
-
     document.getElementById('fecha-inicio').addEventListener('click', function (){
         document.getElementById('calendario-inicio').classList.toggle('open');
 
     })
-
-
-
-
-
-
 
 });
 
@@ -249,17 +238,18 @@ function terminadoDeCargarEmpleados() {
 function recogerDisponibilidad() {
     // Obtenemos los elementos del formulario
     var disponibilidad = {};
-    var employeeSelect = document.getElementById("employeeSelect");
-    var dateInput = document.getElementById("dateInput");
-    var startHourInput = document.getElementById("hourStart");
-    var endHourInput = document.getElementById("hourEnd");
+    var employeeSelect = document.getElementById("empleado");
+    var dateInput = document.getElementById("campo-fecha-inicio");
+    var startHourInput = document.getElementById("campo-hora-inicio");
+    var dateOutput = document.getElementById("dateInput");
+    var endHourInput = document.getElementById("campo-hora-fin");
+
 
     // Limpiar errores previos y cerrar mensajes emergentes
     employeeSelect.classList.remove("error");
     dateInput.classList.remove("error");
     startHourInput.classList.remove("error");
     endHourInput.classList.remove("error");
-    cerrarMensaje();
 
     // Validar que todos los campos tengan valor
     let hayError = false;
@@ -270,6 +260,10 @@ function recogerDisponibilidad() {
     if (dateInput.value.trim() === "") {
         dateInput.classList.add("error");
         hayError = true;
+    }
+    if (dateOutput.value.trim() === "") {
+            dateOutput.classList.add("error");
+            hayError = true;
     }
     if (startHourInput.value.trim() === "") {
         startHourInput.classList.add("error");
