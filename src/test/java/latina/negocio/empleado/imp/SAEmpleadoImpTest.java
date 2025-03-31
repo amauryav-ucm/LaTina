@@ -18,14 +18,17 @@ class SAEmpleadoImpTest {
 
     @Test
     void testBuscarEmpleados_DevuelveLista() {
-        // Simulamos una transacción falsa
+
+        //devuelve lista con empleados
+        //se comprueba que la transaccion se realizo de manera correcta y se comprueban los datos de los empleados
+
         EntityTransaction stubTransaction = mock(EntityTransaction.class);
 
-        // Simulamos un EntityManager falso
+
         EntityManager stubEntityManager = mock(EntityManager.class);
         when(stubEntityManager.getTransaction()).thenReturn(stubTransaction);
 
-        // Creamos una lista de empleados simulados
+
         List<Empleado> empleadosFalsos = new ArrayList<>();
         Empleado emp1 = mock(Empleado.class);
         Empleado emp2 = mock(Empleado.class);
@@ -36,23 +39,22 @@ class SAEmpleadoImpTest {
         empleadosFalsos.add(emp1);
         empleadosFalsos.add(emp2);
 
-        // Simulamos una consulta que devuelve la lista de empleados falsos
+
         Query stubQueryBuscarEmpleados = mock(Query.class);
         when(stubQueryBuscarEmpleados.getResultList()).thenReturn(empleadosFalsos);
         when(stubEntityManager.createNamedQuery("Empleado.findAll")).thenReturn(stubQueryBuscarEmpleados);
 
-        // Espiamos la clase SAEmpleadoImp para controlar el EntityManager
         SAEmpleadoImp sa = Mockito.spy(new SAEmpleadoImp());
         doReturn(stubEntityManager).when(sa).crearEntityManager();
 
-        // Llamamos a la función
+
         List<TEmpleado> resultado = sa.buscarEmpleados();
 
-        // Verificamos que la transacción se inició y finalizó correctamente
+
         verify(stubTransaction, times(1)).begin();
         verify(stubTransaction, times(0)).rollback();
 
-        // Comprobamos que la lista devuelta tiene los empleados esperados
+
         assertNotNull(resultado);
         assertEquals(2, resultado.size());
         assertEquals(1, resultado.get(0).getId());
@@ -70,6 +72,11 @@ class SAEmpleadoImpTest {
 
     @Test
     void testBuscarEmpleados_ListaVacia() {
+
+
+        //devuelve lista vacía , se comprueba que la transaccion fue exitosa
+
+
         EntityTransaction stubTransaction = mock(EntityTransaction.class);
         EntityManager stubEntityManager = mock(EntityManager.class);
         when(stubEntityManager.getTransaction()).thenReturn(stubTransaction);
@@ -97,9 +104,9 @@ class SAEmpleadoImpTest {
         EntityManager stubEntityManager = mock(EntityManager.class);
 
         when(stubEntityManager.getTransaction()).thenReturn(stubTransaction);
-        when(stubTransaction.isActive()).thenReturn(true);  // 🔥 Aseguramos que rollback() puede ejecutarse
+        when(stubTransaction.isActive()).thenReturn(true);
 
-        // Simulamos que la consulta lanza una excepción
+        
         Query stubQueryBuscarEmpleados = mock(Query.class);
         when(stubQueryBuscarEmpleados.getResultList()).thenThrow(new RuntimeException("Error en BD"));
         when(stubEntityManager.createNamedQuery("Empleado.findAll")).thenReturn(stubQueryBuscarEmpleados);
@@ -109,7 +116,7 @@ class SAEmpleadoImpTest {
 
         List<TEmpleado> resultado = sa.buscarEmpleados();
 
-        // Verificamos que se inicia y revierte la transacción correctamente
+        // inicia y revierte la transacción correctamente
         verify(stubTransaction, times(1)).begin();
         verify(stubTransaction, times(1)).rollback();  // 🔥 Esto ahora debería ejecutarse
 
