@@ -66,6 +66,13 @@ public class Disponibilidad {
 
     }
 
+    public Disponibilidad(Empleado empleado, Timestamp fechaHoraInicio, Timestamp fechaHoraFin) {
+        this.empleado = empleado;
+        this.fechaHoraInicio = fechaHoraInicio;
+        this.fechaHoraFin = fechaHoraFin;
+
+    }
+
     /**
      * @param inicio el inicio de la ventana a comparar
      * @param fin el final de la ventana a comparar, debe ser posterior a inicio
