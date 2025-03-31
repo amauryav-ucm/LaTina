@@ -13,6 +13,7 @@ import org.w3c.dom.Document;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class RegistrarDisponibilidad implements Comando {
 
@@ -29,7 +30,7 @@ public class RegistrarDisponibilidad implements Comando {
             String horaInicio = jsData.getMember("horaInicio").toString();
             String horaFin = jsData.getMember("horaFin").toString();
             // Define formatters
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy h:mm a");
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy h:mm a", Locale.ENGLISH);
 
             String fechaHoraIniStr = fechaInicio + " " + horaInicio;
             String fechaHoraFinStr = fechaFin + " " + horaFin;

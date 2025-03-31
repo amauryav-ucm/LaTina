@@ -18,7 +18,7 @@ public class RellenarEmpleadosRegistrarDisponibildad implements Comando {
         WebEngine webEngine = vista.getWebView().getEngine();
         if (!l_empleados.isEmpty()) { //Si la lista no esta vacia
             for (TEmpleado empleado : l_empleados) {
-                String nombre = empleado.getNombre();
+                String nombre = empleado.getNombre() + " " + empleado.getApellidos() + " | DNI: " + empleado.getDNI();
                 int id = empleado.getId();
                 webEngine.executeScript(String.format("cargarEmpleadosAux('%s', %d)", nombre, id));
             }

@@ -391,6 +391,19 @@ function validarFormulario() {
         mostrarMensaje("Por favor, completa todos los campos.");
     }
 
+    // Combinación de fecha y hora de inicio
+    var fechaHoraInicio = new Date(dateInput.value + 'T' + startHourInput.value);
+    // Combinación de fecha y hora de fin
+    var fechaHoraFin = new Date(dateOutput.value + 'T' + endHourInput.value);
+
+    // Validación de que la fecha y hora de fin sean mayores que las de inicio
+    if (fechaHoraFin <= fechaHoraInicio) {
+        mostrarMensaje("La fecha y hora de fin deben ser mayores que la fecha y hora de inicio.");
+        dateOutput.classList.add("error");
+        endHourInput.classList.add("error");
+        return false;
+    }
+
     return isValid;
 }
 
