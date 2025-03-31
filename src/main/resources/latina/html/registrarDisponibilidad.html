@@ -70,16 +70,16 @@
             </div>
         </div>
 
-        <label for="dateInput">Fecha final</label>
+        <label for="campo-fecha-fin">Fecha final</label>
         <div class="date-picker">
-            <input type="text" class="date-input" readonly placeholder="Selecciona la fecha final" id="dateInput">
+            <input type="text" class="date-input" readonly placeholder="Selecciona la fecha final" id="campo-fecha-fin">
 
-            <div class="calendar-dropdown" id="calendarDropdown">
+            <div class="calendar-dropdown" id="calendario-fin">
                 <div class="calendar-container">
                     <div class="calendar-header">
-                        <button type="button" class="nav-button" id="prevMonth">&lt;</button>
-                        <div class="month-year" id="monthYear">Marzo 2025</div>
-                        <button type="button" class="nav-button" id="nextMonth">&gt;</button>
+                        <button type="button" class="nav-button" id="mes-ant-fin">&lt;</button>
+                        <div class="month-year" id="mes-fin">Marzo 2025</div>
+                        <button type="button" class="nav-button" id="mes-sig-fin">&gt;</button>
                     </div>
 
                     <div class="weekdays">
@@ -92,14 +92,14 @@
                         <div class="weekday">Do</div>
                     </div>
 
-                    <div class="days" id="calendarDays">
+                    <div class="days" id="dias-fin">
                         <!-- Los días se generarán con JavaScript -->
                     </div>
                 </div>
             </div>
         </div>
 
-        <label for="campo-hora-inicio">Hora final</label>
+        <label for="campo-hora-fin">Hora final</label>
         <div class="date-picker">
             <input type="text" class="time-input" id="campo-hora-fin" readonly onclick="openTimePicker()"
                    placeholder="Selecciona la hora final">
