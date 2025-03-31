@@ -12,8 +12,9 @@ import java.util.List;
 public class RellenarEmpleadosRegistrarDisponibildad implements Comando {
     @Override
     public void ejecutar(Object object, VistaPrincipal vista) {
+
         SAEmpleado saEmpleado = SAFactory.getInstance().createSAEmpleado();
-        List<TEmpleado> l_empleados = saEmpleado.getEmpleadosDisponibles((Integer) object); //Obtiene la lista de empleados disponibles
+        List<TEmpleado> l_empleados = saEmpleado.buscarEmpleados(); //Obtiene la lista de empleados disponibles
         WebEngine webEngine = vista.getWebView().getEngine();
         if (!l_empleados.isEmpty()) { //Si la lista no esta vacia
             for (TEmpleado empleado : l_empleados) {

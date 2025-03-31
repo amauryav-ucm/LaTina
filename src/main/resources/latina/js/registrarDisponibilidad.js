@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+    cargarEmpleados();
+
     const fechaInicio = {
         campo: document.getElementById('campo-fecha-inicio'),
         calendario: document.getElementById('calendario-inicio'),
@@ -6,15 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
         dias: document.getElementById('dias-inicio'),
         mes_ant: document.getElementById('mes-ant-inicio'),
         mes_sig: document.getElementById('mes-sig-inicio')
-    };
-
-    const fechaFin = {
-        campo: document.getElementById('dateInput'),
-        calendario: document.getElementById('calendarDropdown'),
-        mes: document.getElementById('monthYear'),
-        dias: document.getElementById('calendarDays'),
-        mes_ant: document.getElementById('prevMonth'),
-        mes_sig: document.getElementById('nextMonth')
     };
     
     const horaInicio = {
@@ -24,6 +18,15 @@ document.addEventListener('DOMContentLoaded', function() {
         minuto: document.getElementById('minuto-inicio'),
         ampm: document.getElementById('ampm-inicio'),
         boton: document.getElementById('boton-hora-inicio')
+    };
+
+    const fechaFin = {
+            campo: document.getElementById('campo-fecha-fin'),
+            calendario: document.getElementById('calendario-fin'),
+            mes: document.getElementById('mes-fin'),
+            dias: document.getElementById('dias-fin'),
+            mes_ant: document.getElementById('mes-ant-fin'),
+            mes_sig: document.getElementById('mes-sig-fin')
     };
 
     const horaFin = {
@@ -44,13 +47,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('hora-inicio').classList.toggle('open')
     })
 
-    const timeInput = document.getElementById('time-picker');
-    const timeInputPopup = document.getElementById('time-picker-popup');
+    //const timeInputIni = document.getElementById('time-picker');
+    //const timeInputPopupIni = document.getElementById('time-picker-popup');
 
     document.getElementById('fecha-inicio').addEventListener('click', function (){
         document.getElementById('calendario-inicio').classList.toggle('open');
 
     })
+
+    document.getElementById('campo-hora-fin').addEventListener('click', function () {
+            document.getElementById('tiempo-fin').classList.toggle('open')
+    })
+
+    //const timeInputFin = document.getElementById('time-picker');
+    //const timeInputPopupFin = document.getElementById('time-picker-popup');
+
+    document.getElementById('fecha-fin').addEventListener('click', function (){
+            document.getElementById('calendario-fin').classList.toggle('open');
+
+    })
+
+
 
 });
 
@@ -214,16 +231,16 @@ function configHora(selector){
 
 function cargarEmpleados() {
     // Se muestra un mensaje de carga y se deshabilita el combo
-    const empleadoSelect = document.getElementById("name");
+    const empleadoSelect = document.getElementById("empleado");
     empleadoSelect.innerHTML = '<option value="" selected>Cargando empleados...</option>';
     empleadoSelect.disabled = true;
 
     //Llamamos a la función de Java para obtener empleados
-    window.java.accion("OBTENER_TODOS_LOS_EMPLEADOS");
+    window.java.accion("OBTENER_TODOS_LOS_EMPLEADOS", null);
 }
 
 function cargarEmpleadosAux(empleado, id) {
-    const empleadoSelect = document.getElementById("name");
+    const empleadoSelect = document.getElementById("empleado");
     if (empleado) {
         let option = document.createElement("option");
         option.value = id;
@@ -234,8 +251,9 @@ function cargarEmpleadosAux(empleado, id) {
     }
 }
 
+
 function terminadoDeCargarEmpleados() {
-    const empleadoSelect = document.getElementById("name");
+    const empleadoSelect = document.getElementById("empleado");
     empleadoSelect.disabled = false;
     let firstOption = empleadoSelect.querySelector("option");
     if (firstOption) {
@@ -249,7 +267,7 @@ function recogerDisponibilidad() {
     var employeeSelect = document.getElementById("empleado");
     var dateInput = document.getElementById("campo-fecha-inicio");
     var startHourInput = document.getElementById("campo-hora-inicio");
-    var dateOutput = document.getElementById("dateInput");
+    var dateOutput = document.getElementById("campo-fecha-fin");
     var endHourInput = document.getElementById("campo-hora-fin");
 
 
@@ -270,7 +288,7 @@ function recogerDisponibilidad() {
         hayError = true;
     }
     if (dateOutput.value.trim() === "") {
-            dateInput.classList.add("error");
+            dateOutput.classList.add("error");
             hayError = true;
     }
     if (startHourInput.value.trim() === "") {
@@ -295,7 +313,7 @@ function recogerDisponibilidad() {
     disponibilidad.horaFin = endHourInput.value.trim();
 
     // Enviar los datos al backend Java (RegistrarDisponibilidad.java)
-    enviarADisponibilidadAJava(disponibilidad);
+    enviarDisponibilidadAJava(disponibilidad);
 
     // Mostrar mensaje de éxito y recargar (o redirigir) si es necesario
     mostrarMensaje("Disponibilidad registrada correctamente.");
@@ -306,7 +324,7 @@ function validarFormulario() {
      var employeeSelect = document.getElementById("empleado");
      var dateInput = document.getElementById("campo-fecha-inicio");
      var startHourInput = document.getElementById("campo-hora-inicio");
-     var dateOutput = document.getElementById("dateInput");
+     var dateOutput = document.getElementById("campo-fecha-fin");
      var endHourInput = document.getElementById("campo-hora-fin");
      let isValid = true; // Flag para saber si hay errores
 
