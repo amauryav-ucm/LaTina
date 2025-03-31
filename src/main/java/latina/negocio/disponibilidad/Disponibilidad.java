@@ -59,10 +59,10 @@ public class Disponibilidad {
 
     public Disponibilidad() { }
 
-    public Disponibilidad(Empleado empleado, Timestamp fechaHoraInicio, Timestamp fechaHoraFin) {
+    public Disponibilidad(Empleado empleado, TDisponibilidad tDisponibilidad) {
         this.empleado = empleado;
-        this.fechaHoraInicio = fechaHoraInicio;
-        this.fechaHoraFin = fechaHoraFin;
+        this.fechaHoraInicio = tDisponibilidad.getFechaInicio();
+        this.fechaHoraFin = tDisponibilidad.getFechaFin();
 
     }
 
