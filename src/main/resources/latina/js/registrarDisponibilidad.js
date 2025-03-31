@@ -246,3 +246,75 @@ function terminadoDeCargarEmpleados() {
         firstOption.value = "";
     }
 }
+function recogerDisponibilidad() {
+    // Obtenemos los elementos del formulario
+    var disponibilidad = {};
+    var employeeSelect = document.getElementById("employeeSelect");
+    var dateInput = document.getElementById("dateInput");
+    var startHourInput = document.getElementById("hourStart");
+    var endHourInput = document.getElementById("hourEnd");
+
+    // Limpiar errores previos y cerrar mensajes emergentes
+    employeeSelect.classList.remove("error");
+    dateInput.classList.remove("error");
+    startHourInput.classList.remove("error");
+    endHourInput.classList.remove("error");
+    cerrarMensaje();
+
+    // Validar que todos los campos tengan valor
+    let hayError = false;
+    if (employeeSelect.value.trim() === "") {
+        employeeSelect.classList.add("error");
+        hayError = true;
+    }
+    if (dateInput.value.trim() === "") {
+        dateInput.classList.add("error");
+        hayError = true;
+    }
+    if (startHourInput.value.trim() === "") {
+        startHourInput.classList.add("error");
+        hayError = true;
+    }
+    if (endHourInput.value.trim() === "") {
+        endHourInput.classList.add("error");
+        hayError = true;
+    }
+
+    // Si hay algún error, mostramos el mensaje y detenemos el envío
+    if (hayError) {
+        mostrarMensaje("Por favor, completa todos los campos.");
+        return;
+    }
+
+    // Recoger los datos de los campos
+    disponibilidad.empleado = employeeSelect.value.trim();
+    disponibilidad.fecha = dateInput.value.trim();
+    disponibilidad.horaInicio = startHourInput.value.trim();
+    disponibilidad.horaFin = endHourInput.value.trim();
+
+    // Enviar los datos al backend Java (RegistrarDisponibilidad.java)
+    enviarADisponibilidadAJava(disponibilidad);
+
+    // Mostrar mensaje de éxito y recargar (o redirigir) si es necesario
+    mostrarMensaje("Disponibilidad registrada correctamente.");
+    setTimeout(() => location.reload(), 200);
+}
+
+function mostrarMensaje(mensaje) {
+    const popup = document.getElementById("popup");
+    popup.style.display = "flex";
+    document.getElementById("popup-message").innerText = mensaje;
+    setTimeout(() => popup.classList.add("show"), 10);
+}
+
+function cerrarMensaje() {
+    const popup = document.getElementById("popup");
+    popup.classList.remove("show");
+    setTimeout(() => popup.style.display = "none", 300);
+}
+
+function enviarDisponibilidadAJava(disponibilidad) {
+    if (window.java && window.java.accion) {
+        window.java.accion("REGISTRAR_DISPONIBILIDAD", disponibilidad);
+    }
+}
