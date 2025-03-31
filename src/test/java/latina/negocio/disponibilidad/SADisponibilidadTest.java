@@ -68,6 +68,7 @@ public class SADisponibilidadTest
 
         SADisponibilidadImp sad = Mockito.spy(new SADisponibilidadImp());
         doReturn(em).when(sad).crearEntityManager();
+        doNothing().when(sad).combinarDisponibilidad(anyInt());
 
         Empleado empleado = new Empleado();
         when(em.find(Empleado.class, 1)).thenReturn(empleado);
