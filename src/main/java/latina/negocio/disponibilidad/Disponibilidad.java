@@ -83,6 +83,22 @@ public class Disponibilidad {
         return !(fechaHoraInicio.after(fin) || fechaHoraFin.before(inicio) || fechaHoraInicio.equals(fin) || fechaHoraFin.equals(inicio));
     }
 
+    public boolean seDebeUnirCon(Disponibilidad otraDisponibilidad){
+        // Si es la misma no se deben unir
+        if(id==otraDisponibilidad.getId()) {
+            return false;
+        }
+        // Si empieza despues que la otra acaba no se deben unir
+        if(fechaHoraInicio.after(otraDisponibilidad.getFechaHoraFin())){
+            return false;
+        }
+        // Si acaba antes que la otra comience no se deben unir
+        if(fechaHoraFin.before(otraDisponibilidad.getFechaHoraInicio())){
+            return false;
+        }
+        return true;
+    }
+
     /**
      * @param inicio el inicio de la ventana a comparar
      * @param fin el final de la ventana a comparar, debe ser posterior a inicio
