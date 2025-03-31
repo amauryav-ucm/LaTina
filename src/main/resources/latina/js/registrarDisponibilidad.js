@@ -214,3 +214,35 @@ function configHora(selector){
             selector.dropdown.classList.remove('open');
     })
 }
+
+function cargarEmpleados() {
+    // Se muestra un mensaje de carga y se deshabilita el combo
+    const empleadoSelect = document.getElementById("name");
+    empleadoSelect.innerHTML = '<option value="" selected>Cargando empleados...</option>';
+    empleadoSelect.disabled = true;
+
+    //Llamamos a la función de Java para obtener empleados
+    window.java.accion("OBTENER_TODOS_LOS_EMPLEADOS");
+}
+
+function cargarEmpleadosAux(empleado, id) {
+    const empleadoSelect = document.getElementById("name");
+    if (empleado) {
+        let option = document.createElement("option");
+        option.value = id;
+        option.textContent = empleado;
+        empleadoSelect.appendChild(option);
+    } else {
+        empleadoSelect.innerHTML = '<option value="" selected>No hay empleados disponibles</option>';
+    }
+}
+
+function terminadoDeCargarEmpleados() {
+    const empleadoSelect = document.getElementById("name");
+    empleadoSelect.disabled = false;
+    let firstOption = empleadoSelect.querySelector("option");
+    if (firstOption) {
+        firstOption.textContent = "Selecciona un empleado";
+        firstOption.value = "";
+    }
+}
