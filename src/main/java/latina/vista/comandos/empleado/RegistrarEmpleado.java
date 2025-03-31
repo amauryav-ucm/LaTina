@@ -15,39 +15,58 @@ public class RegistrarEmpleado implements Comando {
     @Override
     public void ejecutar(Object datos, VistaPrincipal vista) {
         try {
-            TEmpleado tEmpleado = new TEmpleado(
-                    ((JSObject)datos).getMember("dni").toString(),
-                    ((JSObject)datos).getMember("nombre").toString(),
-                    ((JSObject)datos).getMember("apellidos").toString(),
-                    ((JSObject)datos).getMember("email").toString(),
-                    ((JSObject)datos).getMember("telefono").toString(),
-                    true);
+            String dni = ((JSObject) datos).getMember("dni").toString();
+            String nombre = ((JSObject) datos).getMember("nombre").toString();
+            String apellidos = ((JSObject) datos).getMember("apellidos").toString();
+            String email = ((JSObject) datos).getMember("email").toString();
+            String telefono = ((JSObject) datos).getMember("telefono").toString();
+
+            TEmpleado tEmpleado = new TEmpleado(dni, nombre, apellidos, email, telefono, true);
             SAEmpleado sae = SAFactory.getInstance().createSAEmpleado();
             int result = sae.altaEmpleado(tEmpleado);
             String mensaje = "";
-            if (result >= 0) mensaje = "Se ha registrado el empleado correctamente con ID: " + result;
-            else if (result == -1) mensaje = "Ya existe un empleado con el DNI introducido";
-            else if (result == -2) mensaje = "Ya existe un empleado con el correo introducido";
-            else if (result == -3) mensaje = "Formato del DNI erróneo";
-            else if (result == -4) mensaje = "El campo teléfono solo permite números de 9 dígitos";
-            else if (result == -5) mensaje = "El campo nombre solo permite letras y espacios";
-            else if (result == -6) mensaje = "El campo apellidos solo permite letras y espacios";
-            else if (result == -7) mensaje = "El campo correo debe tener un formato válido, por ejemplo: usuario@ejemplo.com";
-            else mensaje = "Error desconocido";
+            boolean error = false;
+
+            // Lista de errores en formato JSON para pasarlo a JavaScript
+            String camposError = "[]";
+
+            if (result >= 0) {
+                mensaje = "Se ha registrado el empleado correctamente con ID: " + result;
+            } else {
+                error = true;
+                if (result == -1) mensaje = "Ya existe un empleado con el DNI introducido";
+                else if (result == -2) mensaje = "Ya existe un empleado con el correo introducido";
+                else if (result == -3) { mensaje = "Formato del DNI erróneo"; camposError = "['dni']"; }
+                else if (result == -4) { mensaje = "El campo teléfono solo permite números de 9 dígitos"; camposError = "['telefono']"; }
+                else if (result == -5) { mensaje = "El campo nombre solo permite letras y espacios"; camposError = "['nombre']"; }
+                else if (result == -6) { mensaje = "El campo apellidos solo permite letras y espacios"; camposError = "['apellidos']"; }
+                else if (result == -7) { mensaje = "El campo correo debe tener un formato válido, por ejemplo: usuario@ejemplo.com"; camposError = "['email']"; }
+                else mensaje = "Error desconocido";
+            }
 
             WebEngine webEngine = vista.getWebView().getEngine();
             String finalMensaje = mensaje;
-            // Se añade un listener para mostrar el mensaje cuando el documento esté listo
+            boolean finalError = error;
+            String finalCamposError = camposError;
+
             webEngine.documentProperty().addListener(new ChangeListener<Document>() {
                 @Override
                 public void changed(ObservableValue<? extends Document> obs, Document oldDoc, Document newDoc) {
                     if (newDoc != null) {
-                        webEngine.executeScript(String.format("mostrarMensaje('%s')", finalMensaje));
+                        if (finalError) {
+                            webEngine.executeScript(String.format(
+                                    "mostrarError('%s', '%s', '%s', '%s', '%s', '%s', %s)",
+                                    finalMensaje, dni, nombre, apellidos, email, telefono, finalCamposError
+                            ));
+                        } else {
+                            webEngine.executeScript(String.format("mostrarMensaje('%s')", finalMensaje));
+                        }
                         webEngine.documentProperty().removeListener(this);
                     }
                 }
             });
-        }catch(Exception e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

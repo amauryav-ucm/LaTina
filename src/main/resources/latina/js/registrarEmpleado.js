@@ -77,6 +77,31 @@ function cerrarMensaje() {
     setTimeout(() => popup.style.display = "none", 300);
 }
 
+function mostrarError(mensaje, dni, nombre, apellidos, email, telefono, camposError) {
+    const popup = document.querySelector(".popup-overlay");
+    popup.style.display = "flex";
+    popup.classList.add("show");
+    document.getElementById("popup-message").innerText = mensaje;
+
+    // Restaurar los valores en el formulario
+    document.getElementById("dni").value = dni;
+    document.getElementById("nombre").value = nombre;
+    document.getElementById("apellidos").value = apellidos;
+    document.getElementById("email").value = email;
+    document.getElementById("telefono").value = telefono;
+
+    // Quitar clases de error de todos los campos primero
+    document.querySelectorAll("input").forEach(input => input.classList.remove("error"));
+
+    // Agregar la clase de error solo a los campos que fallaron
+    camposError.forEach(id => {
+        const campo = document.getElementById(id);
+        if (campo) campo.classList.add("error");
+    });
+}
+
+
+
 function enviarAJava(empleado) {
      if (window.java && window.java.accion) {
             window.java.accion("REGISTRAR_EMPLEADO", empleado);
