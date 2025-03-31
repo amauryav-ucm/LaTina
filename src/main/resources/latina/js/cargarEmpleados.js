@@ -2,7 +2,7 @@ function cargarEmpleadosAux(empleado, idEmpleado) {
     let comboBox = document.getElementById("name")
     if (empleado) {
         let option = document.createElement("option");
-        option.value = id;
+        option.value = idEmpleado;
         option.textContent = empleado;
         comboBox.appendChild(option);
     }
