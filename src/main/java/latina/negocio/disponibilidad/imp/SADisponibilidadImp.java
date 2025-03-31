@@ -37,6 +37,7 @@ public class SADisponibilidadImp implements SADisponibilidad {
                 em.persist(disp);
                 trans.commit();
                 id = disp.getId();
+                combinarDisponibilidad(id);
             }
         }catch (Exception e) {
             if (trans != null && trans.isActive())
