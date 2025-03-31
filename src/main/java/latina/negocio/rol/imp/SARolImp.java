@@ -1,5 +1,6 @@
 package latina.negocio.rol.imp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.EntityTransaction;
@@ -62,4 +63,29 @@ public class SARolImp implements SARol {
         return EMFContainer.getInstance().getEMF().createEntityManager();
     }
 
+    @Override
+    public List<TRol> buscarRoles() {
+        EntityTransaction tx = null;
+        try (EntityManager em = crearEntityManager()) {
+            tx = em.getTransaction();
+            tx.begin();
+
+            Query query = em.createNamedQuery("Rol.findAll");
+            List<Rol> roles = (List<Rol>) query.getResultList();
+
+            List<TRol> resultado = new ArrayList<>();
+            for (Rol rol : roles) {
+                resultado.add(rol.toTransfer());
+            }
+            tx.commit();
+            return resultado;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            return null;
+        }
+    }
 }
