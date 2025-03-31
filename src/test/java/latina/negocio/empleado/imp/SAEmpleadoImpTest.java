@@ -106,7 +106,7 @@ class SAEmpleadoImpTest {
         when(stubEntityManager.getTransaction()).thenReturn(stubTransaction);
         when(stubTransaction.isActive()).thenReturn(true);
 
-        
+
         Query stubQueryBuscarEmpleados = mock(Query.class);
         when(stubQueryBuscarEmpleados.getResultList()).thenThrow(new RuntimeException("Error en BD"));
         when(stubEntityManager.createNamedQuery("Empleado.findAll")).thenReturn(stubQueryBuscarEmpleados);
