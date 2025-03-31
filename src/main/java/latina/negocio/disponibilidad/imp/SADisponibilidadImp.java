@@ -79,7 +79,7 @@ public class SADisponibilidadImp implements SADisponibilidad {
         }
     }
 
-    protected EntityManager crearEntityManager(){
+    public EntityManager crearEntityManager(){
         return EMFContainer.getInstance().getEMF().createEntityManager();
     }
 
