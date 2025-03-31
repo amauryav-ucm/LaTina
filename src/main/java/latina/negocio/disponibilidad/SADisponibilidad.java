@@ -4,6 +4,6 @@ public interface SADisponibilidad {
 
     public int altaDisponibilidad(TDisponibilidad tDisponibilidad);
 
-    public void combinarDisponibilidad(TDisponibilidad tDisponibilidad);
+    public void combinarDisponibilidad(int idDisponibilidad);
 
 }

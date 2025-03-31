@@ -50,8 +50,33 @@ public class SADisponibilidadImp implements SADisponibilidad {
     }
 
     @Override
-    public void combinarDisponibilidad(TDisponibilidad tDisponibilidad) {
-
+    public void combinarDisponibilidad(int idDisponibilidad) {
+        EntityTransaction tx = null;
+        try(EntityManager em = crearEntityManager()) {
+            // Esta es la disponibilidad nueva que hemos insertado
+            // Asumo que se llama a esta funcion despues de haber persistido la nueva disponibilidad
+            Disponibilidad nuevaDisponibilidad = em.find(Disponibilidad.class, idDisponibilidad);
+            // Buscamos todas las disponibilidades del empleado
+            List<Disponibilidad> lista = nuevaDisponibilidad.getEmpleado().getDisponibilidad();
+            for(Disponibilidad disp : lista){
+                if(disp.getId() != nuevaDisponibilidad.getId() && nuevaDisponibilidad.solapaCon(disp.getFechaHoraInicio(), disp.getFechaHoraFin())){
+                    // Actualizamos las horas de la disponibilidad
+                    // Si tiene un tiempo de inicio anterior se actualiza
+                    if(disp.getFechaHoraInicio().before(nuevaDisponibilidad.getFechaHoraInicio()))
+                        nuevaDisponibilidad.setFechaHoraInicio(disp.getFechaHoraInicio());
+                    // Si tiene un tiempo de fin posterior se actualiza
+                    if(disp.getFechaHoraFin().after(nuevaDisponibilidad.getFechaHoraFin()))
+                        nuevaDisponibilidad.setFechaHoraFin(disp.getFechaHoraFin());
+                    // Vamos a borrar esta disponibilidad ya que se ha fusionado con la nueva
+                    Query borrarDisponibilidad = em.createNamedQuery("Disponibilidad.delete");
+                    borrarDisponibilidad.setParameter("id", disp.getId());
+                    borrarDisponibilidad.executeUpdate();
+                }
+            }
+        } catch (Exception e) {
+            // Lanzamos una excepcion para que la atrape la funcion que llamo a combinarDisponibilidad
+            throw new RuntimeException(e);
+        }
     }
 
     protected EntityManager crearEntityManager(){
