@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    cargarEmpleados();
-
     const fechaInicio = {
         campo: document.getElementById('campo-fecha-inicio'),
         calendario: document.getElementById('calendario-inicio'),

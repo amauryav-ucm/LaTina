@@ -11,6 +11,8 @@ import latina.vista.comandos.Comando;
 import netscape.javascript.JSObject;
 import org.w3c.dom.Document;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class RegistrarDisponibilidad implements Comando {
 
@@ -20,14 +22,27 @@ public class RegistrarDisponibilidad implements Comando {
         try {
             
             JSObject jsData = (JSObject) datos;
-            int empleadoId = Integer.parseInt(jsData.getMember("empleadoId").toString());
-            Timestamp fechaInicio = Timestamp.valueOf(jsData.getMember("fechaInicio").toString());
-            Timestamp fechaFin = Timestamp.valueOf(jsData.getMember("fechaFin").toString());
+
+            int empleadoId = Integer.parseInt(jsData.getMember("empleado").toString());
+            String fechaInicio = jsData.getMember("fechaInicio").toString();
+            String fechaFin = jsData.getMember("fechaFin").toString();
+            String horaInicio = jsData.getMember("horaInicio").toString();
+            String horaFin = jsData.getMember("horaFin").toString();
+            // Define formatters
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy h:mm a");
+
+            String fechaHoraIniStr = fechaInicio + " " + horaInicio;
+            String fechaHoraFinStr = fechaFin + " " + horaFin;
+
+            // Convert to java.sql.Timestamp
+            Timestamp fechaHoraInicio = Timestamp.valueOf(LocalDateTime.parse(fechaHoraIniStr, dateTimeFormatter));
+            Timestamp fechaHoraFin = Timestamp.valueOf(LocalDateTime.parse(fechaHoraFinStr, dateTimeFormatter));
+
 
             TDisponibilidad t = new TDisponibilidad();
             t.setEmpleadoId(empleadoId);
-            t.setFechaInicio(fechaInicio);
-            t.setFechaFin(fechaFin);
+            t.setFechaInicio(fechaHoraInicio);
+            t.setFechaFin(fechaHoraFin);
 
             SADisponibilidad saDisponibilidad = SAFactory.getInstance().createSADisponibilidad();
             int result = saDisponibilidad.altaDisponibilidad(t);
