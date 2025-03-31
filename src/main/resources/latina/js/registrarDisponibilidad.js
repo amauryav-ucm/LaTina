@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    cargarEmpleados();
-
     const fechaInicio = {
         campo: document.getElementById('campo-fecha-inicio'),
         calendario: document.getElementById('calendario-inicio'),
@@ -67,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     })
 
-
+    cargarEmpleados();
 
 });
 
@@ -120,6 +118,7 @@ function configCalendario(selector){
         }
         generateCalendar(selector, currentMonth, currentYear);
     });
+
 }
 
 // Formatear la fecha para mostrar en el input
@@ -308,7 +307,8 @@ function recogerDisponibilidad() {
 
     // Recoger los datos de los campos
     disponibilidad.empleado = employeeSelect.value.trim();
-    disponibilidad.fecha = dateInput.value.trim();
+    disponibilidad.fechaInicio = dateInput.value.trim();
+    disponibilidad.fechaFin = dateOutput.value.trim();
     disponibilidad.horaInicio = startHourInput.value.trim();
     disponibilidad.horaFin = endHourInput.value.trim();
 

@@ -2,6 +2,7 @@ package latina.vista.comandos.factoria.imp;
 
 import latina.vista.Eventos;
 import latina.vista.comandos.Comando;
+import latina.vista.comandos.disponibilidad.RegistrarDisponibilidad;
 import latina.vista.comandos.disponibilidad.RellenarEmpleadosRegistrarDisponibildad;
 import latina.vista.comandos.empleado.ObtenerEmpleadosDisponiblesInterfaz;
 import latina.vista.comandos.turno.AsignarTurnoEmpleado;
@@ -30,6 +31,8 @@ public class FactoriaComandosImp extends FactoriaComandos {
                 break;
             case OBTENER_TODOS_LOS_EMPLEADOS:
                 comando = new RellenarEmpleadosRegistrarDisponibildad();
+            case REGISTRAR_DISPONIBILIDAD:
+                comando = new RegistrarDisponibilidad();
             default:
                 break;
         }
