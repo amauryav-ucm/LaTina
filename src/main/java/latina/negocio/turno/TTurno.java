@@ -15,6 +15,11 @@ public class TTurno {
     // Sera -1 cuando no esta asignado
     private int idEmpleado;
 
+    public TTurno()
+    {
+
+    }
+
     public TTurno(int idTurno, int idRol, Timestamp fechaHoraInicio, Timestamp fechaHoraFin) {
         this.idTurno = idTurno;
         this.idRol = idRol;
