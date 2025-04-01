@@ -5,6 +5,7 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import latina.negocio.turno.SATurno;
+import latina.negocio.turno.TTurno;
 import latina.negocio.turno.Turno;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.disponibilidad.Disponibilidad;
@@ -430,7 +431,7 @@ class SATurnoImpTest {
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.getResultList()).thenReturn(turnosSimulados);
 
-        List<Turno> resultado = sat.getTurnosSemana(semana);
+        List<TTurno> resultado = sat.getTurnosSemana(semana);
         assertEquals(2, resultado.size());
     }
 
@@ -447,7 +448,7 @@ class SATurnoImpTest {
         when(query.setParameter(anyString(), any())).thenReturn(query);
         when(query.getResultList()).thenReturn(new ArrayList<>());
 
-        List<Turno> resultado = sat.getTurnosSemana(semana);
+        List<TTurno> resultado = sat.getTurnosSemana(semana);
         assertTrue(resultado.isEmpty());
     }
 
@@ -461,7 +462,7 @@ class SATurnoImpTest {
 
         when(em.createQuery(anyString(), eq(Turno.class))).thenThrow(new RuntimeException("Database error"));
 
-        List<Turno> resultado = sat.getTurnosSemana(semana);
+        List<TTurno> resultado = sat.getTurnosSemana(semana);
         assertNull(resultado);
     }
 

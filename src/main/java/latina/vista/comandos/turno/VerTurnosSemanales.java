@@ -1,16 +1,12 @@
-package latina.vista.comandos.Turno;
+package latina.vista.comandos.turno;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.web.WebEngine;
 import latina.VistaPrincipal;
 import latina.negocio.factoria.SAFactory;
 import latina.negocio.turno.SATurno;
 import latina.negocio.turno.TTurno;
-import latina.negocio.turno.Turno;
 import latina.vista.comandos.Comando;
-import netscape.javascript.JSObject;
-import org.w3c.dom.Document;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
