@@ -1,18 +1,19 @@
 package latina.negocio.disponibilidad;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 import latina.integracion.emfc.EMFContainer;
 import latina.integracion.emfc.imp.EMFContainerImpTest;
 import latina.negocio.disponibilidad.imp.SADisponibilidadImp;
 import latina.negocio.empleado.Empleado;
+import latina.negocio.rol.Rol;
+import latina.negocio.turno.Turno;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -92,6 +93,43 @@ public class SADisponibilidadTestIT {
 
         int resultado = sa.altaDisponibilidad(tDisponibilidad);
         assertEquals(-2, resultado);
+    }
+
+    @Test
+    public void testAltaDisponibilidadTurnoCoincidente(){
+        // Persistir empleado y un Rol.
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+        Rol rol = new Rol();
+        rol.setNombre("ROLTEST3");
+        rol.setSalario(10);
+        rol.setActivo(true);
+        em.persist(rol);
+        em.getTransaction().commit();
+        em.close();
+
+        // Crear dos turnos: uno ya asignado (de 10:00 a 12:00) y otro nuevo que solapa (de 11:00 a 13:00).
+        em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+        Timestamp turnoInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
+        Timestamp turnoFin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).truncatedTo(ChronoUnit.HOURS));
+        Turno turno = new Turno();
+        turno.setFechaHoraInicio(turnoInicio);
+        turno.setFechaHoraFin(turnoFin);
+        turno.setEmpleado(empleado); // Ya asignado al empleado.
+        turno.setRol(rol);
+        em.persist(turno);
+        // Nueva disp conflictivo: de 11:00 a 13:00.
+        TDisponibilidad tDisp = new TDisponibilidad(
+                empleado.getId(),
+                Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(11).truncatedTo(ChronoUnit.HOURS)),
+                Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).truncatedTo(ChronoUnit.HOURS))
+        );
+        em.getTransaction().commit();
+        em.close();
+
+        int result = sa.altaDisponibilidad(tDisp);
+        assertEquals(-3, result);
     }
 
 }
