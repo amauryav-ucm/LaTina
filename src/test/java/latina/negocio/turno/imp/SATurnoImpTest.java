@@ -486,163 +486,7 @@ class SATurnoImpTest {
         assertEquals(-2, resultado);
     }
 
-    @Test
-    void testAltaTurno_empleadoNoEncontrado() {
-        // Usamos mocks para simular EntityManager y Transaction
-        EntityTransaction tx = mock(EntityTransaction.class);
-        EntityManager em = mock(EntityManager.class);
-        when(em.getTransaction()).thenReturn(tx);
 
-        SATurnoImp sat = Mockito.spy(new SATurnoImp());
-        doReturn(em).when(sat).createEntityManager();
-
-        // Crear TTurno con datos válidos y empleado asignado
-        TTurno tTurno = new TTurno();
-        tTurno.setIdRol(1);
-        tTurno.setIdEmpleado(100); // ID que "no existe"
-        tTurno.setFechaHoraInicio(Timestamp.valueOf(LocalDateTime.now()));
-        tTurno.setFechaHoraFin(Timestamp.valueOf(LocalDateTime.now().plusHours(2)));
-
-        // Simular que sí existe el rol pero no el empleado
-        Rol rol = new Rol();
-        rol.setId(1);
-        when(em.find(Rol.class, 1)).thenReturn(rol);
-        when(em.find(Empleado.class, 100)).thenReturn(null);
-
-        // Ejecutar método a probar
-        int resultado = sat.altaTurno(tTurno);
-
-        // Verificar que se hizo rollback y se retornó -3
-        verify(tx, times(1)).rollback();
-        assertEquals(-3, resultado);
-    }
-
-    @Test
-    void testSolapamientoTurnos() {
-        // Usamos mocks para simular EntityManager y Transaction
-        EntityTransaction tx = mock(EntityTransaction.class);
-        EntityManager em = mock(EntityManager.class);
-        Query q = mock(Query.class);
-        when(em.getTransaction()).thenReturn(tx);
-
-        SATurnoImp sat = Mockito.spy(new SATurnoImp());
-        doReturn(em).when(sat).createEntityManager();
-
-        // Crear TTurno con datos válidos y empleado asignado
-        TTurno tTurno = new TTurno();
-        tTurno.setIdRol(1);
-        tTurno.setIdEmpleado(100);
-        tTurno.setFechaHoraInicio(Timestamp.valueOf(LocalDateTime.now()));
-        tTurno.setFechaHoraFin(Timestamp.valueOf(LocalDateTime.now().plusHours(2)));
-
-        // Simular que existen rol y empleado
-        Rol rol = new Rol();
-        rol.setId(1);
-        Empleado empleado = new Empleado();
-        empleado.setId(100);
-
-        when(em.find(Rol.class, 1)).thenReturn(rol);
-        when(em.find(Empleado.class, 100)).thenReturn(empleado);
-
-        // Simular que hay solapamiento de turnos
-        when(em.createQuery(anyString())).thenReturn(q);
-        when(q.setParameter(anyString(), any())).thenReturn(q);
-        when(q.getSingleResult()).thenReturn(1L); // Indica solapamiento (contador > 0)
-
-        // Ejecutar método a probar
-        int resultado = sat.altaTurno(tTurno);
-
-        // Verificar que se hizo rollback y se retornó -4
-        verify(tx, times(1)).rollback();
-        assertEquals(-4, resultado);
-    }
-
-
-    @Test
-    void testAltaTurno_sinEmpleadoExitoso() {
-        // Usamos mocks para simular EntityManager y Transaction
-        EntityTransaction tx = mock(EntityTransaction.class);
-        EntityManager em = mock(EntityManager.class);
-        when(em.getTransaction()).thenReturn(tx);
-
-        SATurnoImp sat = Mockito.spy(new SATurnoImp());
-        doReturn(em).when(sat).createEntityManager();
-
-        // Crear TTurno con datos válidos sin empleado asignado
-        TTurno tTurno = new TTurno();
-        tTurno.setIdRol(1);
-        tTurno.setIdEmpleado(0); // Sin empleado
-        tTurno.setFechaHoraInicio(Timestamp.valueOf(LocalDateTime.now()));
-        tTurno.setFechaHoraFin(Timestamp.valueOf(LocalDateTime.now().plusHours(2)));
-
-        // Simular que existe el rol
-        Rol rol = new Rol();
-        rol.setId(1);
-        when(em.find(Rol.class, 1)).thenReturn(rol);
-
-        // Simular que al persistir se asigna un ID al turno
-        doAnswer(invocation -> {
-            Turno t = invocation.getArgument(0);
-            t.setId(5); // Asignar ID 5
-            return null;
-        }).when(em).persist(any(Turno.class));
-
-        // Ejecutar método a probar
-        int resultado = sat.altaTurno(tTurno);
-
-        // Verificar que se realizó commit y se retornó el ID del turno creado
-        verify(tx, times(1)).commit();
-        verify(tx, never()).rollback();
-        assertEquals(5, resultado);
-    }
-
-    @Test
-    void testAltaTurno_conEmpleadoExitoso() {
-        // Usamos mocks para simular EntityManager y Transaction
-        EntityTransaction tx = mock(EntityTransaction.class);
-        EntityManager em = mock(EntityManager.class);
-        Query q = mock(Query.class);
-        when(em.getTransaction()).thenReturn(tx);
-
-        SATurnoImp sat = Mockito.spy(new SATurnoImp());
-        doReturn(em).when(sat).createEntityManager();
-
-        // Crear TTurno con datos válidos y empleado asignado
-        TTurno tTurno = new TTurno();
-        tTurno.setIdRol(1);
-        tTurno.setIdEmpleado(100);
-        tTurno.setFechaHoraInicio(Timestamp.valueOf(LocalDateTime.now()));
-        tTurno.setFechaHoraFin(Timestamp.valueOf(LocalDateTime.now().plusHours(2)));
-
-        // Simular que existen rol y empleado
-        Rol rol = new Rol();
-        rol.setId(1);
-        Empleado empleado = new Empleado();
-        empleado.setId(100);
-
-        when(em.find(Rol.class, 1)).thenReturn(rol);
-        when(em.find(Empleado.class, 100)).thenReturn(empleado);
-
-        // Simular que NO hay solapamiento de turnos
-        when(em.createQuery(anyString())).thenReturn(q);
-        when(q.setParameter(anyString(), any())).thenReturn(q);
-        when(q.getSingleResult()).thenReturn(0L); // No hay solapamiento
-
-        // Simular que al persistir se asigna un ID al turno
-        doAnswer(invocation -> {
-            Turno t = invocation.getArgument(0);
-            t.setId(10); // Asignar ID 10
-            return null;
-        }).when(em).persist(any(Turno.class));
-
-        // Ejecutar método a probar
-        int resultado = sat.altaTurno(tTurno);
-
-        // Verificar que se realizó commit y se retornó el ID del turno creado
-        verify(tx, times(1)).commit();
-        verify(tx, never()).rollback();
-        assertEquals(10, resultado);
-    }
 
     @Test
     void testAltaTurno_persistenciaFalla() {
@@ -672,4 +516,78 @@ class SATurnoImpTest {
 
         assertEquals(-5, resultado);
     }
+
+    @Test
+    void testAltaTurno_exitoso() {
+        // Crear mocks
+        EntityTransaction tx = mock(EntityTransaction.class);
+        EntityManager em = mock(EntityManager.class);
+        when(em.getTransaction()).thenReturn(tx);
+
+        SATurnoImp sat = Mockito.spy(new SATurnoImp());
+        doReturn(em).when(sat).createEntityManager();
+
+        // Crear TTurno con datos válidos
+        Timestamp ahora = Timestamp.valueOf(LocalDateTime.now().plusHours(1));
+        Timestamp futuro = Timestamp.valueOf(LocalDateTime.now().plusHours(3));
+
+        TTurno tTurno = new TTurno();
+        tTurno.setIdRol(1);
+        tTurno.setFechaHoraInicio(ahora);
+        tTurno.setFechaHoraFin(futuro);
+
+        // Simular que sí existe el rol
+        Rol rol = new Rol();
+        rol.setId(1);
+        when(em.find(Rol.class, 1)).thenReturn(rol);
+
+        // Simular persistencia del turno con ID generado
+        Turno turnoMock = mock(Turno.class);
+        when(turnoMock.getId()).thenReturn(10);
+        doAnswer(invocation -> {
+            Turno turno = invocation.getArgument(0);
+            turno.setId(10); // Simular que se asigna un ID al persistir
+            return null;
+        }).when(em).persist(any(Turno.class));
+
+        // Ejecutar método a probar
+        int resultado = sat.altaTurno(tTurno);
+
+        // Verificar que se hizo commit y se retornó el ID esperado
+        verify(tx, times(1)).commit();
+        assertEquals(10, resultado);
+    }
+
+    @Test
+    void testAltaTurno_fechaInicioPasada() {
+        // Crear mocks
+        EntityTransaction tx = mock(EntityTransaction.class);
+        EntityManager em = mock(EntityManager.class);
+        when(em.getTransaction()).thenReturn(tx);
+
+        SATurnoImp sat = Mockito.spy(new SATurnoImp());
+        doReturn(em).when(sat).createEntityManager();
+
+        // Crear TTurno con fecha de inicio en el pasado
+        Timestamp pasado = Timestamp.valueOf(LocalDateTime.now().minusDays(1));
+        Timestamp futuro = Timestamp.valueOf(LocalDateTime.now().plusHours(3));
+
+        TTurno tTurno = new TTurno();
+        tTurno.setIdRol(1);
+        tTurno.setFechaHoraInicio(pasado);
+        tTurno.setFechaHoraFin(futuro);
+
+        // Simular que sí existe el rol
+        Rol rol = new Rol();
+        rol.setId(1);
+        when(em.find(Rol.class, 1)).thenReturn(rol);
+
+        // Ejecutar método a probar
+        int resultado = sat.altaTurno(tTurno);
+
+        // Verificar que se hizo rollback y se retornó -3
+        verify(tx, times(1)).rollback();
+        assertEquals(-3, resultado);
+    }
+
 }
