@@ -140,4 +140,28 @@ public class SADisponibilidadTest
         verify(tx, times(9)).rollback();
     }
 
+    @Test
+    public void testAltaDisponibilidadHoraActual(){
+        EntityTransaction tx = mock(EntityTransaction.class);
+        EntityManager em = mock(EntityManager.class);
+        when(em.getTransaction()).thenReturn(tx);
+
+        SADisponibilidadImp sad = Mockito.spy(new SADisponibilidadImp());
+        doReturn(em).when(sad).crearEntityManager();
+
+        Empleado empleado = new Empleado();
+        when(em.find(Empleado.class, 1)).thenReturn(empleado);
+
+        TDisponibilidad tDisponibilidad = new TDisponibilidad();
+        tDisponibilidad.setEmpleadoId(1);
+        Timestamp fechaInicio = Timestamp.valueOf(LocalDateTime.now().withHour(0).truncatedTo(ChronoUnit.HOURS));
+        Timestamp fechaFin = Timestamp.valueOf(LocalDateTime.now().withHour(23).truncatedTo(ChronoUnit.HOURS));
+        tDisponibilidad.setFechaInicio(fechaInicio);
+        tDisponibilidad.setFechaFin(fechaFin);
+
+        int resultado = sad.altaDisponibilidad(tDisponibilidad);
+        assertEquals(-4, resultado);
+        verify(tx, times(1)).rollback();
+    }
+
 }
