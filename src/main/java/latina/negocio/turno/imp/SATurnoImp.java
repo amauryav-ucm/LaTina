@@ -181,7 +181,7 @@ public class SATurnoImp implements SATurno {
                 trans.rollback();
             }
             e.printStackTrace();
-            return -5; // Código de error para excepción general
+            return -4; // Código de error para excepción general
         } finally {
             if (em != null) {
                 em.close();

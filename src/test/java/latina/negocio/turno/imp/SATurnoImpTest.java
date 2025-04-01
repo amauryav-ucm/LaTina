@@ -514,7 +514,7 @@ class SATurnoImpTest {
         // Ejecutar el método a probar
         int resultado = saTurno.altaTurno(tTurno);
 
-        assertEquals(-5, resultado);
+        assertEquals(-4, resultado);
     }
 
     @Test

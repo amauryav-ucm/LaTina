@@ -51,7 +51,8 @@ public class RegistrarTurno implements Comando {
             if (result >= 0) mensaje = "Turno registrado correctamente con ID: " + result;
             else if (result == -1) mensaje = "No se encontró el rol con el ID especificado";
             else if (result == -2) mensaje = "La fecha de fin debe ser posterior a la fecha de inicio";
-            else if (result == -3) mensaje = "Error al registrar el turno";
+            else if (result == -3) mensaje = "La fecha de inicio no puede ser anterior a la hora actual";
+            else if (result == -4) mensaje = "Error al registrar el turno";
             else mensaje = "Error desconocido";
 
             WebEngine webEngine = vista.getWebView().getEngine();

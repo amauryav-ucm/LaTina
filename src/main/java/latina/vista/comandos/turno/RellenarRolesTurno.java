@@ -9,7 +9,7 @@ import latina.vista.comandos.Comando;
 
 import java.util.List;
 
-public class RellenarRolesDisponibilidad implements Comando {
+public class RellenarRolesTurno implements Comando {
 
     @Override
     public void ejecutar(Object object, VistaPrincipal vista) {

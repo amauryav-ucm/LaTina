@@ -8,7 +8,7 @@ import latina.vista.comandos.factoria.FactoriaComandos;
 import latina.vista.comandos.rol.RegistrarRol;
 import latina.vista.comandos.turno.ObtenerTurnosPorDiaInterfaz;
 import latina.vista.comandos.turno.RegistrarTurno;
-import latina.vista.comandos.turno.RellenarRolesDisponibilidad;
+import latina.vista.comandos.turno.RellenarRolesTurno;
 
 public class FactoriaComandosImp extends FactoriaComandos {
 
@@ -30,7 +30,7 @@ public class FactoriaComandosImp extends FactoriaComandos {
                 comando = new ObtenerEmpleadosDisponiblesInterfaz();
                 break;
             case OBTENER_TODOS_LOS_ROLES:
-                comando = new RellenarRolesDisponibilidad();
+                comando = new RellenarRolesTurno();
                 break;
             case REGISTRAR_TURNO:
                 comando = new RegistrarTurno();
