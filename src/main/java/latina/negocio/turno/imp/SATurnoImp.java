@@ -7,6 +7,8 @@ import jakarta.persistence.Query;
 import latina.integracion.emfc.EMFContainer;
 import latina.negocio.disponibilidad.Disponibilidad;
 import latina.negocio.empleado.Empleado;
+import latina.negocio.empleado.TEmpleado;
+import latina.negocio.rol.TRol;
 import latina.negocio.turno.SATurno;
 import latina.negocio.turno.TTurno;
 import latina.negocio.turno.TTurnoRolEmpleado;
@@ -138,10 +140,10 @@ public class SATurnoImp implements SATurno {
     }
 
     @Override
-    public List<TTurno> getTurnosSemana(Timestamp semana) {
+    public List<TTurnoRolEmpleado> getTurnosSemana(Timestamp semana) {
         EntityManager em = null;
         List<Turno> turnos = null;
-        ArrayList<TTurno> listaTurnos = new ArrayList<>();
+        ArrayList<TTurnoRolEmpleado> listaTurnos = new ArrayList<>();
         try {
             em = createEntityManager();            // Convierte Timestamp(formato de la fecha de Turno) en LocalDateTime para manipularlo
             LocalDateTime semanaLocalDateTime = semana.toLocalDateTime();
@@ -165,15 +167,22 @@ public class SATurnoImp implements SATurno {
             turnos = query.getResultList();
             for (Turno a: turnos)
             {
+                TTurno turno = a.toTransfer();
+                TRol rol = a.getRol().toTransfer();
+                TEmpleado empleado = null;
                 if(a.getEmpleado() != null){
-                    listaTurnos.add(new TTurno(a.getId(), a.getRol().getId(), a.getFechaHoraInicio(), a.getFechaHoraFin(), a.getEmpleado().getId()));
+                   empleado = a.getEmpleado().toTransfer();
+                   listaTurnos.add(new TTurnoRolEmpleado(turno, rol, empleado));
                 }
                 else{
-                    listaTurnos.add(new TTurno(a.getId(), a.getRol().getId(), a.getFechaHoraInicio(), a.getFechaHoraFin()));
+                    listaTurnos.add(new TTurnoRolEmpleado(turno, rol));
                 }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
+
         } finally {
             if (em != null) {
                 em.close();

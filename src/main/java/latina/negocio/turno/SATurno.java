@@ -8,6 +8,6 @@ public interface SATurno {
 
     public int asignarTurno(int idTurno, int idEmpleado);
 
-    public List<TTurno> getTurnosSemana(Timestamp semana);
+    public List<TTurnoRolEmpleado> getTurnosSemana(Timestamp semana);
     public List<TTurnoRolEmpleado> listarTurnosPorDia(String fecha);
 }

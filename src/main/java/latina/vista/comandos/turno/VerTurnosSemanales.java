@@ -3,8 +3,10 @@ package latina.vista.comandos.turno;
 import javafx.scene.web.WebEngine;
 import latina.VistaPrincipal;
 import latina.negocio.factoria.SAFactory;
+import latina.negocio.rol.TRol;
 import latina.negocio.turno.SATurno;
 import latina.negocio.turno.TTurno;
+import latina.negocio.turno.TTurnoRolEmpleado;
 import latina.vista.comandos.Comando;
 
 import java.sql.Timestamp;
@@ -30,11 +32,11 @@ public class VerTurnosSemanales implements Comando {
             // Convierte de nuevo a Timestamp
 
             SATurno saTurno = SAFactory.getInstance().createSATurno();
-            List<TTurno> turnos = saTurno.getTurnosSemana(lunes);
-            List<TTurno> turnosDivididos = new ArrayList<>();
+            List<TTurnoRolEmpleado> turnos = saTurno.getTurnosSemana(lunes);
+            List<TTurnoRolEmpleado> turnosDivididos = new ArrayList<>();
             //Si un turno dura varios dias dividirlo en varios turnos
             //y las horas que sean fuera de esta semana no cogerlas
-            for (TTurno turno : turnos) {
+            for (TTurnoRolEmpleado turno : turnos) {
                 LocalDateTime inicio = turno.getFechaHoraInicio().toLocalDateTime();
                 LocalDateTime fin = turno.getFechaHoraFin().toLocalDateTime();
 
@@ -59,13 +61,16 @@ public class VerTurnosSemanales implements Comando {
                     }
 
                     // Crear y añadir nuevo turno fragmentado
-                    turnosDivididos.add(new TTurno(
+                    TTurno turnoDividido = new TTurno(
                             turno.getIdTurno(),
                             turno.getIdRol(),
                             Timestamp.valueOf(inicio),
                             Timestamp.valueOf(nuevoFin),
-                            turno.getIdEmpleado()
-                    ));
+                            turno.getIdEmpleado());
+                    TRol tRol = new TRol(turno.getNombreRol(),turno.getSalarioRol(), true);
+                    TTurnoRolEmpleado div = new TTurnoRolEmpleado(turnoDividido, tRol);
+                    div.setDNIEmpleado(turno.getDNIEmpleado()!=null?turno.getDNIEmpleado():"Sin asignar");
+                    turnosDivididos.add(div);
 
                     // Avanzar al siguiente día a las 00:00
                     inicio = inicio.toLocalDate().plusDays(1).atStartOfDay();
@@ -73,13 +78,13 @@ public class VerTurnosSemanales implements Comando {
             }
 
             WebEngine webEngine = vista.getWebView().getEngine();
-            for (TTurno turno : turnosDivididos) {
+            for (TTurnoRolEmpleado turno : turnosDivididos) {
                 String turnoJson = "{"
                         + "\"id\": " + turno.getIdTurno() + ","
                         + "\"fechaHoraInicio\": \"" + turno.getFechaHoraInicio().toString() + "\","
                         + "\"fechaHoraFin\": \"" + turno.getFechaHoraFin().toString() + "\","
-                        + "\"dniEmpleado\": \"" + turno.getIdEmpleado() + "\","
-                        + "\"rol\": \"" + turno.getIdRol() + "\""
+                        + "\"dniEmpleado\": \"" + turno.getDNIEmpleado() + "\","
+                        + "\"rol\": \"" + turno.getNombreRol() + "\""
                         + "}";
                 webEngine.executeScript(String.format("cargarTurnosAux('%s', %d)", turnoJson, turno.getIdTurno()));
             }
