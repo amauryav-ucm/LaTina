@@ -131,5 +131,23 @@ public class SADisponibilidadTestIT {
         int result = sa.altaDisponibilidad(tDisp);
         assertEquals(-3, result);
     }
+    @Test
+    public void testAltaDisponibilidadHoraPasada() {
+
+        TDisponibilidad tDisponibilidad = new TDisponibilidad();
+        tDisponibilidad.setEmpleadoId(empleado.getId());
+
+        Timestamp fechaPasada = Timestamp.valueOf(LocalDateTime.now().minusHours(1)); // Hace 1 hora
+        Timestamp fechaFin = Timestamp.valueOf(LocalDateTime.now().plusHours(2)); // Dentro de 2 horas
+
+        tDisponibilidad.setFechaInicio(fechaPasada);
+        tDisponibilidad.setFechaFin(fechaFin);
+
+
+        int resultado = sa.altaDisponibilidad(tDisponibilidad);
+
+        assertEquals(-4, resultado);
+    }
+
 
 }
