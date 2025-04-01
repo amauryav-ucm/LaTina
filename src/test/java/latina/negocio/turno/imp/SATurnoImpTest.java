@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
+import latina.negocio.rol.Rol;
 import latina.negocio.turno.SATurno;
 import latina.negocio.turno.TTurno;
 import latina.negocio.turno.TTurnoRolEmpleado;
@@ -424,8 +425,12 @@ class SATurnoImpTest {
         Timestamp semana = Timestamp.valueOf(LocalDateTime.now().with(TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY)));
 
         List<Turno> turnosSimulados = new ArrayList<>();
-        turnosSimulados.add(new Turno());
-        turnosSimulados.add(new Turno());
+        Turno turnoA  = new Turno();
+        turnoA.setRol(new Rol());
+        Turno turnoB  = new Turno();
+        turnoB.setRol(new Rol());
+        turnosSimulados.add(turnoA);
+        turnosSimulados.add(turnoB);
 
         TypedQuery<Turno> query = mock(TypedQuery.class);
         when(em.createQuery(anyString(), eq(Turno.class))).thenReturn(query);
