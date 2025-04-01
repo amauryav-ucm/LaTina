@@ -1,7 +1,7 @@
 package latina.negocio.empleado;
 
 import jakarta.persistence.*;
-import latina.negocio.dispoinibilidad.Disponibilidad;
+import latina.negocio.disponibilidad.Disponibilidad;
 import latina.negocio.turno.Turno;
 
 import java.util.ArrayList;
@@ -10,7 +10,9 @@ import java.util.List;
 @Entity
 @NamedQueries({
         @NamedQuery(name = "Empleado.findByDNI", query = "select obj from Empleado obj where :DNI = obj.DNI "),
-        @NamedQuery(name = "Empleado.findByCorreo", query = "select obj from Empleado obj where :correo = obj.correo ")
+        @NamedQuery(name = "Empleado.findByCorreo", query = "select obj from Empleado obj where :correo = obj.correo "),
+        @NamedQuery(name = "Disponibilidad.findByRangoFecha",
+                query = "SELECT d FROM Disponibilidad d WHERE d.fechaHoraInicio <= :fechaHoraIni AND d.fechaHoraFin >= :fechaHoraFin")
 })
 
 public class Empleado {
@@ -25,9 +27,9 @@ public class Empleado {
     private String correo;
     private String telefono;
     private boolean activo;
-    @OneToMany(mappedBy = "empleado")
+    @OneToMany(mappedBy = "empleado", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Disponibilidad> disponibilidad = new ArrayList<>();
-    @OneToMany(mappedBy = "empleado")
+    @OneToMany(mappedBy = "empleado", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Turno> turno = new ArrayList<>();
 
     public Empleado() {
@@ -116,5 +118,9 @@ public class Empleado {
 
     public void setTurno(List<Turno> turno) {
         this.turno = turno;
+    }
+
+    public TEmpleado toTransfer(){
+        return new TEmpleado(id, DNI, nombre, apellidos, correo, telefono, activo);
     }
 }

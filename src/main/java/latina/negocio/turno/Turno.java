@@ -7,6 +7,11 @@ import latina.negocio.rol.Rol;
 import java.sql.Timestamp;
 
 @Entity
+
+@NamedQueries({
+        @NamedQuery(name = "Turno.findByDia", query = "SELECT t FROM Turno t WHERE function('DATE', t.fechaHoraInicio) = :dia AND t.empleado IS NULL")
+})
+
 public class Turno {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -93,6 +98,16 @@ public class Turno {
     // Si empleado es null es que no se ha asignado el turno
     public boolean estaAsignado(){
         return empleado != null;
+    }
+
+    /**
+     * @param inicio el inicio de la ventana a comparar
+     * @param fin el final de la ventana a comparar, debe ser posterior a inicio
+     * @returns true si el turno solapa con la ventana definida por inicio y fin
+     */
+    public boolean solapaCon(Timestamp inicio, Timestamp fin){
+        // Se presupone que las horas estan bien cronologicamente
+        return !(fechaHoraInicio.after(fin) || fechaHoraFin.before(inicio) || fechaHoraInicio.equals(fin) || fechaHoraFin.equals(inicio));
     }
 
 }

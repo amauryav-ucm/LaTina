@@ -1,7 +1,11 @@
 package latina.negocio.rol.imp;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import latina.integracion.emfc.EMFContainer;
+import latina.integracion.emfc.imp.EMFContainerImp;
+import latina.integracion.emfc.imp.EMFContainerImpTest;
 import latina.negocio.factoria.SAFactory;
 import latina.negocio.rol.Rol;
 import latina.negocio.rol.SARol;
@@ -10,6 +14,8 @@ import latina.negocio.rol.TRol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+
+import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,25 +26,22 @@ public class SARolImpTestsIT {
 
     @BeforeEach
     public void setUp() {
+        // Base de datos exclusiva para tests, se crean las tablas antes de cada test y se borran despues
+        // Hace falta crear un nuevo esquema llamado bdlatinatest
+        try {
+            Field instancia = EMFContainer.class.getDeclaredField("emfc");
+            instancia.setAccessible(true);
+            instancia.set(null, new EMFContainerImpTest());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         sa = SAFactory.getInstance().createSARol();
-        limpiarBaseDeDatos();
     }
-    private void limpiarBaseDeDatos() {
-        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
-        em.getTransaction().begin();
-        em.createQuery("DELETE FROM Rol").executeUpdate();
-        em.getTransaction().commit();
-        em.close();
-    }
+
     @Test
     public void registrarRolExitoso() {
-
-
-        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
-
-
         int id = sa.altaRol(tRol);
 
         //Exito
@@ -47,7 +50,6 @@ public class SARolImpTestsIT {
 
     @Test
     public void registarRolRepetido() {
-        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
         int id = sa.altaRol(tRol);
@@ -61,7 +63,6 @@ public class SARolImpTestsIT {
 
     @Test
     public void registrarRolSalarioO() {
-        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
         //Salario = 0
@@ -72,7 +73,6 @@ public class SARolImpTestsIT {
 
     @Test
     public void registrarRolSalarioN() {
-        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
         //Salario < 0
@@ -83,7 +83,6 @@ public class SARolImpTestsIT {
 
     @Test
     public void registrarRolNombreIncorrecto() {
-        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
 
@@ -94,7 +93,6 @@ public class SARolImpTestsIT {
 
     @Test
     public void registrarRolNombreIncorrecto2() {
-        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
 
@@ -105,7 +103,6 @@ public class SARolImpTestsIT {
 
     @Test
     public void registrarRolNombreIncorrecto3() {
-        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
 
@@ -113,20 +110,22 @@ public class SARolImpTestsIT {
         int id = sa.altaRol(tRol);
         assertEquals(-3, id);
     }
+
     @Test
     public void registrarRolNombreVacio() {
-        limpiarBaseDeDatos();
         TRol tRol = new TRol("", 8.00, true);
 
         int id = sa.altaRol(tRol);
         assertEquals(-3, id);
     }
+
     @Test
     public void registrarRolNombreNull() {
         TRol tRol = new TRol(null, 8.00, true);
         int id = sa.altaRol(tRol);
         assertEquals(-4, id);
     }
+
     /*@Test //es imposible este caso ya que registrarRol.js ya se encarga de que no pase
     public void registrarRolNombreSoloEspacios() {
         TRol tRol = new TRol("   ", 8.00, true);
@@ -138,6 +137,7 @@ public class SARolImpTestsIT {
         int id = sa.altaRol(null);
         assertEquals(-4, id); // Asumiendo que la excepción da este código
     }
+
     @Test
     public void verificarRollbackTrasFallo() {
         TRol tRol1 = new TRol("LIMPIEZA", 1000, true);

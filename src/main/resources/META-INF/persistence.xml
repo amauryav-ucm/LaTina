@@ -5,10 +5,11 @@
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd">
     <persistence-unit name="LaTinaCode"
                       transaction-type="RESOURCE_LOCAL">
-        <class>latina.negocio.empleado.Empleado</class>
-        <class>latina.negocio.dispoinibilidad.Disponibilidad</class>
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>latina.negocio.rol.Rol</class>
+        <class>latina.negocio.empleado.Empleado</class>
         <class>latina.negocio.turno.Turno</class>
+        <class>latina.negocio.disponibilidad.Disponibilidad</class>
         <properties>
             <!-- Configuración de conexión a la base de datos -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
@@ -16,10 +17,51 @@
             <property name="jakarta.persistence.jdbc.user" value="root" />
             <property name="jakarta.persistence.jdbc.password" value="root" />
 
-            <!-- Propiedad para la generación de DDL (especificada como 'create-or-extend-tables' por si deseas crear/modificar tablas) -->
-            <property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
-            <property name="eclipselink.ddl-generation.output-mode" value="both" />
-            <property name="eclipselink.jdbc.batch-writing" value="JDBC" />
+            <property name="hibernate.hbm2ddl.auto" value="update"/>  <!-- Keeps existing data -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
         </properties>
     </persistence-unit>
+    <persistence-unit name="H2Test" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>latina.negocio.rol.Rol</class>
+        <properties>
+
+            <!-- Database Configuration -->
+            <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:file:./data/h2database;DB_CLOSE_DELAY=-1"/>
+            <property name="jakarta.persistence.jdbc.user" value="sa"/>
+            <property name="jakarta.persistence.jdbc.password" value=""/>
+
+            <!-- Hibernate Configuration -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>  <!-- Keeps existing data -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+    <persistence-unit name="LaTinaCodeTest"
+                      transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>latina.negocio.rol.Rol</class>
+        <class>latina.negocio.empleado.Empleado</class>
+        <class>latina.negocio.turno.Turno</class>
+        <class>latina.negocio.disponibilidad.Disponibilidad</class>
+        <properties>
+            <!-- Configuración de conexión a la base de datos -->
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bdlatinatest" />
+            <property name="jakarta.persistence.jdbc.user" value="root" />
+            <property name="jakarta.persistence.jdbc.password" value="root" />
+
+            <!-- Propiedad para la generación de DDL (especificada como 'create-or-extend-tables' por si deseas crear/modificar tablas) -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>  <!-- Keeps existing data -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.use_sql_comments" value="true"/>
+        </properties>
+    </persistence-unit>
+
+
 </persistence>

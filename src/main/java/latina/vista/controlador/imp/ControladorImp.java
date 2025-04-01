@@ -19,7 +19,6 @@ public class ControladorImp extends Controlador {
         Comando comando = FactoriaComandos.getInstance().crearComando(evento);
         if (comando != null)
             comando.ejecutar(param, this.vistaP);
-
     }
 
 }

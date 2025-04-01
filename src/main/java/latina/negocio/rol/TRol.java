@@ -44,6 +44,13 @@ public class TRol {
         this.activo = activo;
     }
 
+    public TRol(int id, String nombre, double salario, boolean activo){
+        this.id = id;
+        this.nombre = nombre;
+        this.salario = salario;
+        this.activo = activo;
+    }
+
     public String toString(){
         return nombre + Double.toString(salario);
     }
