@@ -145,7 +145,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         turnos[dateKey].push({
             startTime: turno.fechaHoraInicio, // Asegúrate de que el formato sea compatible con tu renderizado
-            endTime: turno.fechaHoraFin
+            endTime: turno.fechaHoraFin,
+            dniEmpleado: turno.dniEmpleado, // Agrega el DNI del empleado
+            rol: turno.rol // Agrega el nombre del rol
         });
 
     }

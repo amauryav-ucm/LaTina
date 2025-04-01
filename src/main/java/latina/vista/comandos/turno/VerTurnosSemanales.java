@@ -10,6 +10,7 @@ import latina.negocio.turno.TTurnoRolEmpleado;
 import latina.vista.comandos.Comando;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
@@ -86,7 +87,11 @@ public class VerTurnosSemanales implements Comando {
                         + "\"dniEmpleado\": \"" + turno.getDNIEmpleado() + "\","
                         + "\"rol\": \"" + turno.getNombreRol() + "\""
                         + "}";
-                webEngine.executeScript(String.format("cargarTurnosAux('%s', %d)", turnoJson, turno.getIdTurno()));
+
+                LocalDateTime localDateTime = turno.getFechaHoraInicio().toLocalDateTime();
+                LocalDate localDate = localDateTime.toLocalDate();
+                String fechaSoloDia = localDate.toString();
+                webEngine.executeScript(String.format("agregarTurnoAlDia(%s, '%s')", turnoJson, fechaSoloDia));
             }
             //String finalJson = jsonTurnos.toString();
 
