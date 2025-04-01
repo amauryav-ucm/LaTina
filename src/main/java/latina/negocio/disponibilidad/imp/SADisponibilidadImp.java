@@ -9,6 +9,7 @@ import latina.negocio.disponibilidad.SADisponibilidad;
 import latina.negocio.disponibilidad.TDisponibilidad;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.rol.Rol;
+import latina.negocio.turno.Turno;
 
 import java.util.List;
 
@@ -33,6 +34,15 @@ public class SADisponibilidadImp implements SADisponibilidad {
                 trans.rollback();
                 return -2;
             }else{
+                //Para que no se pueda registrar una disponibilidad si el empleado tiene un turno asignado
+                Empleado empleado = em.find(Empleado.class, tDisponibilidad.getEmpleadoId());
+                List<Turno> listaTurnos = empleado.getTurno();
+                for (Turno turnoEmp : listaTurnos) {
+                    if (turnoEmp.solapaCon(tDisponibilidad.getFechaInicio(),tDisponibilidad.getFechaFin())) {
+                        trans.rollback();
+                        return -3;
+                    }
+                }
                 Disponibilidad disp = new Disponibilidad(emp, tDisponibilidad);
                 em.persist(disp);
                 trans.commit();
@@ -43,7 +53,7 @@ public class SADisponibilidadImp implements SADisponibilidad {
             if (trans != null && trans.isActive())
                 trans.rollback();
             e.printStackTrace();
-            return -3;
+            return -4;
         } finally {
             if (em != null)
                 em.close();
