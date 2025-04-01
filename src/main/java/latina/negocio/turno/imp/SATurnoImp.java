@@ -13,6 +13,8 @@ import latina.negocio.turno.SATurno;
 import latina.negocio.turno.TTurno;
 import latina.negocio.turno.TTurnoRolEmpleado;
 import latina.negocio.turno.Turno;
+
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -144,6 +146,7 @@ public class SATurnoImp implements SATurno {
             em = createEntityManager();
             trans = em.getTransaction();
             trans.begin();
+            Timestamp ahora = new Timestamp(System.currentTimeMillis());
 
             // 1. Validar rol
             Rol rol = em.find(Rol.class, tTurno.getIdRol());
@@ -152,6 +155,7 @@ public class SATurnoImp implements SATurno {
                 return -1; // Código de error para rol no encontrado
             }
 
+
             // 2. Validar fechas
             if (tTurno.getFechaHoraFin().equals(tTurno.getFechaHoraInicio()) ||
                     tTurno.getFechaHoraFin().before(tTurno.getFechaHoraInicio())) {
@@ -159,36 +163,13 @@ public class SATurnoImp implements SATurno {
                 return -2; // Código de error para fechas inválidas
             }
 
-            // 3. Validar empleado si está asignado
-            Empleado empleado = null;
-            if (tTurno.getIdEmpleado() > 0) {
-                empleado = em.find(Empleado.class, tTurno.getIdEmpleado());
-                if (empleado == null) {
-                    trans.rollback();
-                    return -3; // Código de error para empleado no encontrado
-                }
-
-                // 4. Validar solapamiento de turnos
-                boolean existeSolapamiento = ((Number)em.createQuery(
-                                "SELECT COUNT(t) FROM Turno t WHERE " +
-                                        "t.empleado = :empleado AND " +
-                                        "t.fechaHoraInicio < :fin AND " +
-                                        "t.fechaHoraFin > :inicio")
-                        .setParameter("empleado", empleado)
-                        .setParameter("inicio", tTurno.getFechaHoraInicio())
-                        .setParameter("fin", tTurno.getFechaHoraFin())
-                        .getSingleResult()).longValue() > 0;
-
-                if (existeSolapamiento) {
-                    trans.rollback();
-                    return -4; // Código de error para turno solapado
-                }
+            if(tTurno.getFechaHoraInicio().before(ahora)){
+                trans.rollback();
+                return -3;
             }
 
-            // 5. Crear y persistir turno
-            Turno turno = (empleado != null) ?
-                    new Turno(tTurno, rol, empleado) :
-                    new Turno(tTurno, rol);
+            // 3. Crear y persistir turno
+            Turno turno = new Turno(tTurno, rol);
 
             em.persist(turno);
             trans.commit();
