@@ -22,17 +22,22 @@ import javafx.stage.StageStyle;
 import latina.vista.controlador.Controlador;
 import latina.vista.Eventos;
 import netscape.javascript.JSObject;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.stream.Collectors;
 
 public class VistaPrincipal extends Application {
     private WebView webView;
     private double xOffset = 0;
     private double yOffset = 0;
-    private final Color TEXT_COLOR = Color.WHITE;
-    private final String DARK_RED = "#990000"; // Rojo oscuro para hover
-    private final String TITLE_BAR_COLOR = "#1e3c72"; // Color más elegante para la barra
-    private final String BORDER_COLOR = "#1e3c72"; // Color de borde a juego
+    private final Color TEXT_COLOR = Color.web("#FFFFFF"); // Azul claro
+    private final String COLOR_HOVER_BOTONES = "#606060"; // Rojo oscuro para hover
+    private final String TITLE_BAR_COLOR = "#333"; // Color más elegante para la barra
+    private final String BORDER_COLOR = "#333"; // Color de borde a juego
 
     @Override
     public void start(Stage primaryStage) {
@@ -62,7 +67,7 @@ public class VistaPrincipal extends Application {
         root.setPrefWidth(Region.USE_COMPUTED_SIZE);
         root.setPrefHeight(Region.USE_COMPUTED_SIZE);
 
-        Scene scene = new Scene(root, 900, 600);
+        Scene scene = new Scene(root, 1250, 700);
 
         // Agregar listener para manejar los cambios de tamaño
         primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
@@ -112,9 +117,9 @@ public class VistaPrincipal extends Application {
         controlBox.setAlignment(Pos.CENTER_RIGHT);
 
         try {
-            ImageView minimizeIcon = new ImageView(new Image(getClass().getResourceAsStream("/latina/images/minimize.png")));
-            ImageView maximizeIcon = new ImageView(new Image(getClass().getResourceAsStream("/latina/images/cuadrado.png")));
-            ImageView closeIcon = new ImageView(new Image(getClass().getResourceAsStream("/latina/images/X.png")));
+            ImageView minimizeIcon = new ImageView(new Image(getClass().getResourceAsStream("/latina/images/minimizeBlanco.png")));
+            ImageView maximizeIcon = new ImageView(new Image(getClass().getResourceAsStream("/latina/images/cuadradoBlanco.png")));
+            ImageView closeIcon = new ImageView(new Image(getClass().getResourceAsStream("/latina/images/Xblanca.png")));
 
             configureIcon(minimizeIcon);
             configureIcon(maximizeIcon);
@@ -186,7 +191,7 @@ public class VistaPrincipal extends Application {
     }
 
     private void addDarkRedHoverEffect(Button button) {
-        button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: " + DARK_RED + "; -fx-padding: 5px;"));
+        button.setOnMouseEntered(event -> button.setStyle("-fx-background-color: " + COLOR_HOVER_BOTONES + "; -fx-padding: 5px;"));
         button.setOnMouseExited(event -> button.setStyle("-fx-background-color: transparent; -fx-padding: 5px;"));
     }
 
@@ -236,9 +241,5 @@ public class VistaPrincipal extends Application {
 
     public WebView getWebView() {
         return webView;
-    }
-
-    public static void main(String[] args) {//Habrá q quitarlo, y q sol haya main en la clase Main
-        launch(args);
     }
 }

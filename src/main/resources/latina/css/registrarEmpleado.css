@@ -1,0 +1,149 @@
+/* Reset global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    /*background-color: #4A90E2CC;*/
+    background: #DDD;
+}
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    /*background: linear-gradient(transparent, #05BC);*/
+    padding: 20px; /* Evita que el contenido se pegue a los bordes */
+}
+
+form {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 1s ease-out;
+    width: 90%;
+    max-width: 500px; /* Evita que el formulario sea demasiado ancho */
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Estilos para las etiquetas */
+label {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #555;
+    display: block;
+}
+
+/* Estilo de los campos de entrada */
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Estado de error en los campos */
+input.error {
+    border: 2px solid red; /* Borde rojo para el error */
+    background-color: #ffeeee; /* Fondo rojo claro */
+}
+
+input.error:focus {
+    border-color: darkred; /* Cambio en el borde cuando se está en el campo de error */
+}
+
+/* Contenedor del botón */
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+/* Botón de registro */
+.registerButton {
+    width: 100%; /* Hace que el botón ocupe todo el ancho del formulario */
+    padding: 12px;
+    /*background-color: #4A90E2;*/
+    background: #555;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Efectos de hover y active para el botón */
+.registerButton:hover {
+    background-color: #6d6d6d; /* Un gris más claro */
+    transform: scale(1.05);
+}
+
+.registerButton:active {
+    background-color: #42a5f5;
+}
+
+
+/* Estilos de la ventana emergente (popup) */
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.popup-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.popup-box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.popup-button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = "Rol.findBynombre", query = "select obj from Rol obj where :nombre = obj.nombre ") })
+        @NamedQuery(name = "Rol.findBynombre", query = "select obj from Rol obj where :nombre = obj.nombre "),
+        @NamedQuery(name = "Rol.findAll", query = "select r from Rol r")
+})
 public class Rol {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -55,6 +57,10 @@ public class Rol {
         this.nombre = rol.getNombre();
         this.salario = rol.getSalario();
         this.activo = rol.isActivo();
+    }
+
+    public TRol toTransfer(){
+        return new TRol(id, nombre, salario, activo);
     }
 
 

@@ -1,7 +1,10 @@
 package latina.negocio.factoria;
 
+import latina.negocio.disponibilidad.SADisponibilidad;
+import latina.negocio.empleado.SAEmpleado;
 import latina.negocio.factoria.imp.SAFactoryImp;
 import latina.negocio.rol.SARol;
+import latina.negocio.turno.SATurno;
 
 public abstract class SAFactory {
 
@@ -13,4 +16,11 @@ public abstract class SAFactory {
     }
 
     public abstract SARol createSARol();
+
+    public abstract SADisponibilidad createSADisponibilidad();
+
+    public abstract SATurno createSATurno();
+
+    public abstract SAEmpleado createSAEmpleado();
+
 }

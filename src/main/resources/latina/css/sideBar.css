@@ -1,0 +1,82 @@
+/* Barra lateral */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-right: 1px solid #FFF4;
+    width: 180px; /* Tamaño de la sidebar */
+    height: 100vh;
+    background-color: #333;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Coloca los elementos desde arriba */
+    padding-top: 10px; /* Espacio superior para el botón */
+    transition: transform 0.3s ease; /* Añadida transición para animación suave */
+}
+
+/* Estado colapsado de la sidebar */
+.sidebar-collapsed {
+    transform: translateX(-200px);
+}
+
+/* Botón para desplegar la sidebar */
+.desplegar-btn {
+    position: fixed;  /* Fija el botón en la pantalla */
+    top: 0;        /* Lo posiciona en la parte superior */
+    left: 0;       /* Lo deja pegado al lado izquierdo */
+    background-color: #333C;
+    margin: 7px;
+    color: white;
+    border: none;
+    font-size: 30px;
+    padding: 7px;
+    cursor: pointer;
+    border-radius: 3px;
+    z-index: 1100;  /* Asegura que esté por encima de la sidebar */
+}
+.desplegar-btn:hover{
+    background-color: #34495e;
+}
+
+/* Menú de la sidebar */
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-top: 50px;
+    overflow-y: auto; /* Solo el menú tendrá scroll */
+    flex-grow: 1; /* Deja que el menú ocupe todo el espacio disponible */
+}
+
+.sidebar a {
+    padding: 15px 20px;
+    text-decoration: none;
+    border-top: 1px solid #FFF4;
+    color: white;
+    display: block;
+    transition: background 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #34495e;
+}
+
+
+/* Personalización de la barra de desplazamiento */
+.sidebar-menu::-webkit-scrollbar {
+    width: 10px; /* Ancho de la barra de desplazamiento */
+}
+
+/* Personalizar el fondo de la barra de desplazamiento */
+.sidebar-menu::-webkit-scrollbar-track {
+    background: #444; /* Fondo de la barra */
+    border-radius: 10px; /* Bordes redondeados en el track */
+}
+
+/* Personalizar el "thumb" (el control deslizante de la barra) */
+.sidebar-menu::-webkit-scrollbar-thumb {
+    background-color: white; /* Color de la barra deslizante */
+    border-radius: 10px; /* Bordes redondeados */
+    border: 2px solid #2c3e50; /* Borde alrededor del "thumb" */
+}

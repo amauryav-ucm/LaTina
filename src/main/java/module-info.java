@@ -4,7 +4,9 @@ open module latina {
     requires jakarta.persistence;
     requires javafx.web;
     requires jdk.jsobject;
+    requires org.hibernate.orm.core;
+    requires jdk.jfr;
 
-    exports latina.negocio.rol to org.eclipse.persistence.core;
+    exports latina.negocio.rol to org.hibernate.orm.core;
     exports latina;
 }

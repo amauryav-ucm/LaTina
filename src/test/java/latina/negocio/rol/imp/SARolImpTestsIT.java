@@ -1,7 +1,11 @@
 package latina.negocio.rol.imp;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import latina.integracion.emfc.EMFContainer;
+import latina.integracion.emfc.imp.EMFContainerImp;
+import latina.integracion.emfc.imp.EMFContainerImpTest;
 import latina.negocio.factoria.SAFactory;
 import latina.negocio.rol.Rol;
 import latina.negocio.rol.SARol;
@@ -10,6 +14,9 @@ import latina.negocio.rol.TRol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,25 +27,22 @@ public class SARolImpTestsIT {
 
     @BeforeEach
     public void setUp() {
+        // Base de datos exclusiva para tests, se crean las tablas antes de cada test y se borran despues
+        // Hace falta crear un nuevo esquema llamado bdlatinatest
+        try {
+            Field instancia = EMFContainer.class.getDeclaredField("emfc");
+            instancia.setAccessible(true);
+            instancia.set(null, new EMFContainerImpTest());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         sa = SAFactory.getInstance().createSARol();
-        limpiarBaseDeDatos();
     }
-    private void limpiarBaseDeDatos() {
-        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
-        em.getTransaction().begin();
-        em.createQuery("DELETE FROM Rol").executeUpdate();
-        em.getTransaction().commit();
-        em.close();
-    }
+
     @Test
     public void registrarRolExitoso() {
-
-
-        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
-
-
         int id = sa.altaRol(tRol);
 
         //Exito
@@ -47,7 +51,6 @@ public class SARolImpTestsIT {
 
     @Test
     public void registarRolRepetido() {
-        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
         int id = sa.altaRol(tRol);
@@ -61,7 +64,6 @@ public class SARolImpTestsIT {
 
     @Test
     public void registrarRolSalarioO() {
-        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
         //Salario = 0
@@ -72,7 +74,6 @@ public class SARolImpTestsIT {
 
     @Test
     public void registrarRolSalarioN() {
-        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
         //Salario < 0
@@ -83,7 +84,6 @@ public class SARolImpTestsIT {
 
     @Test
     public void registrarRolNombreIncorrecto() {
-        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
 
@@ -94,7 +94,6 @@ public class SARolImpTestsIT {
 
     @Test
     public void registrarRolNombreIncorrecto2() {
-        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
 
@@ -105,7 +104,6 @@ public class SARolImpTestsIT {
 
     @Test
     public void registrarRolNombreIncorrecto3() {
-        limpiarBaseDeDatos();
         TRol tRol = new TRol("LIMPIEZA", 8.00, true);
         Rol rol = new Rol(tRol);
 
@@ -113,20 +111,22 @@ public class SARolImpTestsIT {
         int id = sa.altaRol(tRol);
         assertEquals(-3, id);
     }
+
     @Test
     public void registrarRolNombreVacio() {
-        limpiarBaseDeDatos();
         TRol tRol = new TRol("", 8.00, true);
 
         int id = sa.altaRol(tRol);
         assertEquals(-3, id);
     }
+
     @Test
     public void registrarRolNombreNull() {
         TRol tRol = new TRol(null, 8.00, true);
         int id = sa.altaRol(tRol);
         assertEquals(-4, id);
     }
+
     /*@Test //es imposible este caso ya que registrarRol.js ya se encarga de que no pase
     public void registrarRolNombreSoloEspacios() {
         TRol tRol = new TRol("   ", 8.00, true);
@@ -138,6 +138,7 @@ public class SARolImpTestsIT {
         int id = sa.altaRol(null);
         assertEquals(-4, id); // Asumiendo que la excepción da este código
     }
+
     @Test
     public void verificarRollbackTrasFallo() {
         TRol tRol1 = new TRol("LIMPIEZA", 1000, true);
@@ -152,6 +153,56 @@ public class SARolImpTestsIT {
         em.close();
 
         assertEquals(1, count); // Asegurar que el rollback funcionó y solo hay 1 registro
+    }
+    //-----------------------------------------------------------------
+    //TESTS BUSCAR ROLES
+    @Test
+    public void buscarRolesExitoso() {
+        // Insertar roles de prueba en la base de datos
+        TRol tRol1 = new TRol("COCINERO", 6, true);
+        sa.altaRol(tRol1);
+        TRol tRol2 = new TRol("MAITRE", 5, true);
+        sa.altaRol(tRol2);
+
+        // Llamar a buscarRoles() para obtener todos los roles
+        List<TRol> roles = sa.buscarRoles();
+
+        // Verificar que los roles fueron encontrados correctamente
+        assertNotNull(roles);
+        assertEquals(2, roles.size());
+        assertTrue(roles.stream().anyMatch(r -> r.getNombre().equals("COCINERO")));
+        assertTrue(roles.stream().anyMatch(r -> r.getNombre().equals("MAITRE")));
+    }
+
+    @Test
+    public void buscarRolesConUnSoloRol() {
+        // Insertar un solo rol
+        TRol tRol = new TRol("COCINERO", 6, true);
+        sa.altaRol(tRol);
+
+        // Llamar a buscarRoles() y verificar que se devuelva solo un rol
+        List<TRol> roles = sa.buscarRoles();
+
+        assertNotNull(roles);
+        assertEquals(1, roles.size());
+        assertEquals("COCINERO", roles.get(0).getNombre());
+    }
+
+    @Test
+    public void buscarRolesRollbackTrasFallo() {
+        // Intentar insertar un rol con un nombre incorrecto (debería fallar, por ejemplo, nombre vacío o nulo)
+        TRol tRol = new TRol("", 7, true);  // Nombre vacío, debería generar error en la validación
+        int id = sa.altaRol(tRol);
+
+        // Verificar que la inserción falló
+        assertEquals(-3, id);  // Asumiendo que la validación devuelve -3 en este caso
+
+        // Llamar a buscarRoles() para asegurar que no se haya insertado el rol
+        List<TRol> roles = sa.buscarRoles();
+
+        // Verificar que la lista esté vacía porque el rol no fue insertado
+        assertNotNull(roles);
+        assertTrue(roles.isEmpty());
     }
 }
 
