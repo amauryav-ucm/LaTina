@@ -13,13 +13,15 @@ body {
     height: 100vh;
     width: 100vw;
     margin: 0;
-    background-color: #4A90E2CC;
+    overflow: hidden;
+    /*background-color: #4A90E2CC;*/
+    background: #DDD;
     /*background-color: #616161;*/
 }
 .form-container{
     margin-top: 30vh;
     margin-left: 0;
-    background: linear-gradient(transparent, #05BC);
+    /*background: linear-gradient(transparent, #05BC);*/
     padding-bottom: 50px;
     height: 100vh;
     width: 100vw;
@@ -33,7 +35,7 @@ form {
     width: 100vh;
     height: 400px;
     margin-left: 25vw;;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     animation: fadeIn 1s ease-out;
 }
 
@@ -80,7 +82,7 @@ input:focus {
     width: 48%;
     padding: 12px;
     /*background-color: #616161;*/
-    background-color: #4A90E2;
+    background-color: #333;
     color: white;
     font-size: 18px;
     border: none;

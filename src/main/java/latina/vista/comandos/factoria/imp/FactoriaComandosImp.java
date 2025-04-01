@@ -7,6 +7,7 @@ import latina.vista.comandos.disponibilidad.RellenarEmpleadosRegistrarDisponibil
 import latina.vista.comandos.empleado.ObtenerEmpleadosDisponiblesInterfaz;
 import latina.vista.comandos.empleado.RegistrarEmpleado;
 import latina.vista.comandos.turno.AsignarTurnoEmpleado;
+import latina.vista.comandos.turno.VerTurnosSemanales;
 import latina.vista.comandos.factoria.FactoriaComandos;
 import latina.vista.comandos.rol.RegistrarRol;
 import latina.vista.comandos.turno.ObtenerTurnosPorDiaInterfaz;
@@ -25,6 +26,9 @@ public class FactoriaComandosImp extends FactoriaComandos {
                 break;
             case ASIGNAR_TURNO:
                 comando = new AsignarTurnoEmpleado();
+                break;
+            case OBTENER_TURNOS_SEMANALES:
+                comando = new VerTurnosSemanales();
                 break;
             case OBTENER_TURNOS_POR_DIA:
                 comando = new ObtenerTurnosPorDiaInterfaz();

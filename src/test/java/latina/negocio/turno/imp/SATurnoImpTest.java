@@ -7,6 +7,11 @@ import latina.negocio.rol.Rol;
 import latina.negocio.rol.TRol;
 import latina.negocio.rol.imp.SARolImp;
 import latina.negocio.turno.TTurno;
+import jakarta.persistence.TypedQuery;
+import latina.negocio.rol.Rol;
+import latina.negocio.turno.SATurno;
+import latina.negocio.turno.TTurno;
+import latina.negocio.turno.TTurnoRolEmpleado;
 import latina.negocio.turno.Turno;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.disponibilidad.Disponibilidad;
@@ -15,6 +20,7 @@ import org.mockito.Mockito;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -589,5 +595,62 @@ class SATurnoImpTest {
         verify(tx, times(1)).rollback();
         assertEquals(-3, resultado);
     }
+    @Test
+    public void testGetTurnosSemanaConTurnos() {
+        EntityManager em = mock(EntityManager.class);
+        SATurnoImp sat = Mockito.spy(new SATurnoImp());
+        doReturn(em).when(sat).createEntityManager();
+
+        // Simular valores de entrada
+        Timestamp semana = Timestamp.valueOf(LocalDateTime.now().with(TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY)));
+
+        List<Turno> turnosSimulados = new ArrayList<>();
+        Turno turnoA  = new Turno();
+        turnoA.setRol(new Rol());
+        Turno turnoB  = new Turno();
+        turnoB.setRol(new Rol());
+        turnosSimulados.add(turnoA);
+        turnosSimulados.add(turnoB);
+
+        TypedQuery<Turno> query = mock(TypedQuery.class);
+        when(em.createQuery(anyString(), eq(Turno.class))).thenReturn(query);
+        when(query.setParameter(anyString(), any())).thenReturn(query);
+        when(query.getResultList()).thenReturn(turnosSimulados);
+
+        List<TTurnoRolEmpleado> resultado = sat.getTurnosSemana(semana);
+        assertEquals(2, resultado.size());
+    }
+
+    @Test
+    public void testGetTurnosSemanaSinTurnos() {
+        EntityManager em = mock(EntityManager.class);
+        SATurnoImp sat = Mockito.spy(new SATurnoImp());
+        doReturn(em).when(sat).createEntityManager();
+
+        Timestamp semana = Timestamp.valueOf(LocalDateTime.now().with(TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY)));
+
+        TypedQuery<Turno> query = mock(TypedQuery.class);
+        when(em.createQuery(anyString(), eq(Turno.class))).thenReturn(query);
+        when(query.setParameter(anyString(), any())).thenReturn(query);
+        when(query.getResultList()).thenReturn(new ArrayList<>());
+
+        List<TTurnoRolEmpleado> resultado = sat.getTurnosSemana(semana);
+        assertTrue(resultado.isEmpty());
+    }
+
+    @Test
+    public void testGetTurnosSemanaError() {
+        EntityManager em = mock(EntityManager.class);
+        SATurnoImp sat = Mockito.spy(new SATurnoImp());
+        doReturn(em).when(sat).createEntityManager();
+
+        Timestamp semana = Timestamp.valueOf(LocalDateTime.now().with(TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY)));
+
+        when(em.createQuery(anyString(), eq(Turno.class))).thenThrow(new RuntimeException("Database error"));
+
+        List<TTurnoRolEmpleado> resultado = sat.getTurnosSemana(semana);
+        assertNull(resultado);
+    }
+
 
 }
