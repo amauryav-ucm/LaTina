@@ -53,7 +53,8 @@ public class RegistrarDisponibilidad implements Comando {
             else if (result == -1) mensaje = "No se encontró el empleado con el ID especificado";
             else if (result == -2) mensaje = "La fecha de fin debe ser posterior a la fecha de inicio";
             else if (result == -3) mensaje = "El empleado tiene un turno asignado dentro de ese horario";
-            else if (result == -4) mensaje = "Error al registrar la disponibilidad";
+            else if (result == -4) mensaje = "La disponibilidad debe comenzar más tarde que la hora actual";
+            else if (result == -5) mensaje = "Error al registrar la disponibilidad";
             else mensaje = "Error desconocido";
 
             WebEngine webEngine = vista.getWebView().getEngine();

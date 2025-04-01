@@ -11,6 +11,7 @@ import latina.negocio.empleado.Empleado;
 import latina.negocio.rol.Rol;
 import latina.negocio.turno.Turno;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public class SADisponibilidadImp implements SADisponibilidad {
@@ -25,14 +26,18 @@ public class SADisponibilidadImp implements SADisponibilidad {
             trans = em.getTransaction();
             trans.begin();
             Empleado emp = em.find(Empleado.class, tDisponibilidad.getEmpleadoId());
+            Timestamp ahora = new Timestamp(System.currentTimeMillis());
 
             if(emp == null) {
                 trans.rollback();
                 return -1;
             }else if(tDisponibilidad.getFechaFin().equals(tDisponibilidad.getFechaInicio())
-                    || tDisponibilidad.getFechaFin().before(tDisponibilidad.getFechaInicio())){
+                    || tDisponibilidad.getFechaFin().before(tDisponibilidad.getFechaInicio())) {
                 trans.rollback();
                 return -2;
+            }else if(tDisponibilidad.getFechaInicio().before(ahora)){
+                trans.rollback();
+                return -4;
             }else{
                 //Para que no se pueda registrar una disponibilidad si el empleado tiene un turno asignado
                 Empleado empleado = em.find(Empleado.class, tDisponibilidad.getEmpleadoId());
@@ -53,7 +58,7 @@ public class SADisponibilidadImp implements SADisponibilidad {
             if (trans != null && trans.isActive())
                 trans.rollback();
             e.printStackTrace();
-            return -4;
+            return -5;
         } finally {
             if (em != null)
                 em.close();
