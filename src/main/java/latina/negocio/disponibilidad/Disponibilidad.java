@@ -59,6 +59,13 @@ public class Disponibilidad {
 
     public Disponibilidad() { }
 
+    public Disponibilidad(Empleado empleado, TDisponibilidad tDisponibilidad) {
+        this.empleado = empleado;
+        this.fechaHoraInicio = tDisponibilidad.getFechaInicio();
+        this.fechaHoraFin = tDisponibilidad.getFechaFin();
+
+    }
+
     public Disponibilidad(Empleado empleado, Timestamp fechaHoraInicio, Timestamp fechaHoraFin) {
         this.empleado = empleado;
         this.fechaHoraInicio = fechaHoraInicio;
@@ -74,6 +81,22 @@ public class Disponibilidad {
     public boolean solapaCon(Timestamp inicio, Timestamp fin){
         // Se presupone que las horas estan bien cronologicamente
         return !(fechaHoraInicio.after(fin) || fechaHoraFin.before(inicio) || fechaHoraInicio.equals(fin) || fechaHoraFin.equals(inicio));
+    }
+
+    public boolean seDebeUnirCon(Disponibilidad otraDisponibilidad){
+        // Si es la misma no se deben unir
+        if(id==otraDisponibilidad.getId()) {
+            return false;
+        }
+        // Si empieza despues que la otra acaba no se deben unir
+        if(fechaHoraInicio.after(otraDisponibilidad.getFechaHoraFin())){
+            return false;
+        }
+        // Si acaba antes que la otra comience no se deben unir
+        if(fechaHoraFin.before(otraDisponibilidad.getFechaHoraInicio())){
+            return false;
+        }
+        return true;
     }
 
     /**

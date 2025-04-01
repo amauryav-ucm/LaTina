@@ -1,6 +1,7 @@
 package latina.negocio.empleado;
 
 import jakarta.persistence.*;
+import latina.integracion.emfc.EMFContainer;
 import latina.negocio.disponibilidad.Disponibilidad;
 import latina.negocio.turno.Turno;
 
@@ -12,7 +13,8 @@ import java.util.List;
         @NamedQuery(name = "Empleado.findByDNI", query = "select obj from Empleado obj where :DNI = obj.DNI "),
         @NamedQuery(name = "Empleado.findByCorreo", query = "select obj from Empleado obj where :correo = obj.correo "),
         @NamedQuery(name = "Disponibilidad.findByRangoFecha",
-                query = "SELECT d FROM Disponibilidad d WHERE d.fechaHoraInicio <= :fechaHoraIni AND d.fechaHoraFin >= :fechaHoraFin")
+                query = "SELECT d FROM Disponibilidad d WHERE d.fechaHoraInicio <= :fechaHoraIni AND d.fechaHoraFin >= :fechaHoraFin"),
+        @NamedQuery(name = "Empleado.findAll", query = "select e from Empleado e")
 })
 
 public class Empleado {
@@ -123,4 +125,5 @@ public class Empleado {
     public TEmpleado toTransfer(){
         return new TEmpleado(id, DNI, nombre, apellidos, correo, telefono, activo);
     }
+
 }
