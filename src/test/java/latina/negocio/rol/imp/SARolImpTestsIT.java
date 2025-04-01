@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -152,6 +153,56 @@ public class SARolImpTestsIT {
         em.close();
 
         assertEquals(1, count); // Asegurar que el rollback funcionó y solo hay 1 registro
+    }
+    //-----------------------------------------------------------------
+    //TESTS BUSCAR ROLES
+    @Test
+    public void buscarRolesExitoso() {
+        // Insertar roles de prueba en la base de datos
+        TRol tRol1 = new TRol("COCINERO", 6, true);
+        sa.altaRol(tRol1);
+        TRol tRol2 = new TRol("MAITRE", 5, true);
+        sa.altaRol(tRol2);
+
+        // Llamar a buscarRoles() para obtener todos los roles
+        List<TRol> roles = sa.buscarRoles();
+
+        // Verificar que los roles fueron encontrados correctamente
+        assertNotNull(roles);
+        assertEquals(2, roles.size());
+        assertTrue(roles.stream().anyMatch(r -> r.getNombre().equals("COCINERO")));
+        assertTrue(roles.stream().anyMatch(r -> r.getNombre().equals("MAITRE")));
+    }
+
+    @Test
+    public void buscarRolesConUnSoloRol() {
+        // Insertar un solo rol
+        TRol tRol = new TRol("COCINERO", 6, true);
+        sa.altaRol(tRol);
+
+        // Llamar a buscarRoles() y verificar que se devuelva solo un rol
+        List<TRol> roles = sa.buscarRoles();
+
+        assertNotNull(roles);
+        assertEquals(1, roles.size());
+        assertEquals("COCINERO", roles.get(0).getNombre());
+    }
+
+    @Test
+    public void buscarRolesRollbackTrasFallo() {
+        // Intentar insertar un rol con un nombre incorrecto (debería fallar, por ejemplo, nombre vacío o nulo)
+        TRol tRol = new TRol("", 7, true);  // Nombre vacío, debería generar error en la validación
+        int id = sa.altaRol(tRol);
+
+        // Verificar que la inserción falló
+        assertEquals(-3, id);  // Asumiendo que la validación devuelve -3 en este caso
+
+        // Llamar a buscarRoles() para asegurar que no se haya insertado el rol
+        List<TRol> roles = sa.buscarRoles();
+
+        // Verificar que la lista esté vacía porque el rol no fue insertado
+        assertNotNull(roles);
+        assertTrue(roles.isEmpty());
     }
 }
 

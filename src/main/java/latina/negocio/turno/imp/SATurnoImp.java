@@ -6,9 +6,15 @@ import jakarta.persistence.Query;
 import latina.integracion.emfc.EMFContainer;
 import latina.negocio.disponibilidad.Disponibilidad;
 import latina.negocio.empleado.Empleado;
+import latina.negocio.empleado.TEmpleado;
+import latina.negocio.rol.Rol;
+import latina.negocio.rol.TRol;
 import latina.negocio.turno.SATurno;
+import latina.negocio.turno.TTurno;
 import latina.negocio.turno.TTurnoRolEmpleado;
 import latina.negocio.turno.Turno;
+
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -130,6 +136,59 @@ public class SATurnoImp implements SATurno {
             throw e;
         }
     }
+
+    @Override
+    public int altaTurno(TTurno tTurno) {
+        EntityManager em = null;
+        EntityTransaction trans = null;
+
+        try {
+            em = createEntityManager();
+            trans = em.getTransaction();
+            trans.begin();
+            Timestamp ahora = new Timestamp(System.currentTimeMillis());
+
+            // 1. Validar rol
+            Rol rol = em.find(Rol.class, tTurno.getIdRol());
+            if (rol == null) {
+                trans.rollback();
+                return -1; // Código de error para rol no encontrado
+            }
+
+
+            // 2. Validar fechas
+            if (tTurno.getFechaHoraFin().equals(tTurno.getFechaHoraInicio()) ||
+                    tTurno.getFechaHoraFin().before(tTurno.getFechaHoraInicio())) {
+                trans.rollback();
+                return -2; // Código de error para fechas inválidas
+            }
+
+            if(tTurno.getFechaHoraInicio().before(ahora)){
+                trans.rollback();
+                return -3;
+            }
+
+            // 3. Crear y persistir turno
+            Turno turno = new Turno(tTurno, rol);
+
+            em.persist(turno);
+            trans.commit();
+
+            return turno.getId(); // Éxito: devuelve el ID del turno creado
+
+        } catch (Exception e) {
+            if (trans != null && trans.isActive()) {
+                trans.rollback();
+            }
+            e.printStackTrace();
+            return -4; // Código de error para excepción general
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
 
     protected EntityManager createEntityManager() {
         return EMFContainer.getInstance().getEMF().createEntityManager();

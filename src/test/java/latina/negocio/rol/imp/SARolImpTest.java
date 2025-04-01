@@ -217,4 +217,73 @@ class SARolImpTest {
         assertTrue(resultado > 0);
     }
 
+    // TESTS PARA BUSCAR ROLES
+    @Test
+    void testBuscarRoles_Exitoso() {
+        // Simulamos una transacción falsa
+        EntityTransaction stubTransaction = mock(EntityTransaction.class);
+        EntityManager stubEntityManager = mock(EntityManager.class);
+        Query stubQuery = mock(Query.class);
+
+        when(stubEntityManager.getTransaction()).thenReturn(stubTransaction);
+        when(stubEntityManager.createNamedQuery("Rol.findAll")).thenReturn(stubQuery);
+
+        // Creamos varios roles
+        List<Rol> stubRoles = new ArrayList<>();
+        stubRoles.add(new Rol(new TRol(1, "COCINERO", 6, true)));
+        stubRoles.add(new Rol(new TRol(2, "MAITRE", 5, true)));
+
+        when(stubQuery.getResultList()).thenReturn(stubRoles);
+
+        // Espiamos la clase SARolImp para controlar el EntityManager
+        SARolImp sa = Mockito.spy(new SARolImp());
+        doReturn(stubEntityManager).when(sa).crearEntityManager();
+
+        // Llamamos a la función
+        List<TRol> resultado = sa.buscarRoles();
+
+        verify(stubTransaction, times(1)).commit();
+        assertNotNull(resultado);
+        assertEquals(2, resultado.size());
+        assertEquals("COCINERO", resultado.get(0).getNombre());
+        assertEquals(6, resultado.get(0).getSalario());
+        assertTrue(resultado.get(0).isActivo());
+    }
+
+    @Test
+    void testBuscarRoles_SinResultados() {
+        // Simulamos una transacción falsa
+        EntityTransaction stubTransaction = mock(EntityTransaction.class);
+        EntityManager stubEntityManager = mock(EntityManager.class);
+        Query stubQuery = mock(Query.class);
+
+        when(stubEntityManager.getTransaction()).thenReturn(stubTransaction);
+        when(stubEntityManager.createNamedQuery("Rol.findAll")).thenReturn(stubQuery);
+        when(stubQuery.getResultList()).thenReturn(new ArrayList<>());
+
+        SARolImp saRol = Mockito.spy(new SARolImp());
+        doReturn(stubEntityManager).when(saRol).crearEntityManager();
+
+        List<TRol> resultado = saRol.buscarRoles();
+
+        verify(stubTransaction, times(1)).commit();
+        assertNotNull(resultado);
+        assertTrue(resultado.isEmpty());
+    }
+    @Test
+    void testBuscarRoles_PersistenciaFalla() {
+        // Simulamos una transacción falsa
+        EntityTransaction stubTransaction = mock(EntityTransaction.class);
+        EntityManager stubEntityManager = mock(EntityManager.class);
+
+        when(stubEntityManager.getTransaction()).thenReturn(stubTransaction);
+        when(stubEntityManager.createNamedQuery("Rol.findAll")).thenThrow(new RuntimeException("Error en persistencia"));
+
+        SARolImp saRol = Mockito.spy(new SARolImp());
+        doReturn(stubEntityManager).when(saRol).crearEntityManager();
+
+        List<TRol> resultado = saRol.buscarRoles();
+
+        assertNull(resultado);
+    }
 }
