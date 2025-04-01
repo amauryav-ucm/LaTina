@@ -164,4 +164,34 @@ public class SADisponibilidadTest
         verify(tx, times(1)).rollback();
     }
 
+    @Test
+    public void testAltaDisponibilidadPersistenciaFalla() {
+        EntityTransaction tx = mock(EntityTransaction.class);
+        EntityManager em = mock(EntityManager.class);
+        when(em.getTransaction()).thenReturn(tx);
+
+        SADisponibilidadImp sad = Mockito.spy(new SADisponibilidadImp());
+        doReturn(em).when(sad).crearEntityManager();
+        doNothing().when(sad).combinarDisponibilidad(anyInt());
+
+        Empleado empleado = new Empleado();
+        when(em.find(Empleado.class, 1)).thenReturn(empleado);
+
+        TDisponibilidad tDisponibilidad = new TDisponibilidad();
+        tDisponibilidad.setEmpleadoId(1);
+        tDisponibilidad.setFechaInicio(Timestamp.valueOf(LocalDateTime.now().plusDays(1)));
+        tDisponibilidad.setFechaFin(Timestamp.valueOf(LocalDateTime.now().plusDays(1).plusHours(2)));
+
+        // Simular que `persist()` lanza una excepción
+        doThrow(new RuntimeException("Error en persistencia")).when(em).persist(any(Disponibilidad.class));
+
+        int resultado = sad.altaDisponibilidad(tDisponibilidad);
+
+        // Verificamos que el método devuelve el código de error correspondiente
+        assertEquals(-5, resultado);
+
+        // Verificamos que la transacción se haya iniciado
+        verify(tx, times(1)).begin();
+        //verify(tx, times(1)).rollback();
+    }
 }
