@@ -154,7 +154,7 @@ public class SARolImpTestsIT {
 
         assertEquals(1, count); // Asegurar que el rollback funcionó y solo hay 1 registro
     }
-
+    //-----------------------------------------------------------------
     //TESTS BUSCAR ROLES
     @Test
     public void buscarRolesExitoso() {
@@ -191,7 +191,7 @@ public class SARolImpTestsIT {
     @Test
     public void buscarRolesRollbackTrasFallo() {
         // Intentar insertar un rol con un nombre incorrecto (debería fallar, por ejemplo, nombre vacío o nulo)
-        TRol tRol = new TRol("", 15, true);  // Nombre vacío, debería generar error en la validación
+        TRol tRol = new TRol("", 7, true);  // Nombre vacío, debería generar error en la validación
         int id = sa.altaRol(tRol);
 
         // Verificar que la inserción falló
