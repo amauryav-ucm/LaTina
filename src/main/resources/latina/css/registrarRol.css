@@ -90,7 +90,7 @@ input:focus {
 }
 
 .registerButton:hover {
-    background-color: #5c6bc0;
+    background-color: #6d6d6d; /* Un gris más claro */
     transform: scale(1.05);
 }
 
