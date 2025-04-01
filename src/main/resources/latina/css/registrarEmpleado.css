@@ -12,7 +12,8 @@ body {
     align-items: center;
     height: 100vh;
     width: 100vw;
-    background-color: #4A90E2CC;
+    /*background-color: #4A90E2CC;*/
+    background: #DDD;
 }
 
 .form-container {
@@ -21,7 +22,7 @@ body {
     align-items: center;
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(transparent, #05BC);
+    /*background: linear-gradient(transparent, #05BC);*/
     padding: 20px; /* Evita que el contenido se pegue a los bordes */
 }
 
@@ -29,7 +30,7 @@ form {
     background: rgba(255, 255, 255, 0.9);
     padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     animation: fadeIn 1s ease-out;
     width: 90%;
     max-width: 500px; /* Evita que el formulario sea demasiado ancho */
@@ -80,7 +81,8 @@ input.error:focus {
 .registerButton {
     width: 100%; /* Hace que el botón ocupe todo el ancho del formulario */
     padding: 12px;
-    background-color: #4A90E2;
+    /*background-color: #4A90E2;*/
+    background: #555;
     color: white;
     font-size: 18px;
     border: none;
@@ -91,7 +93,7 @@ input.error:focus {
 
 /* Efectos de hover y active para el botón */
 .registerButton:hover {
-    background-color: #5c6bc0;
+    background-color: #6d6d6d; /* Un gris más claro */
     transform: scale(1.05);
 }
 
