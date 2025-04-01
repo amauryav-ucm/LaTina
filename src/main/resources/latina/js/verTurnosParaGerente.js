@@ -66,11 +66,17 @@ document.addEventListener('DOMContentLoaded', function() {
         // Limpiar contenedor de días
         const dayElements = weekContainer.querySelectorAll('.day');
         dayElements.forEach(el => el.remove());
+        //meter los turnos registrados en el calendario
+        const lunes = getWeekDates(currentDate)[0]; // Obtiene el lunes
+        const lunesFormateado = `${lunes.getFullYear()}-${String(lunes.getMonth() + 1).padStart(2, '0')}-${String(lunes.getDate()).padStart(2, '0')} 00:00:00`;
+        cargarTurnos(lunesFormateado);
 
         // Renderizar días
         weekDates.forEach(date => {
             renderDay(date);
         });
+
+
 
         // Actualizar título de la semana
         updateWeekTitle(weekDates);
@@ -130,6 +136,20 @@ document.addEventListener('DOMContentLoaded', function() {
         weekContainer.appendChild(day);
     }
 
+    function agregarTurnoAlDia(turno, dia) {
+        const dateKey = formatDate(dia); // Formatea la fecha para que coincida con la estructura de turnos
+
+        if (!turnos[dateKey]) {
+            turnos[dateKey] = [];
+        }
+
+        turnos[dateKey].push({
+            startTime: turno.fechaHoraInicio, // Asegúrate de que el formato sea compatible con tu renderizado
+            endTime: turno.fechaHoraFin
+        });
+
+    }
+
     // Actualizar título de la semana
     function updateWeekTitle(weekDates) {
         const startDate = weekDates[0];
@@ -151,6 +171,24 @@ document.addEventListener('DOMContentLoaded', function() {
     function goToCurrentWeek() {
         currentDate = new Date();
         renderWeek(getWeekDates(currentDate));
+    }
+
+    function cargarTurnos(Lunes)
+    {
+        waitForJavaBridge(() => {
+            console.log("Java bridge is ready!");
+            if (!Lunes) return;
+                window.java.accion("OBTENER_TURNOS_SEMANALES", Lunes);
+        });
+    }
+
+    function waitForJavaBridge(callback) {
+        if (window.java && window.java.accion) {
+            callback();
+        } else {
+            console.log("Waiting for Java bridge...");
+            setTimeout(() => waitForJavaBridge(callback), 100);
+        }
     }
 
 

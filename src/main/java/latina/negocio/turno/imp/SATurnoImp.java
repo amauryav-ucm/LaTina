@@ -7,11 +7,13 @@ import latina.integracion.emfc.EMFContainer;
 import latina.negocio.dispoinibilidad.Disponibilidad;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.turno.SATurno;
+import latina.negocio.turno.TTurno;
 import latina.negocio.turno.Turno;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SATurnoImp implements SATurno {
@@ -68,9 +70,10 @@ public class SATurnoImp implements SATurno {
     }
 
     @Override
-    public List<Turno> getTurnosSemana(Timestamp semana) {
+    public List<TTurno> getTurnosSemana(Timestamp semana) {
         EntityManager em = null;
         List<Turno> turnos = null;
+        ArrayList<TTurno> listaTurnos = new ArrayList<>();
         try {
             em = createEntityManager();            // Convierte Timestamp(formato de la fecha de Turno) en LocalDateTime para manipularlo
             LocalDateTime semanaLocalDateTime = semana.toLocalDateTime();
@@ -82,13 +85,25 @@ public class SATurnoImp implements SATurno {
             Timestamp finTimestamp = Timestamp.valueOf(fin);
             //Selecciona de la tabla turno todos los que tienen horas en la semana seleccionada
             TypedQuery<Turno> query = em.createQuery(
-                    "SELECT t FROM Turno t WHERE " + "(t.fechaHoraInicio <= :fin AND t.fechaHoraFin >= :inicio)",
+                    "SELECT t FROM Turno t WHERE " +
+                            "(t.fechaHoraInicio BETWEEN :inicio AND :fin OR " +
+                            "t.fechaHoraFin BETWEEN :inicio AND :fin OR " +
+                            "(t.fechaHoraInicio <= :inicio AND t.fechaHoraFin >= :fin))",
                     Turno.class
             );
             query.setParameter("inicio", inicioTimestamp);
             query.setParameter("fin", finTimestamp);
             //Guarda la lista de los turnos que cumplen la condición
             turnos = query.getResultList();
+            for (Turno a: turnos)
+            {
+                if(a.getEmpleado() != null){
+                    listaTurnos.add(new TTurno(a.getId(), a.getRol().getId(), a.getFechaHoraInicio(), a.getFechaHoraFin(), a.getEmpleado().getId()));
+                }
+                else{
+                    listaTurnos.add(new TTurno(a.getId(), a.getRol().getId(), a.getFechaHoraInicio(), a.getFechaHoraFin()));
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -96,7 +111,7 @@ public class SATurnoImp implements SATurno {
                 em.close();
             }
         }
-        return turnos;
+        return listaTurnos;
     }
 
     protected EntityManager createEntityManager() {

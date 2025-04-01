@@ -7,5 +7,5 @@ public interface SATurno {
 
     public int asignarTurno(int idTurno, int idEmpleado);
 
-    public List<Turno> getTurnosSemana(Timestamp semana);
+    public List<TTurno> getTurnosSemana(Timestamp semana);
 }

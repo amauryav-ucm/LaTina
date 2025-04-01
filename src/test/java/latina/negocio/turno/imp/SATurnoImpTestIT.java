@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import latina.integracion.emfc.EMFContainer;
 import latina.negocio.factoria.SAFactory;
 import latina.negocio.turno.SATurno;
+import latina.negocio.turno.TTurno;
 import latina.negocio.turno.Turno;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ public class SATurnoImpTestIT {
      //   limpiarBaseDeDatos();
         Timestamp semanaEspecifica = Timestamp.valueOf("2025-03-25 10:30:00");
 
-        List<Turno> lista = sa.getTurnosSemana(semanaEspecifica);
+        List<TTurno> lista = sa.getTurnosSemana(semanaEspecifica);
         if(lista.isEmpty()){
             System.out.println("ERROR");
         }
@@ -50,7 +51,7 @@ public class SATurnoImpTestIT {
         limpiarBaseDeDatos();
         Timestamp semanaEspecifica = Timestamp.valueOf("2025-03-25 10:30:00");
 
-        List<Turno> lista = sa.getTurnosSemana(semanaEspecifica);
+        List<TTurno> lista = sa.getTurnosSemana(semanaEspecifica);
         if(lista.isEmpty()){
             System.out.println("ERROR");
         }
