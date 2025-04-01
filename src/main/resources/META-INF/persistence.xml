@@ -25,6 +25,9 @@
     <persistence-unit name="H2Test" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>latina.negocio.rol.Rol</class>
+        <class>latina.negocio.empleado.Empleado</class>
+        <class>latina.negocio.turno.Turno</class>
+        <class>latina.negocio.disponibilidad.Disponibilidad</class>
         <properties>
 
             <!-- Database Configuration -->
