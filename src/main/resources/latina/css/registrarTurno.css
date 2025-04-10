@@ -19,7 +19,7 @@ body {
 }
 
 .form-container{
-    margin-top: 30vh;
+    margin-top: 5vh;
     margin-left: 0;
     /*background: linear-gradient(transparent, #05BC);*/
     padding-bottom: 50px;
@@ -28,7 +28,7 @@ body {
 }
 .form-title {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     color: #333;
     font-size: 24px;
     font-weight: bold;
@@ -36,22 +36,13 @@ body {
 
 form {
     background: rgba(255, 255, 255, 0.9);
-    padding: 30px;
+    padding: 20px;
     border-radius: 10px;
     width: 100vh;
-    height: 600px;
+    height: 550px;
     margin-left: 25vw;;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     animation: fadeIn 1s ease-out;
-}
-
-h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 24px;
-    font-weight: bold;
-    animation: slideIn 1.5s ease-out;
 }
 
 label {
@@ -64,8 +55,8 @@ label {
 
 input {
     width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
+    padding: 5px;
+    margin-bottom: 5px;
     border: 2px solid #ddd;
     border-radius: 5px;
     font-size: 16px;
