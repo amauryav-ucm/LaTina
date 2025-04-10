@@ -22,9 +22,10 @@ public class RegistrarRol implements Comando {
 
             SARol rol = SAFactory.getInstance().createSARol();
             int result = rol.altaRol(t);
+            String name = t.getNombre();
             String mensaje = "";
 
-            if (result >= 0) mensaje = "Se ha registrado el rol correctamente con ID: " + result;
+            if (result >= 0) mensaje = "El rol " + name + " se ha registrado correctamente";
             else if (result == -1) mensaje = "Ya existe un rol con el nombre introducido";
             else if (result == -2) mensaje = "El salario debe ser un número positivo";
             else if (result == -3) mensaje = "El rol debe estar en mayúsculas y sin números";
