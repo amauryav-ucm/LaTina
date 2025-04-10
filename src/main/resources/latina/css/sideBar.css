@@ -80,3 +80,17 @@
     border-radius: 10px; /* Bordes redondeados */
     border: 2px solid #2c3e50; /* Borde alrededor del "thumb" */
 }
+
+/* Estilo para el elemento activo en el sidebar */
+.sidebar-menu a.active {
+    background-color: #777A;
+    color: white;
+    font-weight: bold;
+    border-left: 4px solid white;
+}
+
+/* Efecto hover para los elementos del sidebar */
+.sidebar-menu a:hover:not(.active) {
+    background-color: #ddd;
+    color: #333;
+}
