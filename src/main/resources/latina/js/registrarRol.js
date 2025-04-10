@@ -67,3 +67,26 @@ function volver(){
         window.java.changeScene("ventanaPrincipal.html");
     }
 }
+
+// Añade esta función a tu archivo registrarRol.js
+document.addEventListener('DOMContentLoaded', function() {
+    const nombreInput = document.getElementById('name');
+
+    // Convierte a minúsculas mientras el usuario escribe
+    nombreInput.addEventListener('input', function() {
+        // Guarda la posición del cursor antes de modificar el valor
+        const cursorPos = this.selectionStart;
+
+        // Convierte el texto a minúsculas
+        const valorOriginal = this.value;
+        const valorMayusc = valorOriginal.toUpperCase();
+
+        // Si realmente hubo un cambio (evita bucles infinitos)
+        if (valorOriginal !== valorMayusc) {
+            this.value = valorMayusc;
+
+            // Restaura la posición del cursor
+            this.setSelectionRange(cursorPos, cursorPos);
+        }
+    });
+});
