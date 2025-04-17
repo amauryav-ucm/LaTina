@@ -56,6 +56,27 @@ function enviarAJava(rol){
             }
 }
 
+function mostrarError(mensaje, nombreRol, salarioRol, camposError) {
+    const popup = document.querySelector(".popup-overlay");
+    popup.style.display = "flex";
+    popup.classList.add("show");
+    document.getElementById("popup-message").innerText = mensaje;
+
+    // Restaurar los valores en el formulario
+    document.getElementById("name").value = nombreRol;
+    document.getElementById("wage").value = salarioRol;
+
+    // Quitar clases de error de todos los campos primero
+    document.querySelectorAll("input").forEach(input => input.classList.remove("error"));
+
+    // Agregar la clase de error solo a los campos que fallaron
+    camposError.forEach(id => {
+        const campo = document.getElementById(id);
+        if (campo) campo.classList.add("error");
+    });
+}
+
+
 function cerrarMensaje() {
     const popup = document.getElementById("popup");
     popup.classList.remove("show");

@@ -17,31 +17,55 @@ public class RegistrarRol implements Comando {
     public void ejecutar(Object datos, VistaPrincipal vista) {
 
         try {
-            TRol t = new TRol(((JSObject)datos).getMember("nombre").toString(),
-                    Double.parseDouble(((JSObject)datos).getMember("salario").toString()), true);
+            String nombreRol = ((JSObject)datos).getMember("nombre").toString();
+            Double salarioRol =  Double.parseDouble(((JSObject)datos).getMember("salario").toString());
+            TRol t = new TRol(nombreRol, salarioRol, true);
 
             SARol rol = SAFactory.getInstance().createSARol();
             int result = rol.altaRol(t);
-            String name = t.getNombre();
             String mensaje = "";
+            boolean error = false;
+            String camposError = "[]";
 
-            if (result >= 0) mensaje = "El rol " + name + " se ha registrado correctamente";
-            else if (result == -1) mensaje = "Ya existe un rol con el nombre introducido";
-            else if (result == -2) mensaje = "El salario debe ser un número positivo";
-            else if (result == -3) mensaje = "El rol debe estar en mayúsculas y sin números";
-            else if (result == -4) mensaje = "Ha ocurrido un error al registrar el rol";
-            else mensaje = "Error desconocido";
+            if (result >= 0) mensaje = "El rol " + nombreRol + " se ha registrado correctamente";
+            else
+            {
+                if (result == -1) mensaje = "Ya existe un rol con el nombre introducido";
+                else if (result == -2)
+                {
+                    mensaje = "El salario debe ser un número positivo";
+                    camposError = "['wage']";
+                }
+                else if (result == -3)
+                {
+                    mensaje = "El rol solo puede contener letras";
+                    camposError = "['name']";
+                }
+                else if (result == -4) mensaje = "Ha ocurrido un error al registrar el rol";
+                else mensaje = "Error desconocido";
+                error = true;
+            }
+
 
             WebEngine webEngine = vista.getWebView().getEngine();
             String finalMensaje = mensaje;
+            boolean finalError= error;
+            String finalCamposError = camposError;
+
 
             // Se añade un listener para mostrar el mensaje cuando el documento esté listo
             webEngine.documentProperty().addListener(new ChangeListener<Document>() {
                 @Override
                 public void changed(ObservableValue<? extends Document> obs, Document oldDoc, Document newDoc) {
                     if (newDoc != null) {
-                        webEngine.executeScript(String.format("mostrarMensaje('%s')", finalMensaje));
-                        webEngine.documentProperty().removeListener(this);
+                        if (finalError) {
+                            webEngine.executeScript(String.format(
+                                    "mostrarError('%s', '%s', '%s', %s)",
+                                    finalMensaje, nombreRol, salarioRol, finalCamposError
+                            ));
+                        } else {
+                            webEngine.executeScript(String.format("mostrarMensaje('%s')", finalMensaje));
+                        }                        webEngine.documentProperty().removeListener(this);
                     }
                 }
             });
