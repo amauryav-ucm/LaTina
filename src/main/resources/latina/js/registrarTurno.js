@@ -227,6 +227,23 @@ function configHora(selector){
     })
 }
 
+function mostrarError(mensaje, fechaInicio, fechaFin, horaInicio, horaFin) {
+    const popup = document.querySelector(".popup-overlay");
+    popup.style.display = "flex";
+    popup.classList.add("show");
+    document.getElementById("popup-message").innerText = mensaje;
+
+    // Restaurar los valores en el formulario
+    document.getElementById("campo-fecha-inicio").value = fechaInicio;
+    document.getElementById("campo-hora-inicio").value = horaInicio;
+    document.getElementById("campo-fecha-fin").value = fechaFin;
+    document.getElementById("campo-hora-fin").value = horaFin;
+
+    // Quitar clases de error de todos los campos primero
+    document.querySelectorAll("input").forEach(input => input.classList.remove("error"));
+}
+
+
 function cargarRol() {
     // Se muestra un mensaje de carga y se deshabilita el combo
     const rolSelect = document.getElementById("rol");
@@ -316,7 +333,6 @@ function recogerTurno() {
 
     // Si hay algún error, mostramos el mensaje y detenemos el envío
     if (hayError) {
-//        mostrarMensaje("Por favor, completa todos los campos.");
         return;
     }
 
@@ -326,12 +342,12 @@ function recogerTurno() {
     turno.fechaFin = dateOutput.value.trim();
     turno.horaInicio = startHourInput.value.trim();
     turno.horaFin = endHourInput.value.trim();
+    turno.nombreRol = rolSelect.selectedOptions[0].textContent.trim();
 
     // Enviar los datos al backend Java (RegistrarTurno.java)
     enviarTurnoAJava(turno);
 
     // Mostrar mensaje de éxito y recargar (o redirigir) si es necesario
-    mostrarMensaje("Turno registrada correctamente.");
     setTimeout(() => location.reload(), 200);
 }
 
