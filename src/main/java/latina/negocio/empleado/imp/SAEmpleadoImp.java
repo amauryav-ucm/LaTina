@@ -85,7 +85,7 @@ public class SAEmpleadoImp implements SAEmpleado {
                 trans.rollback();
                 return -6;//Solo se permiten letras(incluyendo ñ y tildes) y espacios
             }
-            if (!emp.getCorreo().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            if (!emp.getCorreo().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
                 trans.rollback();
                 return -7; // CORREO EN FORMATO INCORRECTO
             }
