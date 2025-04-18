@@ -46,35 +46,26 @@ public class RegistrarTurno implements Comando {
 
             SATurno saTurno = SAFactory.getInstance().createSATurno();
             int result = saTurno.altaTurno(t);
-<<<<<<< Updated upstream
+
             String mensaje = "";
             boolean error = false;
 
             if (result >= 0) mensaje = "El turno se ha registrado correctamente";
-            else
+             else
             {
                 if (result == -1) mensaje = "No se encontró el rol especificado";
                 else if (result == -2) mensaje = "La fecha de fin debe ser posterior a la fecha de inicio";
                 else if (result == -3) mensaje = "La fecha de inicio no puede ser anterior a la hora actual";
-                else if (result == -4) mensaje = "Error al registrar el turno";
+                else if (result == -4) mensaje = "El turno excede las 24 horas de duración permitidas";
+                else if (result == -5) mensaje = "Error al registrar el turno";
                 else mensaje = "Error desconocido";
                 error = true;
             }
 
-=======
-            String mensaje;
-
-            if (result >= 0) mensaje = "El turno se ha registrado correctamente";
-            else if (result == -1) mensaje = "No existe el rol seleccionado";
-            else if (result == -2) mensaje = "La fecha de fin debe ser posterior a la fecha de inicio";
-            else if (result == -3) mensaje = "La fecha de inicio no puede ser anterior a la hora actual";
-            else if (result == -4) mensaje = "El turno excede las 24 horas de duración permitidas";
-            else if (result == -5) mensaje = "Error al registrar el turno";
-            else mensaje = "Error desconocido";
->>>>>>> Stashed changes
 
             WebEngine webEngine = vista.getWebView().getEngine();
             String finalMensaje = mensaje;
+
             boolean finalError = error;
             webEngine.documentProperty().addListener(new ChangeListener<Document>() {
                 @Override
@@ -85,16 +76,13 @@ public class RegistrarTurno implements Comando {
                                     "mostrarError('%s', '%s', '%s', '%s', '%s')",
                                     finalMensaje, fechaInicio, fechaFin, horaInicio, horaFin
                             ));
-                        }
-                        else
-                        {
+                        } else {
                             webEngine.executeScript(String.format("mostrarMensaje('%s')", finalMensaje));
                         }
                         webEngine.documentProperty().removeListener(this);
                     }
-                }
+               }
             });
-
         } catch (Exception e) {
             e.printStackTrace();
             // Mostrar mensaje de error en caso de excepción

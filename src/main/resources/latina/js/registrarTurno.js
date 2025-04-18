@@ -346,12 +346,7 @@ function recogerTurno() {
 
     // Enviar los datos al backend Java (RegistrarTurno.java)
     enviarTurnoAJava(turno);
-<<<<<<< Updated upstream
 
-    // Mostrar mensaje de éxito y recargar (o redirigir) si es necesario
-    setTimeout(() => location.reload(), 200);
-=======
->>>>>>> Stashed changes
 }
 
 function validarFormulario() {
