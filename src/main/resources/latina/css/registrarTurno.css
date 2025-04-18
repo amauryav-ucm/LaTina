@@ -50,7 +50,7 @@ form {
 
 label {
     font-size: 16px;
-    margin-bottom: 8px;
+    margin-bottom: 0;
     color: #555;
     display: block;
     transition: color 0.3s ease;
@@ -290,7 +290,7 @@ input:focus {
 .date-icon, .time-icon {
     position: absolute;
     right: 12px;
-    top: 50%;
+    top: 45%;
     transform: translateY(-50%);
     color: #666;
     pointer-events: none;
