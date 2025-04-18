@@ -40,6 +40,14 @@ form {
     justify-content: center;
 }
 
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
 /* Estilos para las etiquetas */
 label {
     font-size: 16px;
