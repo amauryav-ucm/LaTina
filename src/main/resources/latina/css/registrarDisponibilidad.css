@@ -3,46 +3,51 @@
     padding: 0;
     box-sizing: border-box;
     font-family: sans-serif;
-
 }
 
 body {
+    margin: 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
     width: 100vw;
-    margin: 0;
     background: #DDD;
+    overflow:visible;
     /*background-color: #4A90E2CC;*/
     /*background-color: #616161;*/
 }
 
 .form-container{
-    margin-top: 30vh;
-    margin-left: 0;
-    /*background: linear-gradient(transparent, #05BC);*/
-    padding-bottom: 50px;
+    margin: 0;
+    margin-top: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     height: 100vh;
     width: 100vw;
+    overflow: visible;
 }
 
 form {
     background: rgba(255, 255, 255, 0.9);
-    padding: 30px;
+    padding: 20px;
     border-radius: 10px;
-    width: 100vh;
-    height: 600px;
-    margin-left: 25vw;;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     animation: fadeIn 1s ease-out;
+    margin-left: 200px;
+    width: 66vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    overflow: visible;
 }
 
 h2 {
     text-align: center;
     color: #333;
-    margin-bottom: 20px;
-    font-size: 24px;
+    margin-bottom: 15px;
+    margin-left: 150px;
+    font-size: 30px;
+    font-family: sans-serif;
     font-weight: bold;
 }
 
@@ -120,6 +125,16 @@ input:focus {
     display: inline-block;
 }
 
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
 
 /* Estilos para campos con error */
 input.error, .comboBox-empleado.error { /* Añadido para el select */
@@ -320,23 +335,9 @@ input.error, .comboBox-empleado.error { /* Añadido para el select */
     border-color: #4a6fa5;
 }
 
-.calendar-dropdown {
-    position: absolute;
-    top: calc(100% + 10px);
-    left: 0;
-    width: 100%;
-    z-index: 10;
-    display: none;
-}
-
-.calendar-dropdown.open {
-    display: block;
-    animation: fadeIn 0.3s forwards;
-}
-
 .dropdown-hora {
     position: absolute;
-    top: calc(100% - 40px);
+    top: calc(100% - 30px);
     left: 0;
     width: 100%;
     z-index: 10;
@@ -435,21 +436,21 @@ input.error, .comboBox-empleado.error { /* Añadido para el select */
 .date-icon, .time-icon {
     position: absolute;
     right: 10px; /* Ajusta la distancia de la derecha según sea necesario */
-    top: 50%;
+    top: 35%;
     transform: translateY(-50%);
     pointer-events: none; /* Esto evita que el icono interfiera con el clic en el input */
 }
 
-.calendar-dropdown, .dropdown-hora {
+.calendar-dropdown {
     position: absolute;
-    top: calc(100% + 10px);
+    top: calc(100% - 10px);
     left: 0;
     width: 100%;
     z-index: 10;
     display: none;
 }
 
-.calendar-dropdown.open, .dropdown-hora.open {
+.calendar-dropdown.open {
     display: block;
     animation: fadeIn 0.3s forwards;
 }
@@ -457,7 +458,7 @@ input.error, .comboBox-empleado.error { /* Añadido para el select */
 .select-container {
     position: relative; /* Necesario para posicionar el icono */
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
 /* Estilización del select */
@@ -483,7 +484,7 @@ input.error, .comboBox-empleado.error { /* Añadido para el select */
 /* Icono dentro del select (en la parte derecha) */
 .select-icon {
     position: absolute;
-    top: 50%;
+    top: 35%;
     right: 12px; /* Ajusta el espacio desde la derecha */
     transform: translateY(-50%);
     pointer-events: none; /* El icono no bloquea la interacción con el select */
