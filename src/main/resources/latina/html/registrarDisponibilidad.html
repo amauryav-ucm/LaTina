@@ -6,6 +6,7 @@
     <title>Restaurante LaTina - Registrar Rol</title>
     <link rel="stylesheet" href="../css/registrarDisponibilidad.css">
     <link rel="stylesheet" href="../css/sideBar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body onload="cargarEmpleados()">
 <div id="sidebar-container"></div>
@@ -14,15 +15,20 @@
     <h2>REGISTRAR DISPONIBILIDAD</h2>
     <form onsubmit="return validarFormulario()">
         <label for="empleado">Empleado</label>
-        <select class="comboBox-empleado" id="empleado" name="empleado" disabled>
-            <option value="" selected>Selecciona un empleado</option>
-        </select>
+        <div class="select-container">
+            <select class="comboBox-empleado" id="empleado" name="empleado" disabled>
+                <option value="" selected>Selecciona un empleado</option>
+                <!-- Las opciones se generarán dinámicamente con JavaScript -->
+            </select>
+            <i class="fas fa-chevron-down select-icon"></i> <!-- Icono de Font Awesome -->
+        </div>
+
 
         <label for="campo-fecha-inicio">Fecha inicial</label>
         <div class="date-picker">
             <input type="text" class="date-input" readonly placeholder="Selecciona la fecha inicial"
                    id="campo-fecha-inicio">
-
+            <i class="fas fa-calendar-alt date-icon"></i>
             <div class="calendar-dropdown" id="calendario-inicio">
                 <div class="calendar-container">
                     <div class="calendar-header">
@@ -52,7 +58,7 @@
         <div class="date-picker">
             <input type="text" class="time-input" id="campo-hora-inicio" readonly onclick="openTimePicker()"
                    placeholder="Selecciona la hora inicial">
-
+            <i class="fas fa-chevron-down time-icon"></i>
             <div class="dropdown-hora" id="tiempo-inicio">
                 <div class="time-container">
                     <select id="hora-inicio" >
@@ -74,7 +80,7 @@
         <label for="campo-fecha-fin">Fecha final</label>
         <div class="date-picker">
             <input type="text" class="date-input" readonly placeholder="Selecciona la fecha final" id="campo-fecha-fin">
-
+            <i class="fas fa-calendar-alt date-icon"></i>
             <div class="calendar-dropdown" id="calendario-fin">
                 <div class="calendar-container">
                     <div class="calendar-header">
@@ -104,7 +110,7 @@
         <div class="date-picker">
             <input type="text" class="time-input" id="campo-hora-fin" readonly onclick="openTimePicker()"
                    placeholder="Selecciona la hora final">
-
+            <i class="fas fa-chevron-down time-icon"></i>
             <div class="dropdown-hora" id="tiempo-fin">
                 <div class="time-container">
                     <select id="hora-fin" >
