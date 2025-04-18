@@ -18,33 +18,35 @@ body {
 }
 
 .form-container {
-    margin-top: 30vh;
-    margin-left: 0;
-    /*background: linear-gradient(transparent, #05BC);*/
-    padding-bottom: 50px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     height: 100vh;
     width: 100vw;
+    margin-left: 10vw;
 }
 
 form {
-     background: rgba(255, 255, 255, 0.9);
-     padding: 30px;
-     border-radius: 10px;
-     width: 100vh;
-     height: 600px;
-     margin-left: 25vw;;
-     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-     animation: fadeIn 1s ease-out;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 1s ease-out;
+    width: 66vw;
+    height: auto;
+    margin: 0; /* ya está centrado por el flex del contenedor */
 }
 
 h2 {
-     text-align: center;
-     color: #333;
-     margin-bottom: 20px;
-     font-size: 24px;
-     font-weight: bold;
- }
-
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 30px;
+    font-family: sans-serif;
+    font-weight: bold;
+}
 
 /* Estilos para las etiquetas */
 label {
