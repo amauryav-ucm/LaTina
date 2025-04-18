@@ -1,9 +1,12 @@
 package latina.vista.comandos.disponibilidad;
 
+import jakarta.persistence.EntityManager;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.web.WebEngine;
 import latina.VistaPrincipal;
+import latina.integracion.emfc.EMFContainer;
+import latina.negocio.empleado.Empleado;
 import latina.negocio.factoria.SAFactory;
 import latina.negocio.disponibilidad.SADisponibilidad;
 import latina.negocio.disponibilidad.TDisponibilidad;
@@ -52,7 +55,7 @@ public class RegistrarDisponibilidad implements Comando {
 
             if (result >= 0)
             {
-                mensaje = "Disponibilidad registrada correctamente con ID: " + result;
+                mensaje = "Disponibilidad registrada correctamente para el empleado "+ obtenerNombreEmpleadoPorId(result);
             }
             else
             {
@@ -92,6 +95,20 @@ public class RegistrarDisponibilidad implements Comando {
             // Mostrar mensaje de error en caso de excepción
             WebEngine webEngine = vista.getWebView().getEngine();
             webEngine.executeScript("mostrarMensaje('Error al procesar la solicitud de disponibilidad')");
+        }
+    }
+    private String obtenerNombreEmpleadoPorId(int idEmpleado) {
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+
+        try {
+            Empleado empleado = em.find(Empleado.class, idEmpleado);
+            if (empleado != null) {
+                return empleado.getNombre();
+            } else {
+                return "";
+            }
+        } finally {
+            em.close();
         }
     }
 }
