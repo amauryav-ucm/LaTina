@@ -43,13 +43,6 @@ function mostrarMensaje(mensaje) {
     setTimeout(() => popup.classList.add("show"), 10);
 }
 
-function cerrarMensaje() {
-    const popup = document.getElementById("popup");
-    popup.classList.remove("show");
-    setTimeout(() => popup.style.display = "none", 300);
-}
-
-
 function enviarAJava(rol){
     if (window.java && window.java.accion) {
                 window.java.accion("REGISTRAR_ROL", rol);
