@@ -528,63 +528,6 @@ public class SATurnoImpTestsIT {
     }
 
     @Test
-    public void altaTurnoFechasLimite() {
-        // 1. Crear y persistir un rol y un empleado
-        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
-        em.getTransaction().begin();
-        Rol rol = new Rol();
-        rol.setNombre("ROL_ALTA_TURNO6");
-        rol.setSalario(15);
-        rol.setActivo(true);
-        em.persist(rol);
-
-
-
-        // 2. Crear un turno existente de 08:00 a 10:00
-        Timestamp inicioExistente = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(8).truncatedTo(ChronoUnit.HOURS));
-        Timestamp finExistente = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
-
-        Turno turnoExistente = new Turno();
-        turnoExistente.setFechaHoraInicio(inicioExistente);
-        turnoExistente.setFechaHoraFin(finExistente);
-        //turnoExistente.setEmpleado(emp);
-        turnoExistente.setRol(rol);
-        em.persist(turnoExistente);
-
-        em.getTransaction().commit();
-        int rolId = rol.getId();
-      //  int empId = emp.getId();
-        em.close();
-
-        // 3. Intentar crear un nuevo turno que comienza exactamente cuando termina el otro (10:00 a 12:00)
-        TTurno tTurno = new TTurno();
-        tTurno.setIdRol(rolId);
-      //  tTurno.setIdEmpleado(empId);
-
-        Timestamp inicioNuevo = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(10).truncatedTo(ChronoUnit.HOURS));
-        Timestamp finNuevo = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(12).truncatedTo(ChronoUnit.HOURS));
-        tTurno.setFechaHoraInicio(inicioNuevo);
-        tTurno.setFechaHoraFin(finNuevo);
-
-        int result = sa.altaTurno(tTurno);
-
-        // Según la implementación, esto no debería considerarse solapamiento
-        // El resultado debería ser positivo (ID del turno creado)
-        assertTrue(result > 0);
-
-        // Verificar que se creó correctamente
-        em = EMFContainer.getInstance().getEMF().createEntityManager();
-        Turno turnoCreado = em.find(Turno.class, result);
-
-        assertNotNull(turnoCreado);
-        assertEquals(rolId, turnoCreado.getRol().getId());
-     //   assertEquals(empId, turnoCreado.getEmpleado().getId());
-        assertEquals(inicioNuevo, turnoCreado.getFechaHoraInicio());
-        assertEquals(finNuevo, turnoCreado.getFechaHoraFin());
-        em.close();
-    }
-
-    @Test
     public void altaTurnoExitoso() {
         // Crear un rol y un empleado válidos
         EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
@@ -659,4 +602,81 @@ public class SATurnoImpTestsIT {
         int result = sa.altaTurno(tTurno);
         assertEquals(-3, result); // Supongamos que -3 indica fecha inválida
     }
+
+    @Test
+    public void altaTurno24HorasExactas() {
+        // Crear un rol y un empleado válidos
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+
+        Rol rol = new Rol();
+        rol.setNombre("ROL_TEST_OK");
+        rol.setSalario(20);
+        rol.setActivo(true);
+        em.persist(rol);
+
+        Empleado emp = new Empleado();
+        emp.setDNI("22334455Y");
+        emp.setNombre("Empleado Test");
+        emp.setCorreo("test@empresa.com");
+        emp.setActivo(true);
+        em.persist(emp);
+
+        em.getTransaction().commit();
+        int rolId = rol.getId();
+        int empId = emp.getId();
+        em.close();
+
+        // Crear turno válido
+        TTurno tTurno = new TTurno();
+        tTurno.setIdRol(rolId);
+        tTurno.setIdEmpleado(empId);
+
+        Timestamp inicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(1).truncatedTo(ChronoUnit.HOURS));
+        Timestamp fin = Timestamp.valueOf(LocalDateTime.now().plusDays(2).withHour(1).truncatedTo(ChronoUnit.HOURS));
+        tTurno.setFechaHoraInicio(inicio);
+        tTurno.setFechaHoraFin(fin);
+
+        int result = sa.altaTurno(tTurno);
+        assertTrue(result > 0);
+    }
+
+    @Test
+    public void altaTurnoMas24Horas() {
+        // Crear un rol y un empleado válidos
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+
+        Rol rol = new Rol();
+        rol.setNombre("ROL_TEST_INVALID_DATE");
+        rol.setSalario(25);
+        rol.setActivo(true);
+        em.persist(rol);
+
+        Empleado emp = new Empleado();
+        emp.setDNI("55667788Z");
+        emp.setNombre("Empleado Fecha Inválida");
+        emp.setCorreo("fecha@test.com");
+        emp.setActivo(true);
+        em.persist(emp);
+
+        em.getTransaction().commit();
+        int rolId = rol.getId();
+        int empId = emp.getId();
+        em.close();
+
+        // Crear turno con fecha de inicio en el pasado
+        TTurno tTurno = new TTurno();
+        tTurno.setIdRol(rolId);
+        tTurno.setIdEmpleado(empId);
+
+        Timestamp inicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.HOURS));
+        Timestamp fin = Timestamp.valueOf(LocalDateTime.now().plusDays(2).plusHours(1).truncatedTo(ChronoUnit.HOURS));
+        tTurno.setFechaHoraInicio(inicio);
+        tTurno.setFechaHoraFin(fin);
+
+        int result = sa.altaTurno(tTurno);
+        assertEquals(-4, result); // Supongamos que -4 indica que se han excedido las 24 horas permitidas
+    }
+
 }

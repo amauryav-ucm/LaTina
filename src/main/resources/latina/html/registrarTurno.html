@@ -51,7 +51,7 @@
             <label for="campo-hora-inicio">Hora</label>
             <div class="date-picker">
                 <input type="text" class="time-input" id="campo-hora-inicio" readonly onclick="openTimePicker()"
-                       placeholder="Selecciona la hora inicial">
+                       placeholder="Selecciona la hora inicial" style="cursor: pointer;">
                 <i class="fas fa-chevron-down time-icon"></i>
 
                 <div class="dropdown-hora" id="tiempo-inicio">
@@ -108,7 +108,7 @@
             <label for="campo-hora-fin">Hora</label>
             <div class="date-picker">
                 <input type="text" class="time-input" id="campo-hora-fin" readonly onclick="openTimePicker()"
-                       placeholder="Selecciona la hora final">
+                       placeholder="Selecciona la hora final" style="cursor: pointer;">
                 <i class="fas fa-chevron-down time-icon"></i>
 
                 <div class="dropdown-hora" id="tiempo-fin">
@@ -130,9 +130,13 @@
         </div>
 
         <label for="rol">Rol</label>
-        <select class="comboBox-rol" id="rol" name="rol" disabled>
-            <option value="" selected>Selecciona un rol</option>
-        </select>
+        <div class="date-picker">
+            <select class="comboBox-rol" id="rol" name="rol" disabled>
+                <option value="" selected>Selecciona un rol</option>
+            </select>
+            <!-- Se añade el ícono indicativo para desplegable -->
+            <i class="fas fa-chevron-down time-icon"></i>
+        </div>
 
         <div class="button-container">
             <button class="accept-button" id="accept-button" type="submit" onclick="recogerTurno()">Registrar</button>

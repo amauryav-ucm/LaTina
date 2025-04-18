@@ -46,6 +46,7 @@ public class RegistrarTurno implements Comando {
 
             SATurno saTurno = SAFactory.getInstance().createSATurno();
             int result = saTurno.altaTurno(t);
+<<<<<<< Updated upstream
             String mensaje = "";
             boolean error = false;
 
@@ -60,6 +61,17 @@ public class RegistrarTurno implements Comando {
                 error = true;
             }
 
+=======
+            String mensaje;
+
+            if (result >= 0) mensaje = "El turno se ha registrado correctamente";
+            else if (result == -1) mensaje = "No existe el rol seleccionado";
+            else if (result == -2) mensaje = "La fecha de fin debe ser posterior a la fecha de inicio";
+            else if (result == -3) mensaje = "La fecha de inicio no puede ser anterior a la hora actual";
+            else if (result == -4) mensaje = "El turno excede las 24 horas de duración permitidas";
+            else if (result == -5) mensaje = "Error al registrar el turno";
+            else mensaje = "Error desconocido";
+>>>>>>> Stashed changes
 
             WebEngine webEngine = vista.getWebView().getEngine();
             String finalMensaje = mensaje;
