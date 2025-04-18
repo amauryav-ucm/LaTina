@@ -31,7 +31,7 @@ public class RegistrarEmpleado implements Comando {
             String camposError = "[]";
 
             if (result >= 0) {
-                mensaje = "Se ha registrado el empleado correctamente con ID: " + result;
+                mensaje = "Se ha registrado el empleado correctamente";
             } else {
                 error = true;
                 if (result == -1) mensaje = "Ya existe un empleado con el DNI introducido";
