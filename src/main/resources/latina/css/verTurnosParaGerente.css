@@ -18,9 +18,10 @@ body {
     margin: 0;
     display: flex;
     justify-content: center;
-    margin-top: 5vh;
+    position: relative;
+    margin-top: 70px;
     /*background: linear-gradient(transparent, #05BC);*/
-    height: 100vh;
+    height: calc(100vh - 70px);
     width: 100vw;
 }
 
@@ -120,6 +121,18 @@ body {
     transform: translateY(-2px);
 }
 
+.titulo-principal {
+    position: absolute; /* Lo posiciona de forma independiente */
+    top: 20px; /* Distancia desde la parte superior */
+    left: 180px; /* Mismo margen que la sidebar (150px + 30px de espacio) */
+    right: 0; /* Ocupa el ancho restante */
+    text-align: center; /* Centra el texto */
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+    z-index: 10; /* Asegura que esté por encima de otros elementos */
+    margin: 0 auto; /* Centrado horizontal si left/right no son suficientes */
+}
 
 @media (max-width: 768px) {
     .week-container {
