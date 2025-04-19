@@ -112,14 +112,11 @@ body {
     border-radius: 4px;
     font-size: 14px;
     margin-bottom: 5px;
-    cursor: pointer;
+    cursor: default;
     transition: all 0.2s;
 }
 
-.turno:hover {
-    background-color: rgba(74, 144, 226, 0.3);
-    transform: translateY(-2px);
-}
+
 
 .titulo-principal {
     position: absolute; /* Lo posiciona de forma independiente */
