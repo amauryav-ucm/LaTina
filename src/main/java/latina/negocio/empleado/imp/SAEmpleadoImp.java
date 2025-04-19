@@ -108,7 +108,7 @@ public class SAEmpleadoImp implements SAEmpleado {
     }
 
     @Override
-    public String generarContraseña() {
+    public String generarContrasenya() {
 
         String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*";
         StringBuilder contrasena = new StringBuilder();

@@ -55,12 +55,7 @@ function recogerDatos() {
     empleado.email = email.value.trim();
     empleado.telefono = telefono.value.trim();
 
-
     enviarAJava(empleado);
-
-
-    setTimeout(() => location.reload(), 200);
-
 
 }
 
@@ -100,16 +95,8 @@ function mostrarError(mensaje, dni, nombre, apellidos, email, telefono, camposEr
     });
 }
 
-
-
 function enviarAJava(empleado) {
      if (window.java && window.java.accion) {
             window.java.accion("REGISTRAR_EMPLEADO", empleado);
      }
-}
-
-function volver() {
-    if (window.java && window.java.changeScene) {
-        window.java.changeScene("ventanaPrincipal.html");
-    }
 }
