@@ -31,9 +31,6 @@ function recogerDatos() {
 
     // Enviar los datos al backend Java (RegistrarRol.java)
     enviarAJava(rol);
-
-    // Forzar la recarga (simulando el "submit" clásico)
-    setTimeout(() => location.reload(), 200);
 }
 
 function mostrarMensaje(mensaje) {
@@ -74,12 +71,6 @@ function cerrarMensaje() {
     const popup = document.getElementById("popup");
     popup.classList.remove("show");
     setTimeout(() => popup.style.display = "none", 300);
-}
-
-function volver(){
-    if(window.java && window.java.changeScene){
-        window.java.changeScene("ventanaPrincipal.html");
-    }
 }
 
 // Añade esta función a tu archivo registrarRol.js
