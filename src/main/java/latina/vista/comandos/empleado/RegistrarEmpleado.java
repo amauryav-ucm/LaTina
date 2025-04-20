@@ -26,8 +26,7 @@ public class RegistrarEmpleado implements Comando {
             TEmpleado tEmpleado = new TEmpleado(dni, nombre, apellidos, email, telefono, true);
             SAEmpleado sae = SAFactory.getInstance().createSAEmpleado();
             int result = sae.altaEmpleado(tEmpleado);
-            String contrasenya = ""; //aqui va el generador
-
+            String contrasenya = sae.generarContrasenya();
             String mensaje = "";
             boolean error = false;
 

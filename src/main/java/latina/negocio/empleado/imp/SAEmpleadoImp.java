@@ -10,6 +10,7 @@ import latina.negocio.empleado.SAEmpleado;
 import latina.negocio.empleado.TEmpleado;
 import latina.negocio.turno.Turno;
 
+import java.security.SecureRandom;
 import java.util.*;
 
 public class SAEmpleadoImp implements SAEmpleado {
@@ -85,7 +86,7 @@ public class SAEmpleadoImp implements SAEmpleado {
                 trans.rollback();
                 return -6;//Solo se permiten letras(incluyendo ñ y tildes) y espacios
             }
-            if (!emp.getCorreo().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            if (!emp.getCorreo().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
                 trans.rollback();
                 return -7; // CORREO EN FORMATO INCORRECTO
             }
@@ -104,6 +105,21 @@ public class SAEmpleadoImp implements SAEmpleado {
             }
         }
         return id;
+    }
+
+    @Override
+    public String generarContrasenya() {
+
+        String caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*";
+        StringBuilder contrasena = new StringBuilder();
+        SecureRandom secureRandom = new SecureRandom();
+
+        for (int i = 0; i < 8; i++) {
+            int index = secureRandom.nextInt(caracteres.length());
+            contrasena.append(caracteres.charAt(index));
+        }
+
+        return contrasena.toString();
     }
 
     /// @return Una lista de empleados, una lista vacía si no existen, o null si se produce una excepción
