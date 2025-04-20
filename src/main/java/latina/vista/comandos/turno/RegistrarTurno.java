@@ -56,7 +56,7 @@ public class RegistrarTurno implements Comando {
                 if (result == -1) mensaje = "No se encontró el rol especificado";
                 else if (result == -2) mensaje = "La fecha de fin debe ser posterior a la fecha de inicio";
                 else if (result == -3) mensaje = "La fecha de inicio no puede ser anterior a la hora actual";
-                else if (result == -4) mensaje = "El turno excede las 24 horas de duración permitidas";
+                else if (result == -4) mensaje = "El turno excede las 12 horas de duración permitidas";
                 else if (result == -5) mensaje = "Error al registrar el turno";
                 else mensaje = "Error desconocido";
                 error = true;

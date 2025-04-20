@@ -177,7 +177,7 @@ public class SATurnoImp implements SATurno {
 
             long diferenciaEnMilisegundos = tTurno.getFechaHoraFin().getTime() - tTurno.getFechaHoraInicio().getTime();
             long diferenciaEnMinutos = diferenciaEnMilisegundos / (1000 * 60);
-            if (diferenciaEnMinutos > 1440) {
+            if (diferenciaEnMinutos > 720) {
                 trans.rollback();
                 return -4; // Código de error para duración de turno excedida
             }
