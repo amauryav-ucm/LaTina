@@ -48,7 +48,7 @@ public class VistaPrincipal extends Application {
         HBox titleBar = createTitleBar(primaryStage);
         webView = new WebView();
         WebEngine webEngine = webView.getEngine();
-        URL htmlFile = VistaPrincipal.class.getResource("/latina/html/ventanaPrincipal.html");
+        URL htmlFile = VistaPrincipal.class.getResource("/latina/html/iniciarSesion.html");
         assert htmlFile != null;
         webEngine.load(htmlFile.toString());
         configureJavaScriptBridge(webEngine);

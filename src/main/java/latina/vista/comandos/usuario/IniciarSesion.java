@@ -20,16 +20,17 @@ public class IniciarSesion implements Comando {
             switch (result) {
                 case -1:
                 case -2:
+                case -3:
                     vista.getWebView().getEngine().executeScript("mostrarMensaje('El nombre de usuario o contraseña son incorrectos')");
                     break;
-                case -3:
+                case -4:
                     vista.getWebView().getEngine().executeScript("mostrarMensaje('Ha ocurrido un error')");
                     break;
                 case 1:
-                    // redireccionar a la vista de empleado
+                    vista.getWebView().getEngine().executeScript("mostrarMensaje('Vaya... La interfaz del empleado aún no ha sido creada. Vuelve mas tarde')");
                     break;
                 case 2:
-                    // redireccionar a la vista de gerente
+                    vista.changeScene("ventanaPrincipal.html");
                     break;
 
             }

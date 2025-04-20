@@ -53,6 +53,8 @@ public class SAUsuarioImp implements SAUsuario {
             Usuario usuario = usuarios.get(0);
             if (!usuario.getContrasenya().equals(us.getContrasenya()))
                 return -2;
+            if (!usuario.isActivo())
+                return -3;
             if (usuario.isEsGerente())
                 return 2;
             else
@@ -61,7 +63,7 @@ public class SAUsuarioImp implements SAUsuario {
             if (trans != null && trans.isActive()) {
                 trans.rollback();
             }
-            return -3;
+            return -4;
         }
     }
 
