@@ -26,6 +26,23 @@ function recogerDatos() {
     });
 }
 
+// Añade esto a tu archivo JavaScript
+document.getElementById('toggle-password').addEventListener('click', function() {
+    const passwordInput = document.getElementById('input-contrasenya');
+    const icon = document.getElementById('icon-password');
+
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        icon.src = "../images/eye-slash-solid.svg"; // Cambia al icono de ojo cerrado
+    } else {
+        passwordInput.type = "password";
+        icon.src = "../images/eye-solid.svg"; // Cambia al icono de ojo abierto
+    }
+});
+
+//  elimina la clase "error" del input de contraseña cuando el usuario comienza a escribir en él
+_inputPsswd.addEventListener('input', () => _inputPsswd.classList.remove('error'));
+
 function enviarAJava(obj) {
     if (window.java && window.java.accion)
         window.java.accion('INICIAR_SESION', obj);
