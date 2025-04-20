@@ -1,7 +1,6 @@
 package latina.negocio.empleado;
 
 import jakarta.persistence.*;
-import latina.integracion.emfc.EMFContainer;
 import latina.negocio.disponibilidad.Disponibilidad;
 import latina.negocio.turno.Turno;
 
