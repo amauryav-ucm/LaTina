@@ -9,6 +9,7 @@
         <class>latina.negocio.rol.Rol</class>
         <class>latina.negocio.empleado.Empleado</class>
         <class>latina.negocio.turno.Turno</class>
+        <class>latina.negocio.usuario.Usuario</class>
         <class>latina.negocio.disponibilidad.Disponibilidad</class>
         <properties>
             <!-- Configuración de conexión a la base de datos -->
