@@ -595,7 +595,7 @@ class SATurnoImpTest {
     }
 
     @Test
-    void testAltaTurno24HorasExactas(){
+    void testAltaTurno12HorasExactas(){
         // Crear mocks
         EntityTransaction tx = mock(EntityTransaction.class);
         EntityManager em = mock(EntityManager.class);
@@ -606,7 +606,7 @@ class SATurnoImpTest {
 
         // Crear TTurno con datos válidos
         Timestamp ahora = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(1).withMinute(30).withSecond(0));
-        Timestamp futuro = Timestamp.valueOf(LocalDateTime.now().plusDays(2).withHour(1).withMinute(30).withSecond(0));
+        Timestamp futuro = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).withMinute(30).withSecond(0));
 
         TTurno tTurno = new TTurno();
         tTurno.setIdRol(1);
