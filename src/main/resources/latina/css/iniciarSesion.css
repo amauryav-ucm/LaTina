@@ -54,6 +54,11 @@ form {
     box-shadow: 0 0 8px rgba(66, 165, 245, 0.6);
 }
 
+.form-field > input.error {
+    border: 2px solid red;
+    background-color: #ffeeee;
+}
+
 .button-container {
     display: flex;
     justify-content: center;
