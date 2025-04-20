@@ -3,6 +3,9 @@ package latina.negocio.usuario;
 import jakarta.persistence.*;
 
 @Entity
+@NamedQueries({
+        @NamedQuery(name = "Usuario.findByNombreUsuario", query = "select obj from Usuario obj where :usuario = obj.usuario ")
+})
 public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
