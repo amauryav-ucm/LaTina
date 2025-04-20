@@ -5,6 +5,7 @@ import latina.negocio.empleado.SAEmpleado;
 import latina.negocio.factoria.imp.SAFactoryImp;
 import latina.negocio.rol.SARol;
 import latina.negocio.turno.SATurno;
+import latina.negocio.usuario.SAUsuario;
 
 public abstract class SAFactory {
 
@@ -22,5 +23,7 @@ public abstract class SAFactory {
     public abstract SATurno createSATurno();
 
     public abstract SAEmpleado createSAEmpleado();
+
+    public abstract SAUsuario createSAUsuario();
 
 }

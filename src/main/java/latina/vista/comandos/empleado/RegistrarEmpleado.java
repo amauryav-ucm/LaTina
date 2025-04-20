@@ -7,6 +7,8 @@ import latina.VistaPrincipal;
 import latina.negocio.empleado.SAEmpleado;
 import latina.negocio.empleado.TEmpleado;
 import latina.negocio.factoria.SAFactory;
+import latina.negocio.usuario.SAUsuario;
+import latina.negocio.usuario.TUsuario;
 import latina.vista.comandos.Comando;
 import netscape.javascript.JSObject;
 import org.w3c.dom.Document;
@@ -24,6 +26,8 @@ public class RegistrarEmpleado implements Comando {
             TEmpleado tEmpleado = new TEmpleado(dni, nombre, apellidos, email, telefono, true);
             SAEmpleado sae = SAFactory.getInstance().createSAEmpleado();
             int result = sae.altaEmpleado(tEmpleado);
+            String contrasenya = ""; //aqui va el generador
+
             String mensaje = "";
             boolean error = false;
 
@@ -32,6 +36,9 @@ public class RegistrarEmpleado implements Comando {
 
             if (result >= 0) {
                 mensaje = "Se ha registrado el empleado correctamente con ID: " + result;
+                SAUsuario sau = SAFactory.getInstance().createSAUsuario();
+                TUsuario us = new TUsuario(dni, contrasenya, false, true);
+                sau.altaUsuario(us);
             } else {
                 error = true;
                 if (result == -1) mensaje = "Ya existe un empleado con el DNI introducido";
