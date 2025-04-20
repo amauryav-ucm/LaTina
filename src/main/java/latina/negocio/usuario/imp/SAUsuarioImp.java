@@ -2,11 +2,14 @@ package latina.negocio.usuario.imp;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import latina.integracion.emfc.EMFContainer;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.usuario.SAUsuario;
 import latina.negocio.usuario.TUsuario;
 import latina.negocio.usuario.Usuario;
+
+import java.util.List;
 
 public class SAUsuarioImp implements SAUsuario {
     @Override
@@ -22,7 +25,7 @@ public class SAUsuarioImp implements SAUsuario {
             em.persist(usuario);
             trans.commit();
             id = usuario.getId();
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (trans != null && trans.isActive()) {
                 trans.rollback();
             }
@@ -33,6 +36,33 @@ public class SAUsuarioImp implements SAUsuario {
             }
         }
         return id;
+    }
+
+    @Override
+    public int iniciarSesion(TUsuario us) {
+        EntityTransaction trans = null;
+        try (EntityManager em = crearEntityManager()) {
+            trans = em.getTransaction();
+            trans.begin();
+            Query findByNombreUsuario = em.createNamedQuery("Usuario.findByNombreUsuario");
+            findByNombreUsuario.setParameter("usuario", us.getUsuario());
+            List<Usuario> usuarios = findByNombreUsuario.getResultList();
+            trans.commit();
+            if (usuarios.isEmpty())
+                return -1;
+            Usuario usuario = usuarios.get(0);
+            if (!usuario.getContrasenya().equals(us.getContrasenya()))
+                return -2;
+            if (usuario.isEsGerente())
+                return 2;
+            else
+                return 1;
+        } catch (Exception e) {
+            if (trans != null && trans.isActive()) {
+                trans.rollback();
+            }
+            return -3;
+        }
     }
 
     protected EntityManager crearEntityManager() {
