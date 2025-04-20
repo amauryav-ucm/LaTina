@@ -51,8 +51,8 @@ public class SATurnoImpTestIT {
         // Turno 1 dentro de la semana
         Turno t1 = new Turno();
         t1.setRol(rol);
-        t1.setFechaHoraInicio(Timestamp.valueOf("2025-03-26 08:00:00"));
-        t1.setFechaHoraFin   (Timestamp.valueOf("2025-03-26 16:00:00"));
+        t1.setFechaHoraInicio(Timestamp.valueOf("2025-03-26 18:00:00"));
+        t1.setFechaHoraFin   (Timestamp.valueOf("2025-03-27 04:00:00"));
         em.persist(t1);
 
         // Turno 2 dentro de la semana
@@ -112,8 +112,8 @@ public class SATurnoImpTestIT {
         // Turno 3 fuera de la semana (02-Abr)
         Turno t3 = new Turno();
         t3.setRol(rol);
-        t3.setFechaHoraInicio(Timestamp.valueOf("2025-03-09 23:59:59"));
-        t3.setFechaHoraFin   (Timestamp.valueOf("2025-03-10 10:00:00"));
+        t3.setFechaHoraInicio(Timestamp.valueOf("2025-03-08 23:59:59"));
+        t3.setFechaHoraFin   (Timestamp.valueOf("2025-03-09 10:00:00"));
         em.persist(t3);
 
         em.getTransaction().commit();

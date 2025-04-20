@@ -642,7 +642,7 @@ public class SATurnoImpTestsIT {
     }
 
     @Test
-    public void altaTurnoMas24Horas() {
+    public void altaTurnoMas12Horas() {
         // Crear un rol y un empleado válidos
         EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
@@ -671,7 +671,7 @@ public class SATurnoImpTestsIT {
         tTurno.setIdEmpleado(empId);
 
         Timestamp inicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).truncatedTo(ChronoUnit.HOURS));
-        Timestamp fin = Timestamp.valueOf(LocalDateTime.now().plusDays(2).plusHours(1).truncatedTo(ChronoUnit.HOURS));
+        Timestamp fin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).plusHours(13).truncatedTo(ChronoUnit.HOURS));
         tTurno.setFechaHoraInicio(inicio);
         tTurno.setFechaHoraFin(fin);
 

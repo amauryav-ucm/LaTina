@@ -220,9 +220,12 @@ public class SATurnoImp implements SATurno {
             Timestamp finTimestamp = Timestamp.valueOf(fin);
             //Selecciona de la tabla turno todos los que tienen horas en la semana seleccionada
             TypedQuery<Turno> query = em.createQuery(
-                    "SELECT t FROM Turno t " +
-                            "WHERE t.fechaHoraInicio BETWEEN :inicio AND :fin",
-                    Turno.class);
+                    "SELECT t FROM Turno t WHERE " +
+                            "(t.fechaHoraInicio BETWEEN :inicio AND :fin OR " +
+                            "t.fechaHoraFin BETWEEN :inicio AND :fin OR " +
+                            "(t.fechaHoraInicio <= :inicio AND t.fechaHoraFin >= :fin))",
+                    Turno.class
+            );
             query.setParameter("inicio", inicioTimestamp);
             query.setParameter("fin", finTimestamp);
             //Guarda la lista de los turnos que cumplen la condición
