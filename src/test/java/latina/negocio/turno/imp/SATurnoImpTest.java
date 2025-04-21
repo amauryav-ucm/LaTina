@@ -30,10 +30,8 @@ import static org.mockito.Mockito.*;
 
 class SATurnoImpTest {
 
-    /**
-     * Caso: Campos obligatorios incompletos.
-     * Si idTurno o idEmpleado son <= 0 (o se produce que find retorne null) se hace rollback y se devuelve -4.
-     */
+    /*TEST ASIGNAR TURNO*/
+
     @Test
     void testCamposIncompletos() {
         // Usamos mocks para simular EntityManager y Transaction.
@@ -520,7 +518,7 @@ class SATurnoImpTest {
         // Ejecutar el método a probar
         int resultado = saTurno.altaTurno(tTurno);
 
-        assertEquals(-4, resultado);
+        assertEquals(-5, resultado);
     }
 
     @Test
@@ -595,6 +593,83 @@ class SATurnoImpTest {
         verify(tx, times(1)).rollback();
         assertEquals(-3, resultado);
     }
+
+    @Test
+    void testAltaTurno12HorasExactas(){
+        // Crear mocks
+        EntityTransaction tx = mock(EntityTransaction.class);
+        EntityManager em = mock(EntityManager.class);
+        when(em.getTransaction()).thenReturn(tx);
+
+        SATurnoImp sat = Mockito.spy(new SATurnoImp());
+        doReturn(em).when(sat).createEntityManager();
+
+        // Crear TTurno con datos válidos
+        Timestamp ahora = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(1).withMinute(30).withSecond(0));
+        Timestamp futuro = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(13).withMinute(30).withSecond(0));
+
+        TTurno tTurno = new TTurno();
+        tTurno.setIdRol(1);
+        tTurno.setFechaHoraInicio(ahora);
+        tTurno.setFechaHoraFin(futuro);
+
+        // Simular que sí existe el rol
+        Rol rol = new Rol();
+        rol.setId(1);
+        when(em.find(Rol.class, 1)).thenReturn(rol);
+
+        // Simular persistencia del turno con ID generado
+        Turno turnoMock = mock(Turno.class);
+        when(turnoMock.getId()).thenReturn(10);
+        doAnswer(invocation -> {
+            Turno turno = invocation.getArgument(0);
+            turno.setId(10); // Simular que se asigna un ID al persistir
+            return null;
+        }).when(em).persist(any(Turno.class));
+
+        // Ejecutar método a probar
+        int resultado = sat.altaTurno(tTurno);
+
+        // Verificar que se hizo commit y se retornó el ID esperado
+        assertEquals(10, resultado);
+        verify(tx, times(1)).commit();
+    }
+
+    @Test
+    void testAltaTurnoMas12Horas(){
+        // Crear mocks
+        EntityTransaction tx = mock(EntityTransaction.class);
+        EntityManager em = mock(EntityManager.class);
+        when(em.getTransaction()).thenReturn(tx);
+
+        SATurnoImp sat = Mockito.spy(new SATurnoImp());
+        doReturn(em).when(sat).createEntityManager();
+
+        // Crear TTurno con diferencia de 24 y 30 minutos
+        Timestamp pasado = Timestamp.valueOf(LocalDateTime.now().plusDays(1));
+        Timestamp futuro = Timestamp.valueOf(LocalDateTime.now().plusDays(1).plusHours(12).plusMinutes(30));
+
+        TTurno tTurno = new TTurno();
+        tTurno.setIdRol(1);
+        tTurno.setFechaHoraInicio(pasado);
+        tTurno.setFechaHoraFin(futuro);
+
+        // Simular que sí existe el rol
+        Rol rol = new Rol();
+        rol.setId(1);
+        when(em.find(Rol.class, 1)).thenReturn(rol);
+
+        // Ejecutar método a probar
+        int resultado = sat.altaTurno(tTurno);
+
+        // Verificar que se hizo rollback y se retornó -4
+        verify(tx, times(1)).rollback();
+        assertEquals(-4, resultado);
+    }
+
+    //------------------------------------------------------------
+    /*TEST GET TURNOS SEMANALES*/
+
     @Test
     public void testGetTurnosSemanaConTurnos() {
         EntityManager em = mock(EntityManager.class);

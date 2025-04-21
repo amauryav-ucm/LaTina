@@ -3,53 +3,54 @@
     padding: 0;
     box-sizing: border-box;
     font-family: sans-serif;
-
 }
 
 body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     width: 100vw;
     margin: 0;
     background: #DDD;
-    /*background-color: #4A90E2CC;*/
-    /*background-color: #616161;*/
+    padding: 20px 0;
 }
 
-.form-container{
-    margin-top: 30vh;
+.form-container {
+    margin-top: 0;
     margin-left: 0;
-    /*background: linear-gradient(transparent, #05BC);*/
     padding-bottom: 50px;
-    height: 100vh;
+    height: auto;
     width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-title {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+    padding-top: 20px;
 }
 
 form {
     background: rgba(255, 255, 255, 0.9);
-    padding: 30px;
+    padding: 25px;
     border-radius: 10px;
-    width: 100vh;
-    height: 600px;
-    margin-left: 25vw;;
+    width: 90%;
+    max-width: 600px;
+    height: auto;
+    margin: 0 auto 50px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     animation: fadeIn 1s ease-out;
 }
 
-h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 24px;
-    font-weight: bold;
-    animation: slideIn 1.5s ease-out;
-}
-
 label {
     font-size: 16px;
-    margin-bottom: 8px;
+    margin-bottom: 0;
     color: #555;
     display: block;
     transition: color 0.3s ease;
@@ -57,8 +58,8 @@ label {
 
 input {
     width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
+    padding: 5px;
+    margin-bottom: 5px;
     border: 2px solid #ddd;
     border-radius: 5px;
     font-size: 16px;
@@ -71,17 +72,66 @@ input:focus {
     box-shadow: 0 0 8px rgba(66, 165, 245, 0.6);
 }
 
+/* Grupos de tiempo */
+.time-group {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.time-group h3 {
+    margin-bottom: 15px;
+    color: #555;
+    font-size: 18px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
+}
+
+.time-group:last-child {
+    margin-bottom: 25px;
+}
+
+/* Selector de Rol */
+.comboBox-rol {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0 20px 0;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    appearance: none;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: white;
+    color: gray;
+}
+
+.comboBox-rol option:first-child {
+    color: gray;
+}
+
+.comboBox-rol:focus {
+    color: black;
+}
+
+.comboBox-rol.selected {
+    color: black;
+}
+
+/* Botones */
 .button-container {
     display: flex;
     justify-content: center;
     gap: 10px;
+    margin-top: 15px;
 }
 
 .accept-button {
-    width: 48%;
+    width: 100%;
     padding: 12px;
-    /*background-color: #616161;*/
-    /*background-color: #4A90E2;*/
     background: #555;
     color: white;
     font-size: 18px;
@@ -92,8 +142,8 @@ input:focus {
 }
 
 .accept-button:hover {
-    background-color: #6d6d6d; /* Un gris más claro */
-    transform: scale(1.05);
+    background-color: #6d6d6d;
+    transform: scale(1.02);
 }
 
 .accept-button:active {
@@ -101,117 +151,7 @@ input:focus {
     transform: scale(1);
 }
 
-/* Contenedor para label y mensaje de error */
-.label-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-}
-
-/* Estilo para el mensaje de error */
-.error-message {
-    color: red;
-    font-size: 0.8em;
-    margin-left: 10px;
-    display: none;
-}
-
-/* Para mostrar el mensaje de error */
-.error-message.show {
-    display: inline-block;
-}
-
-
-/* Estilos para campos con error */
-input.error, .comboBox-rol.error { /* Añadido para el select */
-    border: 2px solid red;
-    background-color: #ffeeee;
-}
-
-.comboBox-rol{
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    appearance: none;
-    cursor: pointer;
-    outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Hace que el texto del select sea gris cuando el valor es vacío */
-.comboBox-rol {
-    color: gray;
-}
-
-.comboBox-rol option:first-child{
-    color: gray;
-}
-
-.comboBox-rol {
-    color: gray;
-}
-
-.comboBox-rol:focus{
-    color: black;
-}
-
-/* Cuando se selecciona un valor real */
-.comboBox-rol.selected{
-    color: black;
-}
-
-/* Popup Styling */
-.popup-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-}
-
-.popup-overlay.show {
-    display: flex;
-    opacity: 1;
-}
-
-.popup-box {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    transform: scale(0.8);
-    transition: transform 0.3s ease-in-out;
-}
-
-.popup-overlay.show .popup-box {
-    transform: scale(1);
-}
-
-.popup-button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.popup-button:hover {
-    background-color: #0056b3;
-}
-
-
+/* Calendario */
 .calendar-container {
     width: 320px;
     background-color: white;
@@ -300,9 +240,11 @@ input.error, .comboBox-rol.error { /* Añadido para el select */
     cursor: default;
 }
 
+/* Date Picker */
 .date-picker {
     position: relative;
     width: 100%;
+    margin-bottom: 15px;
 }
 
 .date-input {
@@ -326,7 +268,7 @@ input.error, .comboBox-rol.error { /* Añadido para el select */
     top: calc(100% + 10px);
     left: 0;
     width: 100%;
-    z-index: 10;
+    z-index: 20;
     display: none;
 }
 
@@ -335,13 +277,42 @@ input.error, .comboBox-rol.error { /* Añadido para el select */
     animation: fadeIn 0.3s forwards;
 }
 
+/* Time Picker */
 .dropdown-hora {
     position: absolute;
     top: calc(100% - 40px);
     left: 0;
     width: 100%;
-    z-index: 10;
+    z-index: 20;
     display: none;
+}
+
+.date-icon, .time-icon {
+    position: absolute;
+    right: 12px;
+    top: 45%;
+    transform: translateY(-50%);
+    color: #666;
+    pointer-events: none;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.time-input {
+    width: 100%;
+    height: 40px;
+    padding: 0.5rem 2.5rem 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    line-height: 1.5;
+    box-sizing: border-box;
+}
+
+.time-input:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
 .time-container {
@@ -389,13 +360,84 @@ input.error, .comboBox-rol.error { /* Añadido para el select */
     animation: fadeIn 0.3s forwards;
 }
 
-/* Animations */
+/* Popup */
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+.popup-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.popup-box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transform: scale(0.8);
+    transition: transform 0.3s ease-in-out;
+}
+
+.popup-overlay.show .popup-box {
+    transform: scale(1);
+}
+
+.popup-button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.popup-button:hover {
+    background-color: #0056b3;
+}
+
+/* Errores */
+.label-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.8em;
+    margin-left: 10px;
+    display: none;
+}
+
+.error-message.show {
+    display: inline-block;
+}
+
+input.error, .comboBox-rol.error {
+    border: 2px solid red;
+    background-color: #ffeeee;
+}
+
+/* Animaciones */
 @keyframes fadeIn {
     0% {
         opacity: 0;
         transform: translateY(-20px);
     }
-
     100% {
         opacity: 1;
         transform: translateY(0);
@@ -406,8 +448,12 @@ input.error, .comboBox-rol.error { /* Añadido para el select */
     0% {
         transform: translateX(-100%);
     }
-
     100% {
         transform: translateX(0);
     }
+}
+
+html, body {
+    overflow-x: hidden;
+    overflow-y: auto;
 }

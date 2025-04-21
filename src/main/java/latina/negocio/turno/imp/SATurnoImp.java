@@ -175,6 +175,13 @@ public class SATurnoImp implements SATurno {
                 return -3;
             }
 
+            long diferenciaEnMilisegundos = tTurno.getFechaHoraFin().getTime() - tTurno.getFechaHoraInicio().getTime();
+            long diferenciaEnMinutos = diferenciaEnMilisegundos / (1000 * 60);
+            if (diferenciaEnMinutos > 720) {
+                trans.rollback();
+                return -4; // Código de error para duración de turno excedida
+            }
+
             // 3. Crear y persistir turno
             Turno turno = new Turno(tTurno, rol);
 
@@ -188,7 +195,7 @@ public class SATurnoImp implements SATurno {
                 trans.rollback();
             }
             e.printStackTrace();
-            return -4; // Código de error para excepción general
+            return -5; // Código de error para excepción general
         } finally {
             if (em != null) {
                 em.close();
