@@ -24,6 +24,7 @@ public class RegistrarEmpleado implements Comando {
             TEmpleado tEmpleado = new TEmpleado(dni, nombre, apellidos, email, telefono, true);
             SAEmpleado sae = SAFactory.getInstance().createSAEmpleado();
             int result = sae.altaEmpleado(tEmpleado);
+            String contrasenya = sae.generarContrasenya();
             String mensaje = "";
             boolean error = false;
 
@@ -31,7 +32,7 @@ public class RegistrarEmpleado implements Comando {
             String camposError = "[]";
 
             if (result >= 0) {
-                mensaje = "Se ha registrado el empleado correctamente con ID: " + result;
+                mensaje = "Se ha registrado el empleado correctamente con contraseña: " + contrasenya;
             } else {
                 error = true;
                 if (result == -1) mensaje = "Ya existe un empleado con el DNI introducido";
