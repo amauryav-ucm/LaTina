@@ -18,9 +18,10 @@ body {
     margin: 0;
     display: flex;
     justify-content: center;
-    margin-top: 5vh;
+    position: relative;
+    margin-top: 70px;
     /*background: linear-gradient(transparent, #05BC);*/
-    height: 100vh;
+    height: calc(100vh - 70px);
     width: 100vw;
 }
 
@@ -111,16 +112,36 @@ body {
     border-radius: 4px;
     font-size: 14px;
     margin-bottom: 5px;
-    cursor: pointer;
+    cursor: default;
     transition: all 0.2s;
 }
 
-.turno:hover {
-    background-color: rgba(74, 144, 226, 0.3);
-    transform: translateY(-2px);
+
+
+.titulo-principal {
+    position: absolute; /* Lo posiciona de forma independiente */
+    top: 20px; /* Distancia desde la parte superior */
+    left: 180px; /* Mismo margen que la sidebar (150px + 30px de espacio) */
+    right: 0; /* Ocupa el ancho restante */
+    text-align: center; /* Centra el texto */
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+    z-index: 10; /* Asegura que esté por encima de otros elementos */
+    margin: 0 auto; /* Centrado horizontal si left/right no son suficientes */
 }
 
-
+/* Reset de estilos para la sidebar en "Ver Turno" */
+body[onload="initCalendar()"] #sidebar-container .sidebar a {
+    line-height: 1.23 !important;  /* Ajusta este valor (1.3 es más compacto) */
+    padding: 14px 20px !important; /* Mantén el mismo padding que en otras páginas */
+}
+body[onload="initCalendar()"] .desplegar-btn {
+    display: flex !important;
+    align-items: center !important;  /* Centra verticalmente el ícono */
+    justify-content: center !important; /* Centra horizontalmente */
+    height: 40px !important;       /* Altura fija para consistencia */
+}
 @media (max-width: 768px) {
     .week-container {
         grid-template-columns: 1fr;
