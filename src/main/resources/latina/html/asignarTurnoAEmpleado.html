@@ -6,65 +6,72 @@
     <title>Restaurante LaTina - Asignar Turno a Empleado</title>
     <link rel="stylesheet" href="../css/asignarTurnoAEmpleado.css">
     <link rel="stylesheet" href="../css/sideBar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div id="sidebar-container"></div>
+<div id="sidebar-container"></div>
 
-    <div class="form-container">
-        <form onsubmit="return validarFormulario()">
-            <label for="dateInput">Fecha</label>
-            <div class="date-picker">
-                <input type="text" class="date-input" readonly placeholder="Selecciona una fecha" id="dateInput">
+<div class="form-container">
+    <h2>ASIGNAR TURNO</h2>
+    <form onsubmit="return validarFormulario()">
+        <label for="dateInput">Fecha</label>
+        <div class="date-picker">
+            <input type="text" class="date-input" readonly placeholder="Selecciona una fecha" id="dateInput">
+            <i class="fas fa-calendar-alt date-icon"></i>
+            <div class="calendar-dropdown" id="calendarDropdown">
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button type="button" class="nav-button" id="prevMonth">&lt;</button>
+                        <div class="month-year" id="monthYear">Marzo 2025</div>
+                        <button type="button" class="nav-button" id="nextMonth">&gt;</button>
+                    </div>
 
-                <div class="calendar-dropdown" id="calendarDropdown">
-                    <div class="calendar-container">
-                        <div class="calendar-header">
-                            <button type="button" class="nav-button" id="prevMonth">&lt;</button>
-                            <div class="month-year" id="monthYear">Marzo 2025</div>
-                            <button type="button" class="nav-button" id="nextMonth">&gt;</button>
-                        </div>
+                    <div class="weekdays">
+                        <div class="weekday">Lu</div>
+                        <div class="weekday">Ma</div>
+                        <div class="weekday">Mi</div>
+                        <div class="weekday">Ju</div>
+                        <div class="weekday">Vi</div>
+                        <div class="weekday">Sa</div>
+                        <div class="weekday">Do</div>
+                    </div>
 
-                        <div class="weekdays">
-                            <div class="weekday">Lu</div>
-                            <div class="weekday">Ma</div>
-                            <div class="weekday">Mi</div>
-                            <div class="weekday">Ju</div>
-                            <div class="weekday">Vi</div>
-                            <div class="weekday">Sa</div>
-                            <div class="weekday">Do</div>
-                        </div>
-
-                        <div class="days" id="calendarDays">
-                            <!-- Los días se generarán con JavaScript -->
-                        </div>
+                    <div class="days" id="calendarDays">
+                        <!-- Los días se generarán con JavaScript -->
                     </div>
                 </div>
             </div>
+        </div>
 
-            <label for="turn">Selecciona un turno</label>
+        <label for="turn">Selecciona un turno</label>
+        <div class="select-container">
             <select class="turn" id="turn" name="turn" disabled>
                 <option value="" selected>Selecciona una fecha antes que el turno</option>
             </select>
-            <label for="name">Empleado</label>
-            <select class="comboBox-empleado" id="name" name="name" disabled>
-                <option value="" selected>Selecciona un turno antes que el empleado</option>
-            </select>
-
-            <div class="button-container">
-                <button class="accept-button" id="accept-button" type="submit"onclick="recogerTurno()">Asignar</button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Popup Container -->
-    <div id="popup" class="popup-overlay">
-        <div class="popup-box">
-            <p id="popup-message">Turno asignado correctamente</p>
-            <button class="popup-button" onclick="cerrarMensaje()">OK</button>
+            <i class="fas fa-chevron-down select-icon"></i> <!-- Icono de Font Awesome -->
         </div>
-    </div>
+        <label for="name">Empleado</label>
+        <div class="select-container">
+        <select class="comboBox-empleado" id="name" name="name" disabled>
+            <option value="" selected>Selecciona un turno antes que el empleado</option>
+        </select>
+            <i class="fas fa-chevron-down select-icon"></i> <!-- Icono de Font Awesome -->
+        </div>
+        <div class="button-container">
+            <button class="accept-button" id="accept-button" type="submit" onclick="recogerTurno()">Asignar</button>
+        </div>
+    </form>
+</div>
 
-    <script src="../js/asignarTurnoAEmpleado.js"></script>
-    <script src="../js/sideBar.js"></script>
+<!-- Popup Container -->
+<div id="popup" class="popup-overlay">
+    <div class="popup-box">
+        <p id="popup-message">Turno asignado correctamente</p>
+        <button class="popup-button" onclick="cerrarMensaje()">OK</button>
+    </div>
+</div>
+
+<script src="../js/asignarTurnoAEmpleado.js"></script>
+<script src="../js/sideBar.js"></script>
 </body>
 </html>

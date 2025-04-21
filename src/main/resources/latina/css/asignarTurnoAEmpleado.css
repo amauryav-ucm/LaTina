@@ -13,7 +13,7 @@ body {
     height: 100vh;
     width: 100vw;
     margin: 0;
-    /background-color: #4A90E2CC;*/
+    /*background-color: #4A90E2CC;*/
     /*background-color: #616161;*/
     background: #DDD;
 }
@@ -24,9 +24,8 @@ body {
     padding-bottom: 50px;
     height: 100vh;
     width: 100vw;
-    overflow: none;
+    overflow: hidden;
 }
-
 form {
     background: rgba(255, 255, 255, 0.9);
     padding: 30px;
@@ -35,7 +34,7 @@ form {
     height: 400px;
     margin-left: 25vw;;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    animation: fadeIn 1s ease-out;
+    /*animation: fadeIn 1s ease-out;*/
 }
 
 h2 {
@@ -202,6 +201,22 @@ input.error, .comboBox-empleado.error, .turn.error { /* Añadido para el select 
     transform: scale(1);
 }
 
+.select-container {
+    position: relative; /* Necesario para posicionar el icono */
+    width: 100%;
+    margin-bottom: 0;
+}
+
+
+.select-icon {
+    position: absolute;
+    top: 35%;
+    right: 12px; /* Ajusta el espacio desde la derecha */
+    transform: translateY(-50%);
+    pointer-events: none; /* El icono no bloquea la interacción con el select */
+    color: #777; /* Puedes cambiar el color del icono si lo deseas */
+}
+
 .popup-button {
     margin-top: 15px;
     padding: 10px 20px;
@@ -338,6 +353,14 @@ input.error, .comboBox-empleado.error, .turn.error { /* Añadido para el select 
 .calendar-dropdown.open {
     display: block;
     animation: fadeIn 0.3s forwards;
+}
+
+.date-icon, .time-icon {
+    position: absolute;
+    right: 15px; /* Ajusta la distancia de la derecha según sea necesario */
+    top: 35%;
+    transform: translateY(-50%);
+    pointer-events: none; /* Esto evita que el icono interfiera con el clic en el input */
 }
 
 @keyframes fadeIn {
