@@ -41,9 +41,9 @@ h2 {
     text-align: center;
     color: #333;
     margin-bottom: 20px;
-    font-size: 24px;
+    font-size: 30px;
     font-weight: bold;
-    animation: slideIn 1.5s ease-out;
+    /*animation: slideIn 1.5s ease-out;*/
 }
 
 label {
