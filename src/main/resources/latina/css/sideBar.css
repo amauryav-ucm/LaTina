@@ -15,6 +15,15 @@
     transition: transform 0.3s ease; /* Añadida transición para animación suave */
 }
 
+.sidebar-footer {
+    margin-top: auto;
+    padding: 15px;
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    font-size: 14px;
+}
+
 /* Estado colapsado de la sidebar */
 .sidebar-collapsed {
     transform: translateX(-200px);

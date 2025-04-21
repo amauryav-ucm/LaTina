@@ -1,21 +1,18 @@
 function inicializarSidebar() {
     var sidebarContainer = document.getElementById('sidebar-container');
-
+    var nombreUsuario = localStorage.getItem("usuario") || "Usuario";
     // Crear el contenido de la sidebar mediante JavaScript
     var sidebarHTML = `
         <button id="desplegarSidebar" class="desplegar-btn">☰</button>
         <div class="sidebar" id="sidebar">
             <ul class="sidebar-menu">
-                <li><a href="ventanaPrincipal.html" onclick="java.changeScene('ventanaPrincipal.html')">Inicio</a></li>
-                <li><a href="registrarRol.html" onclick="java.changeScene('registrarRol.html')">Registrar rol</a></li>
-                <li><a href="registrarTurno.html" onclick="java.changeScene('registrarTurno.html')">Registrar turno</a></li>
-                <li><a href="registrarEmpleado.html" onclick="java.changeScene('registrarEmpleado.html')">Registrar empleado</a></li>
-                <li><a href="registrarDisponibilidad.html" onclick="java.changeScene('registrarDisponibilidad.html')">Registrar disponibilidad empleado</a></li>
-                <li><a href="asignarTurnoAEmpleado.html" onclick="java.changeScene('asignarTurnoAEmpleado.html')">Asignar turno</a></li>
-                <li><a href="verTurnosParaGerente.html" onclick="java.changeScene('verTurnosParaGerente.html')">Ver turnos</a></li>
+                <li><a href="ventanaPrincipalEmpleado.html" onclick="java.changeScene('ventanaPrincipalEmpleado.html')">Inicio</a></li>
+                <li><a href="registrarDisponibilidadEmpleado.html" onclick="java.changeScene('registrarDisponibilidadEmpleado.html')">Registrar disponibilidad</a></li>
+                <li><a href="verTurnosParaEmpleado.html" onclick="java.changeScene('verTurnosParaEmpleado.html')">Ver turnos</a></li>
             </ul>
+
             <div class="sidebar-footer">
-                <span>Gerente</span>
+                <span>${nombreUsuario}</span>
             </div>
         </div>
     `;

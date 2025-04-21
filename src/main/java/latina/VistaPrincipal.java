@@ -49,6 +49,7 @@ public class VistaPrincipal extends Application {
         webView = new WebView();
         WebEngine webEngine = webView.getEngine();
         URL htmlFile = VistaPrincipal.class.getResource("/latina/html/iniciarSesion.html");
+        //URL htmlFile = VistaPrincipal.class.getResource("/latina/html/ventanaPrincipal.html");
         assert htmlFile != null;
         webEngine.load(htmlFile.toString());
         configureJavaScriptBridge(webEngine);

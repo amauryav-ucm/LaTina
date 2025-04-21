@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurante LaTina - Ver los turnos de empleado</title>
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/verTurnosParaEmpleado.css">
+    <link rel="stylesheet" href="../css/sideBar.css"></head>
+<body onload="initCalendar()">
+<div id="sidebar-container"></div>
+
+<div class="contenedor">
+    <div class="calendar-container">
+        <!-- El contenido del calendario se integrará aquí -->
+        <div class="calendar-header">
+            <div class="calendar-nav">
+                <button id="current-week" class="btn btn-outline-light">
+                    <img src="../images/icono-calendario.png" alt="Hoy" width="25" height="25" class="me-2"> Hoy
+                </button>
+                <button id="prev-week" class="btn btn-outline-light">
+                    <i class="bi bi-chevron-left"></i> <
+                </button>
+                <button id="next-week" class="btn btn-outline-light">
+                    > <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+            <h5 class="calendar-title" id="week-title">Semanas</h5>
+        </div>
+
+        <!-- Contenedor de la semana -->
+        <div class="week-container" id="week-container">
+            <!-- Los días se generarán dinámicamente con JavaScript -->
+        </div>
+    </div>
+</div>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<script src="../js/sideBarEmpleado.js"></script>
+<script src="../js/verTurnosParaEmpleado.js"></script>
+
+</body>
+</html>
