@@ -11,12 +11,10 @@ body {
     height: 100vh;
     width: 100vw;
     background: #DDD;
-    overflow:visible;
-    /*background-color: #4A90E2CC;*/
-    /*background-color: #616161;*/
+    overflow: visible;
 }
 
-.form-container{
+.form-container {
     margin: 0;
     margin-top: 3px;
     display: flex;
@@ -84,8 +82,6 @@ input:focus {
 .accept-button {
     width: 48%;
     padding: 12px;
-    /*background-color: #616161;*/
-    /*background-color: #4A90E2;*/
     background: #555;
     color: white;
     font-size: 18px;
@@ -96,7 +92,7 @@ input:focus {
 }
 
 .accept-button:hover {
-    background-color: #6d6d6d; /* Un gris más claro */
+    background-color: #6d6d6d;
     transform: scale(1.05);
 }
 
@@ -105,44 +101,13 @@ input:focus {
     transform: scale(1);
 }
 
-/* Contenedor para label y mensaje de error */
-.label-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-}
-
-/* Estilo para el mensaje de error */
-.error-message {
-    color: red;
-    font-size: 0.8em;
-    margin-left: 10px;
-    display: none;
-}
-
-/* Para mostrar el mensaje de error */
-.error-message.show {
-    display: inline-block;
-}
-
-input, select {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Estilos para campos con error */
-input.error, .comboBox-empleado.error { /* Añadido para el select */
+/* Estilos para los campos con error */
+.input.error, .comboBox-empleado.error {
     border: 2px solid red;
     background-color: #ffeeee;
 }
 
-.comboBox-empleado{
+.comboBox-empleado {
     width: 100%;
     padding: 12px;
     margin-bottom: 20px;
@@ -155,25 +120,16 @@ input.error, .comboBox-empleado.error { /* Añadido para el select */
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Hace que el texto del select sea gris cuando el valor es vacío */
+/* Estilo cuando no se selecciona un valor */
 .comboBox-empleado {
     color: gray;
 }
 
-.comboBox-empleado option:first-child{
+.comboBox-empleado option:first-child {
     color: gray;
 }
 
-.comboBox-empleado {
-    color: gray;
-}
-
-.comboBox-empleado:focus{
-    color: black;
-}
-
-/* Cuando se selecciona un valor real */
-.comboBox-empleado.selected{
+.comboBox-empleado.selected {
     color: black;
 }
 
@@ -225,7 +181,7 @@ input.error, .comboBox-empleado.error { /* Añadido para el select */
     background-color: #0056b3;
 }
 
-
+/* Estilo del calendario */
 .calendar-container {
     width: 320px;
     background-color: white;
@@ -389,31 +345,16 @@ input.error, .comboBox-empleado.error { /* Añadido para el select */
     animation: fadeIn 0.3s forwards;
 }
 
-/* Animations
+/* Animaciones */
 @keyframes fadeIn {
     0% {
         opacity: 0;
         transform: translateY(-20px);
     }
-
     100% {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-@keyframes slideIn {
-    0% {
-        transform: translateX(-100%);
-    }
-
-    100% {
-        transform: translateX(0);
-    }
-}*/
-.date-picker {
-    position: relative;
-    width: 100%;
 }
 
 .date-input, .time-input {
@@ -432,66 +373,39 @@ input.error, .comboBox-empleado.error { /* Añadido para el select */
     border-color: #4a6fa5;
 }
 
-/* Posiciona el icono dentro del campo a la derecha */
-.date-icon, .time-icon {
-    position: absolute;
-    right: 10px; /* Ajusta la distancia de la derecha según sea necesario */
-    top: 35%;
-    transform: translateY(-50%);
-    pointer-events: none; /* Esto evita que el icono interfiera con el clic en el input */
-}
-
-.calendar-dropdown {
-    position: absolute;
-    top: calc(100% - 10px);
-    left: 0;
-    width: 100%;
-    z-index: 10;
-    display: none;
-}
-
-.calendar-dropdown.open {
-    display: block;
-    animation: fadeIn 0.3s forwards;
-}
-/* Estilo del contenedor del select */
 .select-container {
-    position: relative; /* Necesario para posicionar el icono */
+    position: relative;
     width: 100%;
     margin-bottom: 0;
 }
 
-/* Estilización del select */
 .comboBox-empleado {
     width: 100%;
-    padding: 12px 40px 12px 12px; /* Espacio a la derecha para el icono */
+    padding: 12px 40px 12px 12px;
     font-size: 16px;
     border: 2px solid #ddd;
     border-radius: 5px;
-    appearance: none; /* Eliminar el estilo predeterminado del select */
+    appearance: none;
     cursor: pointer;
     outline: none;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
     background-color: white;
 }
 
-/* Estilo cuando el select tiene foco */
 .comboBox-empleado:focus {
     border-color: #4a6fa5;
     box-shadow: 0 0 8px rgba(66, 165, 245, 0.6);
 }
 
-/* Icono dentro del select (en la parte derecha) */
 .select-icon {
     position: absolute;
     top: 35%;
-    right: 12px; /* Ajusta el espacio desde la derecha */
+    right: 12px;
     transform: translateY(-50%);
-    pointer-events: none; /* El icono no bloquea la interacción con el select */
-    color: #777; /* Puedes cambiar el color del icono si lo deseas */
+    pointer-events: none;
+    color: #777;
 }
 
-/* Hacemos que el texto del select sea gris cuando el valor es vacío */
 .comboBox-empleado {
     color: gray;
 }
