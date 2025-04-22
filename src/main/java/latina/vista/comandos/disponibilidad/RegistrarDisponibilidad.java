@@ -65,6 +65,7 @@ public class RegistrarDisponibilidad implements Comando {
                 else if (result == -3) mensaje = "El empleado tiene un turno asignado dentro de ese horario";
                 else if (result == -4) mensaje = "La disponibilidad debe comenzar más tarde que la hora actual";
                 else if (result == -5) mensaje = "Error al registrar la disponibilidad";
+                else if (result == -6) mensaje = "La disponibilidad excede las 24 horas de duración permitidas";
                 else mensaje = "Error desconocido";
             }
 

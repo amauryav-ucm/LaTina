@@ -149,5 +149,22 @@ public class SADisponibilidadTestIT {
         assertEquals(-4, resultado);
     }
 
+    @Test
+    public void testAltaDisponibilidad24HorasExcedidas() {
+
+        TDisponibilidad tDisponibilidad = new TDisponibilidad();
+        tDisponibilidad.setEmpleadoId(empleado.getId());
+
+        Timestamp fechaInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1));
+        Timestamp fechaFin = Timestamp.valueOf(LocalDateTime.now().plusDays(2).plusMinutes(30));
+
+        tDisponibilidad.setFechaInicio(fechaInicio);
+        tDisponibilidad.setFechaFin(fechaFin);
+
+
+        int resultado = sa.altaDisponibilidad(tDisponibilidad);
+
+        assertEquals(-6, resultado);
+    }
 
 }

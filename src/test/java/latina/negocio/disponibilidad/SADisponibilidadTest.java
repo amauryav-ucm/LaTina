@@ -165,6 +165,30 @@ public class SADisponibilidadTest
     }
 
     @Test
+    public void testAltaDisponibilidad24HorasExcedidas(){
+        EntityTransaction tx = mock(EntityTransaction.class);
+        EntityManager em = mock(EntityManager.class);
+        when(em.getTransaction()).thenReturn(tx);
+
+        SADisponibilidadImp sad = Mockito.spy(new SADisponibilidadImp());
+        doReturn(em).when(sad).crearEntityManager();
+
+        Empleado empleado = new Empleado();
+        when(em.find(Empleado.class, 1)).thenReturn(empleado);
+
+        TDisponibilidad tDisponibilidad = new TDisponibilidad();
+        tDisponibilidad.setEmpleadoId(1);
+        Timestamp fechaInicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1));
+        Timestamp fechaFin = Timestamp.valueOf(LocalDateTime.now().plusDays(2).plusMinutes(30));
+        tDisponibilidad.setFechaInicio(fechaInicio);
+        tDisponibilidad.setFechaFin(fechaFin);
+
+        int resultado = sad.altaDisponibilidad(tDisponibilidad);
+        assertEquals(-6, resultado);
+        verify(tx, times(1)).rollback();
+    }
+
+    @Test
     public void testAltaDisponibilidadPersistenciaFalla() {
         EntityTransaction tx = mock(EntityTransaction.class);
         EntityManager em = mock(EntityManager.class);
