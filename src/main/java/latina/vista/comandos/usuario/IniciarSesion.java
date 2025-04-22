@@ -6,6 +6,7 @@ import javafx.concurrent.Worker;
 import latina.VistaPrincipal;
 import latina.integracion.emfc.EMFContainer;
 import latina.negocio.empleado.Empleado;
+import latina.negocio.empleado.TEmpleado;
 import latina.negocio.factoria.SAFactory;
 import latina.negocio.usuario.TUsuario;
 import latina.vista.comandos.Comando;
@@ -34,14 +35,9 @@ public class IniciarSesion implements Comando {
                     vista.getWebView().getEngine().executeScript("mostrarMensaje('Ha ocurrido un error')");
                     break;
                 case 1:
-                    EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
-                    Query q = em.createNamedQuery("Empleado.findByDNI");//Amaury no me pegues ya lo cambiaré jajajajja
-                    q.setParameter("DNI", usuario);
-                    List<Empleado> empleados = q.getResultList();
-                    em.close();
-                    int idUs = empleados.get(0).getId();
+                    TEmpleado emp = SAFactory.getInstance().createSAUsuario().conseguirEmpleado(us);
                     vista.getWebView().getEngine().executeScript("localStorage.setItem('usuario', '" + usuario + "');");
-                    vista.getWebView().getEngine().executeScript("localStorage.setItem('idUsuario', '" + idUs + "');");
+                    vista.getWebView().getEngine().executeScript("localStorage.setItem('idUsuario', '" + emp.getId() + "');");
                     vista.changeScene("ventanaPrincipalEmpleado.html");
                     break;
                 case 2:

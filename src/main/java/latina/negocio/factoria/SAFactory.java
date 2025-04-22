@@ -26,4 +26,5 @@ public abstract class SAFactory {
 
     public abstract SAUsuario createSAUsuario();
 
+
 }

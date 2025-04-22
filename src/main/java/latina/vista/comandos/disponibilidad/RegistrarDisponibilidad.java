@@ -1,9 +1,12 @@
 package latina.vista.comandos.disponibilidad;
 
+import jakarta.persistence.EntityManager;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.web.WebEngine;
 import latina.VistaPrincipal;
+import latina.integracion.emfc.EMFContainer;
+import latina.negocio.empleado.Empleado;
 import latina.negocio.factoria.SAFactory;
 import latina.negocio.disponibilidad.SADisponibilidad;
 import latina.negocio.disponibilidad.TDisponibilidad;
@@ -48,23 +51,41 @@ public class RegistrarDisponibilidad implements Comando {
             SADisponibilidad saDisponibilidad = SAFactory.getInstance().createSADisponibilidad();
             int result = saDisponibilidad.altaDisponibilidad(t);
             String mensaje = "";
-
-            if (result >= 0) mensaje = "Disponibilidad registrada correctamente con ID: " + result;
-            else if (result == -1) mensaje = "No se encontró el empleado con el ID especificado";
-            else if (result == -2) mensaje = "La fecha de fin debe ser posterior a la fecha de inicio";
-            else if (result == -3) mensaje = "El empleado tiene un turno asignado dentro de ese horario";
-            else if (result == -4) mensaje = "La disponibilidad debe comenzar más tarde que la hora actual";
-            else if (result == -5) mensaje = "Error al registrar la disponibilidad";
-            else mensaje = "Error desconocido";
+            boolean error = false;
+            if (result >= 0)
+            {
+                mensaje = "Disponibilidad registrada correctamente para el empleado " + obtenerNombreyApellidoEmpleadoPorId(empleadoId);
+            }
+            else
+            {
+                error = true;
+                if (result == -1) mensaje = "No se encontró el empleado con el ID especificado";
+                else if (result == -2) mensaje = "La fecha de fin debe ser posterior a la fecha de inicio";
+                else if (result == -3) mensaje = "El empleado tiene un turno asignado dentro de ese horario";
+                else if (result == -4) mensaje = "La disponibilidad debe comenzar más tarde que la hora actual";
+                else if (result == -5) mensaje = "Error al registrar la disponibilidad";
+                else if (result == -6) mensaje = "La disponibilidad excede las 24 horas de duración permitidas";
+                else mensaje = "Error desconocido";
+            }
 
             WebEngine webEngine = vista.getWebView().getEngine();
             String finalMensaje = mensaje;
+            boolean finalError = error;
 
             webEngine.documentProperty().addListener(new ChangeListener<Document>() {
                 @Override
                 public void changed(ObservableValue<? extends Document> obs, Document oldDoc, Document newDoc) {
                     if (newDoc != null) {
-                        webEngine.executeScript(String.format("mostrarMensaje('%s')", finalMensaje));
+                        if (finalError) {
+                            webEngine.executeScript(String.format(
+                                    "mostrarError('%s', '%s', '%s', '%s', '%s')",
+                                    finalMensaje, fechaInicio, horaInicio, fechaFin, horaFin
+                            ));
+                        }
+                        else
+                        {
+                            webEngine.executeScript(String.format("mostrarMensaje('%s')", finalMensaje));
+                        }
                         webEngine.documentProperty().removeListener(this);
                     }
                 }
@@ -75,6 +96,20 @@ public class RegistrarDisponibilidad implements Comando {
             // Mostrar mensaje de error en caso de excepción
             WebEngine webEngine = vista.getWebView().getEngine();
             webEngine.executeScript("mostrarMensaje('Error al procesar la solicitud de disponibilidad')");
+        }
+    }
+
+    private String obtenerNombreyApellidoEmpleadoPorId(int idEmpleado) {
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        try {
+            Empleado empleado = em.find(Empleado.class, idEmpleado);
+            if (empleado != null) {
+                return empleado.getNombre() + " " + empleado.getApellidos();
+            } else {
+                return "";
+            }
+        } finally {
+            em.close();
         }
     }
 }

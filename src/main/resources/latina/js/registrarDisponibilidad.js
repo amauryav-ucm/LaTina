@@ -331,7 +331,6 @@ function recogerDisponibilidad() {
     enviarDisponibilidadAJava(disponibilidad);
 
     // Mostrar mensaje de éxito y recargar (o redirigir) si es necesario
-    mostrarMensaje("Disponibilidad registrada correctamente.");
     setTimeout(() => location.reload(), 200);
 }
 
@@ -425,3 +424,19 @@ function enviarDisponibilidadAJava(disponibilidad) {
         window.java.accion("REGISTRAR_DISPONIBILIDAD", disponibilidad);
     }
 }
+
+function mostrarError(mensaje, fechaInicio, horaInicio, fechaFin, horaFin) {
+     const popup = document.querySelector(".popup-overlay");
+     popup.style.display = "flex";
+     popup.classList.add("show");
+     document.getElementById("popup-message").innerText = mensaje;
+
+     // Restaurar los valores en el formulario
+     document.getElementById("campo-fecha-inicio").value = fechaInicio;
+     document.getElementById("campo-hora-inicio").value = horaInicio;
+     document.getElementById("campo-fecha-fin").value = fechaFin;
+     document.getElementById("campo-hora-fin").value = horaFin;
+
+     // Quitar clases de error de todos los campos primero
+     document.querySelectorAll("input").forEach(input => input.classList.remove("error"));
+ }

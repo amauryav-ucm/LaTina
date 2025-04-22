@@ -1,5 +1,7 @@
 package latina.negocio.usuario;
 
+import latina.negocio.empleado.TEmpleado;
+
 public interface SAUsuario {
     int altaUsuario(TUsuario us);
 
@@ -14,5 +16,7 @@ public interface SAUsuario {
      * @returns El numero indicando el resultado
      */
     public int iniciarSesion(TUsuario us);
+
+    public TEmpleado conseguirEmpleado(TUsuario us);
 
 }

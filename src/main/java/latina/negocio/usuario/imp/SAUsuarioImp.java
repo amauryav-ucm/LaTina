@@ -5,6 +5,7 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 import latina.integracion.emfc.EMFContainer;
 import latina.negocio.empleado.Empleado;
+import latina.negocio.empleado.TEmpleado;
 import latina.negocio.usuario.SAUsuario;
 import latina.negocio.usuario.TUsuario;
 import latina.negocio.usuario.Usuario;
@@ -65,6 +66,18 @@ public class SAUsuarioImp implements SAUsuario {
             }
             return -4;
         }
+    }
+
+    @Override
+    public TEmpleado conseguirEmpleado(TUsuario us)
+    {
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        Query q = em.createNamedQuery("Empleado.findByDNI");//Amaury no me pegues ya lo cambiaré jajajajja
+        q.setParameter("DNI", us.getUsuario());
+        List<Empleado> empleados = q.getResultList();
+        em.close();
+        Empleado emp = empleados.get(0);
+        return new TEmpleado(emp.getId(), emp.getDNI(), emp.getNombre(), emp.getApellidos(), emp.getCorreo(), emp.getTelefono(), true);
     }
 
     public EntityManager crearEntityManager() {
