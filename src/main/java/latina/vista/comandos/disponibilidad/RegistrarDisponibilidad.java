@@ -55,7 +55,7 @@ public class RegistrarDisponibilidad implements Comando {
 
             if (result >= 0)
             {
-                mensaje = "Disponibilidad registrada correctamente para el empleado "+ obtenerNombreEmpleadoPorId(result);
+                mensaje = "Disponibilidad registrada correctamente para el empleado "+ obtenerNombreEmpleadoPorId(empleadoId);
             }
             else
             {
