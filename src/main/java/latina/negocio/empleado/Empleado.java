@@ -28,6 +28,7 @@ public class Empleado {
     private String correo;
     private String telefono;
     private boolean activo;
+    private boolean haFichadoEntrada;
     @OneToMany(mappedBy = "empleado", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Disponibilidad> disponibilidad = new ArrayList<>();
     @OneToMany(mappedBy = "empleado", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -46,6 +47,7 @@ public class Empleado {
         this.activo = empleado.isActivo();
         this.disponibilidad = new ArrayList<>();
         this.turno = new ArrayList<>();
+        this.haFichadoEntrada = empleado.isHaFichadoEntrada();
     }
 
     public int getId() {
@@ -122,7 +124,14 @@ public class Empleado {
     }
 
     public TEmpleado toTransfer(){
-        return new TEmpleado(id, DNI, nombre, apellidos, correo, telefono, activo);
+        return new TEmpleado(id, DNI, nombre, apellidos, correo, telefono, activo, haFichadoEntrada);
     }
 
+    public boolean isHaFichadoEntrada() {
+        return haFichadoEntrada;
+    }
+
+    public void setHaFichadoEntrada(boolean haFichadoEntrada) {
+        this.haFichadoEntrada = haFichadoEntrada;
+    }
 }

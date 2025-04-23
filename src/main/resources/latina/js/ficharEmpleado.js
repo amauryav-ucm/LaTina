@@ -14,38 +14,23 @@ function inicializarPopup() {
     }
 }
 
+function actualizarBotonesFichaje() {
+    const haFichado = localStorage.getItem("haFichadoEntrada") === "true";
+
+    const btnEntrada = document.querySelector(".fichar-btn.entrada");
+    const btnSalida = document.querySelector(".fichar-btn.salida");
+
+    if (btnEntrada) btnEntrada.disabled = haFichado;
+    if (btnSalida) btnSalida.disabled = !haFichado;
+
+    // Estilos como si estuviera deshabilitado
+    if (btnEntrada) btnEntrada.classList.toggle("disabled", haFichado);
+    if (btnSalida) btnSalida.classList.toggle("disabled", !haFichado);
+}
+
 function cargarDatosIniciales() {
-    // Aquí puedes cargar datos necesarios al iniciar
-}
-
-function ficharEntrada() {
-    const fecha = new Date();
-    const datosFichaje = {
-        tipo: 'entrada',
-        fecha: fecha.toISOString(),
-        hora: formatearHora(fecha),
-        empleadoId: obtenerIdEmpleado()
-    };
-
-    if (!validarFichaje('entrada', datosFichaje)) return;
-
-    mostrarMensaje(`Entrada registrada a las ${datosFichaje.hora}`);
-    enviarFichaje(datosFichaje);
-}
-
-function ficharSalida() {
-    const fecha = new Date();
-    const datosFichaje = {
-        tipo: 'salida',
-        fecha: fecha.toISOString(),
-        hora: formatearHora(fecha),
-        empleadoId: obtenerIdEmpleado()
-    };
-
-    if (!validarFichaje('salida', datosFichaje)) return;
-
-    mostrarMensaje(`Salida registrada a las ${datosFichaje.hora}`);
-    enviarFichaje(datosFichaje);
+    // Actualizar los botones según el estado actual
+    actualizarBotonesFichaje();
 }
 
 function recogerDatosFichaje(tipo) {
@@ -53,7 +38,8 @@ function recogerDatosFichaje(tipo) {
         tipo: tipo,
         fecha: new Date().toISOString(),
         hora: formatearHora(new Date()),
-        empleadoId: obtenerIdEmpleado()
+        //empleadoId: obtenerIdEmpleado()
+        empleadoId: localStorage.getItem("idUsuario")
     };
 
     // Validación básica
@@ -65,12 +51,19 @@ function recogerDatosFichaje(tipo) {
     return datosFichaje;
 }
 
-// Funciones de fichaje refactorizadas
 function ficharEntrada() {
     const datosFichaje = recogerDatosFichaje('entrada');
     if (!datosFichaje) return;
 
+    // Mostrar mensaje al usuario
     mostrarMensaje(`Entrada registrada a las ${datosFichaje.hora}`);
+
+    // Actualizar el estado en localStorage
+    localStorage.setItem("haFichadoEntrada", "true");
+
+    // Actualizar la interfaz de usuario
+    actualizarBotonesFichaje();
+
     enviarFichaje(datosFichaje);
 }
 
@@ -78,7 +71,15 @@ function ficharSalida() {
     const datosFichaje = recogerDatosFichaje('salida');
     if (!datosFichaje) return;
 
+    // Mostrar mensaje al usuario
     mostrarMensaje(`Salida registrada a las ${datosFichaje.hora}`);
+
+    // Actualizar el estado en localStorage
+    localStorage.setItem("haFichadoEntrada", "false");
+
+    // Actualizar la interfaz de usuario
+    actualizarBotonesFichaje();
+
     enviarFichaje(datosFichaje);
 }
 
@@ -111,8 +112,8 @@ function obtenerIdEmpleado() {
 function enviarFichaje(datos) {
     if (window.java && window.java.accion) {
         try {
-            window.java.accion("REGISTRAR_FICHAJE", datos);
-            registrarEnHistorialLocal(datos);
+            window.java.accion("ACTUALIZAR_ESTADO_FICHAJE", datos);
+            //registrarEnHistorialLocal(datos);
             return;
         } catch (e) {
             console.error("Error al enviar a Java:", e);
@@ -164,9 +165,9 @@ function mostrarMensaje(mensaje) {
         popup.style.display = 'flex';
         setTimeout(() => popup.classList.add('show'), 10);
 
-        setTimeout(() => {
+        /*setTimeout(() => {
             if (popup.classList.contains('show')) cerrarMensaje();
-        }, 3000);
+        }, 3000);*/
     }
 }
 
