@@ -53,6 +53,7 @@
         <class>latina.negocio.turno.Turno</class>
         <class>latina.negocio.disponibilidad.Disponibilidad</class>
         <class>latina.negocio.usuario.Usuario</class>
+        <class>latina.negocio.registro.Registro</class>
 
         <properties>
             <!-- Configuración de conexión a la base de datos -->
