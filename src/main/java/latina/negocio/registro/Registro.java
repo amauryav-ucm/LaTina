@@ -42,6 +42,12 @@ public class Registro {
 
     public Registro(){}
 
+    public Registro( Empleado emp,Timestamp horactual , int nHoras){
+        this.nHoras = nHoras;
+        this.empleado = emp;
+        this.hInicio = horactual;
+    }
+
     public Registro(TRegistro registro, Turno turno, Empleado empleado){
         this.id = registro.getId();
         this.nHoras = registro.getnHoras();
