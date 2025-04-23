@@ -17,6 +17,7 @@ function waitForJavaBridge(callback) {
 }
 
 function recogerDatos() {
+    event.preventDefault();
     const usuario = _inputUsuario.value;
     const contrasenya = _inputPsswd.value;
     let _hasError = false;
