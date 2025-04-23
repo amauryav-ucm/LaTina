@@ -52,10 +52,9 @@ public class RegistrarDisponibilidad implements Comando {
             int result = saDisponibilidad.altaDisponibilidad(t);
             String mensaje = "";
             boolean error = false;
-
             if (result >= 0)
             {
-                mensaje = "Disponibilidad registrada correctamente para el empleado "+ obtenerNombreEmpleadoPorId(empleadoId);
+                mensaje = "Disponibilidad registrada correctamente para el empleado " + obtenerNombreyApellidoEmpleadoPorId(empleadoId);
             }
             else
             {
@@ -72,6 +71,7 @@ public class RegistrarDisponibilidad implements Comando {
             WebEngine webEngine = vista.getWebView().getEngine();
             String finalMensaje = mensaje;
             boolean finalError = error;
+
             webEngine.documentProperty().addListener(new ChangeListener<Document>() {
                 @Override
                 public void changed(ObservableValue<? extends Document> obs, Document oldDoc, Document newDoc) {
@@ -98,13 +98,13 @@ public class RegistrarDisponibilidad implements Comando {
             webEngine.executeScript("mostrarMensaje('Error al procesar la solicitud de disponibilidad')");
         }
     }
-    private String obtenerNombreEmpleadoPorId(int idEmpleado) {
-        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
 
+    private String obtenerNombreyApellidoEmpleadoPorId(int idEmpleado) {
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
         try {
             Empleado empleado = em.find(Empleado.class, idEmpleado);
             if (empleado != null) {
-                return empleado.getNombre();
+                return empleado.getNombre() + " " + empleado.getApellidos();
             } else {
                 return "";
             }

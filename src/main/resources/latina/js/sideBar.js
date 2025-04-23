@@ -17,6 +17,10 @@ function inicializarSidebar() {
                 <li><a href="asignarTurnoAEmpleado.html" onclick="java.changeScene('asignarTurnoAEmpleado.html')" class="${paginaActual === 'asignarTurnoAEmpleado.html' ? 'active' : ''}">Asignar turno</a></li>
                 <li><a href="verTurnosParaGerente.html" onclick="java.changeScene('verTurnosParaGerente.html')" class="${paginaActual === 'verTurnosParaGerente.html' ? 'active' : ''}">Ver turnos</a></li>
             </ul>
+            <div class="sidebar-footer">
+                <span>Gerente</span>
+                <img src="../images/gerente2.png" alt="Icono de gerente" class="sidebar-user-icon">
+            </div>
         </div>
     `;
 

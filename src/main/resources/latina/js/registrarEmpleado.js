@@ -15,6 +15,8 @@ function recogerDatos() {
     telefono.classList.remove("error");
     cerrarMensaje(); // Evitar que el mensaje predeterminado se muestre si hay error
 
+
+
     // Verificar si los campos están vacíos o son inválidos
     let hayError = false;
 

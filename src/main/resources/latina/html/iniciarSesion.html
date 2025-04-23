@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Restaurante LaTina - Iniciar Sesión</title>
+    <link rel="stylesheet" href="../css/iniciarSesion.css">
+</head>
+<body>
+<main>
+    <div>
+        <h2>Iniciar Sesión</h2>
+    </div>
+    <div>
+        <form>
+            <div class="form-field">
+                <label for="input-usuario">Usuario</label>
+                <input id="input-usuario" type="text">
+            </div>
+
+            <div class="form-field">
+                <label for="input-contrasenya">Contraseña</label>
+                <div class="password-container">
+                    <input id="input-contrasenya" type="password">
+                    <span class="password-toggle" id="toggle-password">
+                       <img id="icon-password" src="../images/eye-solid.svg" alt="toggle visibility" />
+                    </span>
+                </div>
+            </div>
+            <div class="button-container">
+                <button id="submit-button" type="submit" class="submit-button">Confirmar</button>
+            </div>
+        </form>
+    </div>
+</main>
+<div id="popup" class="popup-overlay">
+    <div class="popup-box">
+        <p id="popup-message">Rol registrado correctamente</p>
+        <button class="popup-button" onclick="cerrarMensaje()">OK</button>
+    </div>
+</div>
+<script src="../js/iniciarSesion.js"></script>
+</body>
+</html>

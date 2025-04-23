@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurante LaTina - Registrar Rol</title>
+    <link rel="stylesheet" href="../css/registrarDisponibilidad.css">
+    <link rel="stylesheet" href="../css/sideBar.css"> <!-- Estilo para la barra lateral del empleado -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<!-- Sidebar del empleado -->
+<div id="sidebar-container"></div>
+
+<div class="form-container">
+    <h2>Registrar Disponibilidad</h2>
+    <form onsubmit="return validarFormulario()">
+
+        <label for="campo-fecha-inicio">Fecha inicial</label>
+        <div class="date-picker">
+            <input type="text" class="date-input" readonly placeholder="Selecciona la fecha inicial"
+                   id="campo-fecha-inicio">
+            <i class="fas fa-calendar-alt date-icon"></i> <!-- Icono de Font Awesome -->
+            <div class="calendar-dropdown" id="calendario-inicio">
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button type="button" class="nav-button" id="mes-ant-inicio">&lt;</button>
+                        <div class="month-year" id="mes-inicio">Marzo 2025</div>
+                        <button type="button" class="nav-button" id="mes-sig-inicio">&gt;</button>
+                    </div>
+
+                    <div class="weekdays">
+                        <div class="weekday">Lu</div>
+                        <div class="weekday">Ma</div>
+                        <div class="weekday">Mi</div>
+                        <div class="weekday">Ju</div>
+                        <div class="weekday">Vi</div>
+                        <div class="weekday">Sa</div>
+                        <div class="weekday">Do</div>
+                    </div>
+
+                    <div class="days" id="dias-inicio">
+                        <!-- Los días se generarán con JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <label for="campo-hora-inicio">Hora inicial</label>
+        <div class="date-picker">
+            <input type="text" class="time-input" id="campo-hora-inicio" readonly onclick="openTimePicker()"
+                   placeholder="Selecciona la hora inicial">
+            <i class="fas fa-chevron-down time-icon"></i> <!-- Icono de Font Awesome -->
+            <div class="dropdown-hora" id="tiempo-inicio">
+                <div class="time-container">
+                    <select id="hora-inicio">
+                    </select>
+                    :
+                    <select id="minuto-inicio">
+                        <option value="00">00</option>
+                        <option value="30">30</option>
+                    </select>
+                    <select id="ampm-inicio">
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                    </select>
+                    <button type="button" id="boton-hora-inicio">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <label for="campo-fecha-fin">Fecha final</label>
+        <div class="date-picker">
+            <input type="text" class="date-input" readonly placeholder="Selecciona la fecha final"
+                   id="campo-fecha-fin">
+            <i class="fas fa-calendar-alt date-icon"></i> <!-- Icono de Font Awesome -->
+            <div class="calendar-dropdown" id="calendario-fin">
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button type="button" class="nav-button" id="mes-ant-fin">&lt;</button>
+                        <div class="month-year" id="mes-fin">Marzo 2025</div>
+                        <button type="button" class="nav-button" id="mes-sig-fin">&gt;</button>
+                    </div>
+
+                    <div class="weekdays">
+                        <div class="weekday">Lu</div>
+                        <div class="weekday">Ma</div>
+                        <div class="weekday">Mi</div>
+                        <div class="weekday">Ju</div>
+                        <div class="weekday">Vi</div>
+                        <div class="weekday">Sa</div>
+                        <div class="weekday">Do</div>
+                    </div>
+
+                    <div class="days" id="dias-fin">
+                        <!-- Los días se generarán con JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <label for="campo-hora-fin">Hora final</label>
+        <div class="date-picker">
+            <input type="text" class="time-input" id="campo-hora-fin" readonly onclick="openTimePicker()"
+                   placeholder="Selecciona la hora final">
+            <i class="fas fa-chevron-down time-icon"></i> <!-- Icono de Font Awesome -->
+            <div class="dropdown-hora" id="tiempo-fin">
+                <div class="time-container">
+                    <select id="hora-fin">
+                    </select>
+                    :
+                    <select id="minuto-fin">
+                        <option value="00">00</option>
+                        <option value="30">30</option>
+                    </select>
+                    <select id="ampm-fin">
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                    </select>
+                    <button type="button" id="boton-hora-fin">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button class="accept-button" id="accept-button" type="submit" onclick="recogerDisponibilidad()">Registrar</button>
+        </div>
+    </form>
+</div>
+
+<!-- Popup Container -->
+<div id="popup" class="popup-overlay">
+    <div class="popup-box">
+        <p id="popup-message">Disponibilidad registrada correctamente</p>
+        <button class="popup-button" onclick="cerrarMensaje()">OK</button>
+    </div>
+</div>
+
+<script src="../js/registrarDisponibilidadEmpleado.js"></script>
+<script src="../js/sideBarEmpleado.js"></script>
+</body>
+</html>

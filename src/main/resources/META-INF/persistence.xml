@@ -9,6 +9,7 @@
         <class>latina.negocio.rol.Rol</class>
         <class>latina.negocio.empleado.Empleado</class>
         <class>latina.negocio.turno.Turno</class>
+        <class>latina.negocio.usuario.Usuario</class>
         <class>latina.negocio.disponibilidad.Disponibilidad</class>
         <properties>
             <!-- Configuración de conexión a la base de datos -->
@@ -28,6 +29,7 @@
         <class>latina.negocio.empleado.Empleado</class>
         <class>latina.negocio.turno.Turno</class>
         <class>latina.negocio.disponibilidad.Disponibilidad</class>
+        <class>latina.negocio.usuario.Usuario</class>
         <properties>
 
             <!-- Database Configuration -->
@@ -50,6 +52,8 @@
         <class>latina.negocio.empleado.Empleado</class>
         <class>latina.negocio.turno.Turno</class>
         <class>latina.negocio.disponibilidad.Disponibilidad</class>
+        <class>latina.negocio.usuario.Usuario</class>
+
         <properties>
             <!-- Configuración de conexión a la base de datos -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver" />

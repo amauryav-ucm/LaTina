@@ -30,8 +30,7 @@ public class SADisponibilidadImp implements SADisponibilidad {
 
             long diferenciaEnMilisegundos = tDisponibilidad.getFechaFin().getTime() - tDisponibilidad.getFechaInicio().getTime();
             long diferenciaEnMinutos = diferenciaEnMilisegundos / (1000 * 60);
-
-            if (emp == null) {
+            if(emp == null) {
                 trans.rollback();
                 return -1;
             }else if(tDisponibilidad.getFechaFin().equals(tDisponibilidad.getFechaInicio())
@@ -44,7 +43,8 @@ public class SADisponibilidadImp implements SADisponibilidad {
             }else if (diferenciaEnMinutos > 1440) {
                 trans.rollback();
                 return -6; // Código de error para duración de turno excedida
-            }else {
+            }
+            else{
                 //Para que no se pueda registrar una disponibilidad si el empleado tiene un turno asignado
                 Empleado empleado = em.find(Empleado.class, tDisponibilidad.getEmpleadoId());
                 List<Turno> listaTurnos = empleado.getTurno();

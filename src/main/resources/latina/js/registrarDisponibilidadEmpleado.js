@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
         mes_ant: document.getElementById('mes-ant-inicio'),
         mes_sig: document.getElementById('mes-sig-inicio')
     };
-    
+
     const horaInicio = {
         campo: document.getElementById('campo-hora-inicio'),
         dropdown: document.getElementById('tiempo-inicio'),
@@ -227,22 +227,6 @@ function configHora(selector){
     })
 }
 
-function cargarEmpleados() {
-    // Se muestra un mensaje de carga y se deshabilita el combo
-    const empleadoSelect = document.getElementById("empleado");
-    empleadoSelect.innerHTML = '<option value="" selected>Cargando empleados...</option>';
-    empleadoSelect.disabled = true;
-
-
-
-    //Llamamos a la función de Java para obtener empleados
-
-    waitForJavaBridge(() => {
-        console.log("Java bridge is ready!");
-        window.java.accion("OBTENER_TODOS_LOS_EMPLEADOS", null);
-    });
-
-}
 
 function waitForJavaBridge(callback) {
     if (window.java && window.java.accion) {
@@ -253,32 +237,10 @@ function waitForJavaBridge(callback) {
     }
 }
 
-function cargarEmpleadosAux(empleado, id) {
-    const empleadoSelect = document.getElementById("empleado");
-    if (empleado) {
-        let option = document.createElement("option");
-        option.value = id;
-        option.textContent = empleado;
-        empleadoSelect.appendChild(option);
-    } else {
-        empleadoSelect.innerHTML = '<option value="" selected>No hay empleados disponibles</option>';
-    }
-}
 
-
-function terminadoDeCargarEmpleados() {
-    const empleadoSelect = document.getElementById("empleado");
-    empleadoSelect.disabled = false;
-    let firstOption = empleadoSelect.querySelector("option");
-    if (firstOption) {
-        firstOption.textContent = "Selecciona un empleado";
-        firstOption.value = "";
-    }
-}
 function recogerDisponibilidad() {
     // Obtenemos los elementos del formulario
     var disponibilidad = {};
-    var employeeSelect = document.getElementById("empleado");
     var dateInput = document.getElementById("campo-fecha-inicio");
     var startHourInput = document.getElementById("campo-hora-inicio");
     var dateOutput = document.getElementById("campo-fecha-fin");
@@ -286,17 +248,13 @@ function recogerDisponibilidad() {
 
 
     // Limpiar errores previos y cerrar mensajes emergentes
-    employeeSelect.classList.remove("error");
     dateInput.classList.remove("error");
     startHourInput.classList.remove("error");
     endHourInput.classList.remove("error");
 
     // Validar que todos los campos tengan valor
     let hayError = false;
-    if (employeeSelect.value.trim() === "") {
-        employeeSelect.classList.add("error");
-        hayError = true;
-    }
+
     if (dateInput.value.trim() === "") {
         dateInput.classList.add("error");
         hayError = true;
@@ -321,7 +279,7 @@ function recogerDisponibilidad() {
     }
 
     // Recoger los datos de los campos
-    disponibilidad.empleado = employeeSelect.value.trim();
+    disponibilidad.empleado = localStorage.getItem("idUsuario");
     disponibilidad.fechaInicio = dateInput.value.trim();
     disponibilidad.fechaFin = dateOutput.value.trim();
     disponibilidad.horaInicio = startHourInput.value.trim();
@@ -334,38 +292,12 @@ function recogerDisponibilidad() {
     setTimeout(() => location.reload(), 200);
 }
 
-function mostrarError(mensaje, fechaInicio, horaInicio, fechaFin, horaFin) {
-    const popup = document.querySelector(".popup-overlay");
-    popup.style.display = "flex";
-    popup.classList.add("show");
-    document.getElementById("popup-message").innerText = mensaje;
-
-    // Restaurar los valores en el formulario
-    document.getElementById("campo-fecha-inicio").value = fechaInicio;
-    document.getElementById("campo-hora-inicio").value = horaInicio;
-    document.getElementById("campo-fecha-fin").value = fechaFin;
-    document.getElementById("campo-hora-fin").value = horaFin;
-
-    // Quitar clases de error de todos los campos primero
-    document.querySelectorAll("input").forEach(input => input.classList.remove("error"));
-}
-
-
 function validarFormulario() {
-     var employeeSelect = document.getElementById("empleado");
      var dateInput = document.getElementById("campo-fecha-inicio");
      var startHourInput = document.getElementById("campo-hora-inicio");
      var dateOutput = document.getElementById("campo-fecha-fin");
      var endHourInput = document.getElementById("campo-hora-fin");
      let isValid = true; // Flag para saber si hay errores
-
-    // Validación del select de empleados
-    if (employeeSelect.value === "") {
-        employeeSelect.classList.add("error");
-        isValid = false;
-    } else {
-        employeeSelect.classList.remove("error");
-    }
 
     // Validación del fecha ini
     if (dateInput.value === "") {
