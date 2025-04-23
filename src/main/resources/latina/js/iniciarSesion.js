@@ -1,6 +1,11 @@
 const _inputUsuario = document.getElementById('input-usuario');
 const _inputPsswd = document.getElementById('input-contrasenya')
 
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.java && window.java.accion)
+            window.java.accion('INICIALIZAR_GERENTE', {});
+}
+
 function recogerDatos() {
     const usuario = _inputUsuario.value;
     const contrasenya = _inputPsswd.value;

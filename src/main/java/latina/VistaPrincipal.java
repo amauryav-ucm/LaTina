@@ -19,6 +19,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import latina.integracion.emfc.EMFContainer;
 import latina.vista.controlador.Controlador;
 import latina.vista.Eventos;
 import netscape.javascript.JSObject;

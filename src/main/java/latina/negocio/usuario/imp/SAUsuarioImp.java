@@ -80,6 +80,18 @@ public class SAUsuarioImp implements SAUsuario {
         return new TEmpleado(emp.getId(), emp.getDNI(), emp.getNombre(), emp.getApellidos(), emp.getCorreo(), emp.getTelefono(), true);
     }
 
+    /*@Override
+    public void inicializarEmpleado()
+    {
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        Query q = em.createNamedQuery("Empleado.findGerente");
+        List<Empleado> empleados = q.getResultList();
+        em.close();
+
+
+    }*/
+
+
     public EntityManager crearEntityManager() {
         return EMFContainer.getInstance().getEMF().createEntityManager();
     }
