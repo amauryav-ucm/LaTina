@@ -13,6 +13,7 @@ import latina.vista.comandos.rol.RegistrarRol;
 import latina.vista.comandos.turno.ObtenerTurnosPorDiaInterfaz;
 import latina.vista.comandos.turno.RegistrarTurno;
 import latina.vista.comandos.turno.RellenarRolesTurno;
+import latina.vista.comandos.usuario.FicharEntrada;
 import latina.vista.comandos.usuario.IniciarSesion;
 
 public class FactoriaComandosImp extends FactoriaComandos {
@@ -55,6 +56,10 @@ public class FactoriaComandosImp extends FactoriaComandos {
             case INICIAR_SESION:
                 comando = new IniciarSesion();
                 break;
+            case REGISTRAR_FICHAJE:
+                comando = new FicharEntrada();
+                break;
+
             default:
                 break;
         }
