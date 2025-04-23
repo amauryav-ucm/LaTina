@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: sans-serif;
     background-color: #f4f4f4;
 }
 
@@ -38,7 +38,8 @@ body {
     gap: 12px;
     width: 220px;
     justify-content: center;
-    font-weight: 600;
+    font-weight: 700;
+    font-family: sans-serif;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -50,23 +51,19 @@ body {
 }
 
 .fichar-btn.entrada {
-    /*background-color: #34c759;*/
-    background-color: #424242;/*Prueba de colores para no desentonar con el resto*/
+    background-color: #34c759;
 }
 
 .fichar-btn.entrada:hover {
-    /*background-color: #2cb24a;*/
-    background-color: #333333;/*Prueba de colores para no desentonar con el resto*/
+    background-color: #2cb24a;
 }
 
 .fichar-btn.salida {
-    /*background-color: #ff3b30;*/
-    background-color: #757575;/*Prueba de colores para no desentonar con el resto*/
+    background-color: #ff3b30;
 }
 
 .fichar-btn.salida:hover {
-    /*background-color: #e0352b;*/
-    background-color: #616161;/*Prueba de colores para no desentonar con el resto*/
+    background-color: #e0352b;
 }
 
 /* Icon Styles - for SVG icons */
