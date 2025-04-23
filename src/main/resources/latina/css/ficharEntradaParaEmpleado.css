@@ -59,11 +59,13 @@ body {
 }
 
 .fichar-btn.salida {
-    background-color: #ff3b30;
+    /*background-color: #ff3b30;*//*color rojo*/
+    background-color: #0056b3;
 }
 
 .fichar-btn.salida:hover {
-    background-color: #e0352b;
+    /*background-color: #0056b3;*//*hover de color rojo*/
+    background-color: #0069d9;
 }
 
 /* Icon Styles - for SVG icons */
