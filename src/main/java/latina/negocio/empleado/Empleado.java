@@ -13,7 +13,8 @@ import java.util.List;
         @NamedQuery(name = "Empleado.findByCorreo", query = "select obj from Empleado obj where :correo = obj.correo "),
         @NamedQuery(name = "Disponibilidad.findByRangoFecha",
                 query = "SELECT d FROM Disponibilidad d WHERE d.fechaHoraInicio <= :fechaHoraIni AND d.fechaHoraFin >= :fechaHoraFin"),
-        @NamedQuery(name = "Empleado.findAll", query = "select e from Empleado e")
+        @NamedQuery(name = "Empleado.findAll", query = "select e from Empleado e"),
+
 })
 
 public class Empleado {

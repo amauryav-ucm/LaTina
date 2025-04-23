@@ -2,8 +2,18 @@ const _inputUsuario = document.getElementById('input-usuario');
 const _inputPsswd = document.getElementById('input-contrasenya')
 
 document.addEventListener('DOMContentLoaded', function() {
-    if (window.java && window.java.accion)
-            window.java.accion('INICIALIZAR_GERENTE', {});
+    waitForJavaBridge(() => {
+            window.java.accion("INICIALIZAR_GERENTE", null);
+    });
+});
+
+function waitForJavaBridge(callback) {
+    if (window.java && window.java.accion) {
+        callback();
+    } else {
+        console.log("Waiting for Java bridge...");
+        setTimeout(() => waitForJavaBridge(callback), 100);
+    }
 }
 
 function recogerDatos() {

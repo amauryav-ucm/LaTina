@@ -19,4 +19,6 @@ public interface SAUsuario {
 
     public TEmpleado conseguirEmpleado(TUsuario us);
 
+    public void inicializarGerente();
+
 }
