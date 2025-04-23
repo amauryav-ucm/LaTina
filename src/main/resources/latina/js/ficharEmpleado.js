@@ -48,12 +48,38 @@ function ficharSalida() {
     enviarFichaje(datosFichaje);
 }
 
-function validarFichaje(tipo, datos) {
-    if (!datos.empleadoId) {
+function recogerDatosFichaje(tipo) {
+    const datosFichaje = {
+        tipo: tipo,
+        fecha: new Date().toISOString(),
+        hora: formatearHora(new Date()),
+        empleadoId: obtenerIdEmpleado()
+    };
+
+    // Validación básica
+    if (!datosFichaje.empleadoId) {
         mostrarMensaje("Error: No se pudo identificar al empleado");
-        return false;
+        return null;
     }
-    return true;
+
+    return datosFichaje;
+}
+
+// Funciones de fichaje refactorizadas
+function ficharEntrada() {
+    const datosFichaje = recogerDatosFichaje('entrada');
+    if (!datosFichaje) return;
+
+    mostrarMensaje(`Entrada registrada a las ${datosFichaje.hora}`);
+    enviarFichaje(datosFichaje);
+}
+
+function ficharSalida() {
+    const datosFichaje = recogerDatosFichaje('salida');
+    if (!datosFichaje) return;
+
+    mostrarMensaje(`Salida registrada a las ${datosFichaje.hora}`);
+    enviarFichaje(datosFichaje);
 }
 
 function formatearHora(fecha) {
