@@ -57,6 +57,7 @@ function ficharEntrada() {
 
     // Mostrar mensaje al usuario
     mostrarMensaje(`Entrada registrada a las ${datosFichaje.hora}`);
+    datosFichaje.haFichadoEntrada = true;
 
     // Actualizar el estado en localStorage
     localStorage.setItem("haFichadoEntrada", "true");
@@ -73,6 +74,7 @@ function ficharSalida() {
 
     // Mostrar mensaje al usuario
     mostrarMensaje(`Salida registrada a las ${datosFichaje.hora}`);
+    datosFichaje.haFichadoEntrada = false;
 
     // Actualizar el estado en localStorage
     localStorage.setItem("haFichadoEntrada", "false");
