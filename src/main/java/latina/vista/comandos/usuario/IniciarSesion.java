@@ -38,6 +38,7 @@ public class IniciarSesion implements Comando {
                     TEmpleado emp = SAFactory.getInstance().createSAUsuario().conseguirEmpleado(us);
                     vista.getWebView().getEngine().executeScript("localStorage.setItem('usuario', '" + usuario + "');");
                     vista.getWebView().getEngine().executeScript("localStorage.setItem('idUsuario', '" + emp.getId() + "');");
+                    vista.getWebView().getEngine().executeScript("localStorage.setItem('haFichadoEntrada', '" + emp.isHaFichadoEntrada() + "');");
                     vista.changeScene("ventanaPrincipalEmpleado.html");
                     break;
                 case 2:

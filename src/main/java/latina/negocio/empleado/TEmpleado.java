@@ -8,8 +8,9 @@ public class TEmpleado {
     private String correo;
     private String telefono;
     private boolean activo;
+    private boolean haFichadoEntrada;
 
-    public TEmpleado(String DNI, String nombre, String apellidos, String correo, String telefono, boolean activo)
+    public TEmpleado(String DNI, String nombre, String apellidos, String correo, String telefono, boolean activo, boolean haFichadoEntrada)
     {
         this.DNI = DNI;
         this.nombre = nombre;
@@ -17,9 +18,10 @@ public class TEmpleado {
         this.correo = correo;
         this.telefono = telefono;
         this.activo = activo;
+        this.haFichadoEntrada = haFichadoEntrada;
     }
 
-    public TEmpleado(int id, String DNI, String nombre, String apellidos, String correo, String telefono, boolean activo)
+    public TEmpleado(int id, String DNI, String nombre, String apellidos, String correo, String telefono, boolean activo, boolean haFichadoEntrada)
     {
         this.id = id;
         this.DNI = DNI;
@@ -28,6 +30,7 @@ public class TEmpleado {
         this.correo = correo;
         this.telefono = telefono;
         this.activo = activo;
+        this.haFichadoEntrada = haFichadoEntrada;
     }
 
     public int getId() {
@@ -93,4 +96,11 @@ public class TEmpleado {
                 + " | Telefono: " + telefono;
     }
 
+    public boolean isHaFichadoEntrada() {
+        return haFichadoEntrada;
+    }
+
+    public void setHaFichadoEntrada(boolean haFichadoEntrada) {
+        this.haFichadoEntrada = haFichadoEntrada;
+    }
 }
