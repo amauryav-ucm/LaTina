@@ -30,7 +30,7 @@ public class SARegistroImp implements SARegistro {
             trans.begin();
             Timestamp ahora = new Timestamp(System.currentTimeMillis());
             Query q = em.createNamedQuery("Empleado.findByDNI");
-            q.setParameter("dni", tEmpleado.getDNI());
+            q.setParameter("DNI", tEmpleado.getDNI());
             List<Empleado> emp = q.getResultList();
             if(emp.isEmpty()){
                 trans.rollback();

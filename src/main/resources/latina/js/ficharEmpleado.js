@@ -39,7 +39,8 @@ function recogerDatosFichaje(tipo) {
         fecha: new Date().toISOString(),
         hora: formatearHora(new Date()),
         //empleadoId: obtenerIdEmpleado()
-        empleadoId: localStorage.getItem("idUsuario")
+        empleadoId: localStorage.getItem("idEmpleado"),
+        usuario: localStorage.getItem("usuario")
     };
 
     // Validación básica
@@ -114,6 +115,7 @@ function obtenerIdEmpleado() {
 function enviarFichaje(datos) {
     if (window.java && window.java.accion) {
         try {
+            window.java.accion("REGISTRAR_FICHAJE", datos);
             window.java.accion("ACTUALIZAR_ESTADO_FICHAJE", datos);
             //registrarEnHistorialLocal(datos);
             return;

@@ -4,6 +4,7 @@ import latina.vista.Eventos;
 import latina.vista.comandos.Comando;
 import latina.vista.comandos.disponibilidad.RegistrarDisponibilidad;
 import latina.vista.comandos.disponibilidad.RellenarEmpleadosRegistrarDisponibildad;
+import latina.vista.comandos.empleado.ActualizarEstadoFichaje;
 import latina.vista.comandos.empleado.ObtenerEmpleadosDisponiblesInterfaz;
 import latina.vista.comandos.empleado.RegistrarEmpleado;
 import latina.vista.comandos.turno.AsignarTurnoEmpleado;
@@ -59,7 +60,9 @@ public class FactoriaComandosImp extends FactoriaComandos {
             case REGISTRAR_FICHAJE:
                 comando = new FicharEntrada();
                 break;
-
+            case ACTUALIZAR_ESTADO_FICHAJE:
+                comando = new ActualizarEstadoFichaje();
+                break;
             default:
                 break;
         }
