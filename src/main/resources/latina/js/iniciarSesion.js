@@ -40,6 +40,7 @@ function recogerDatos() {
         usuario: usuario,
         contrasenya: contrasenya
     });
+    setTimeout(() => location.reload(), 200);
 }
 
 // Añade esto a tu archivo JavaScript

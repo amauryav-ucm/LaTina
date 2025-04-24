@@ -346,6 +346,7 @@ function recogerTurno() {
 
     // Enviar los datos al backend Java (RegistrarTurno.java)
     enviarTurnoAJava(turno);
+    setTimeout(() => location.reload(), 200);
 
 }
 

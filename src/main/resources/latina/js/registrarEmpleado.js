@@ -58,6 +58,7 @@ function recogerDatos() {
     empleado.telefono = telefono.value.trim();
 
     enviarAJava(empleado);
+    setTimeout(() => location.reload(), 200);
 
 }
 
