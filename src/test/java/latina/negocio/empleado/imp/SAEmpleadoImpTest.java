@@ -21,7 +21,7 @@ class SAEmpleadoImpTest {
 
     @Test
     void testDNIRepetido() {
-        TEmpleado stubEmpleado = new TEmpleado("12345678A", "Antonio", "Pérez Salamanca", "toñito@ucm.com", "123456789", true);
+        TEmpleado stubEmpleado = new TEmpleado("12345678A", "Antonio", "Pérez Salamanca", "toñito@ucm.com", "123456789", true,true);
         Empleado empleadoExistente = new Empleado(stubEmpleado);
 
         List<Object> stubResultList = new ArrayList<>();
@@ -46,7 +46,7 @@ class SAEmpleadoImpTest {
     @Test
     void testCorreoRepetido() {
         // Crear un empleado con datos
-        TEmpleado stubEmpleado = new TEmpleado("87654321B", "Norberto", "García Morales", "norbert777@ucm.com", "987654321", true);
+        TEmpleado stubEmpleado = new TEmpleado("87654321B", "Norberto", "García Morales", "norbert777@ucm.com", "987654321", true,true);
         Empleado empleadoExistente = new Empleado(stubEmpleado);
 
         // Configurar el resultado de la consulta para DNI (vacío)
@@ -87,7 +87,7 @@ class SAEmpleadoImpTest {
     @Test
     void testDniFormatoIncorrecto() {
         // Crear un empleado con DNI en formato incorrecto
-        TEmpleado stubEmpleado = new TEmpleado("12345A", "Super", "López", "superlo@ucm.com", "123456789", true);
+        TEmpleado stubEmpleado = new TEmpleado("12345A", "Super", "López", "superlo@ucm.com", "123456789", true,true);
 
         // Configurar mock para que las consultas devuelvan listas vacías
         Query stubQuery = mock(Query.class);
@@ -116,7 +116,7 @@ class SAEmpleadoImpTest {
     @Test
     void testTelefonoFormatoIncorrecto() {
         // Crear un empleado con teléfono en formato incorrecto
-        TEmpleado stubEmpleado = new TEmpleado("12345678C", "ET", "Mi casa telefono", "Xtra@terrestre.com", "12345", true);
+        TEmpleado stubEmpleado = new TEmpleado("12345678C", "ET", "Mi casa telefono", "Xtra@terrestre.com", "12345", true,true);
 
         // Configurar mock para que las consultas devuelvan listas vacías
         Query stubQuery = mock(Query.class);
@@ -145,7 +145,7 @@ class SAEmpleadoImpTest {
     @Test
     void testNombreFormatoIncorrecto() {
         // Crear un empleado con teléfono en formato incorrecto
-        TEmpleado stubEmpleado = new TEmpleado("12345678C", "Antoniooo007", "Olaya Reverte", "aaaaaa@oooooo.com", "123456789", true);
+        TEmpleado stubEmpleado = new TEmpleado("12345678C", "Antoniooo007", "Olaya Reverte", "aaaaaa@oooooo.com", "123456789", true,true);
 
         // Configurar mock para que las consultas devuelvan listas vacías
         Query stubQuery = mock(Query.class);
@@ -174,7 +174,7 @@ class SAEmpleadoImpTest {
     @Test
     void testApellidosFormatoIncorrecto() {
         // Crear un empleado con teléfono en formato incorrecto
-        TEmpleado stubEmpleado = new TEmpleado("12345678C", "Ratón", "Pérez McDonal22", "rpérez@ucm.com", "123456789", true);
+        TEmpleado stubEmpleado = new TEmpleado("12345678C", "Ratón", "Pérez McDonal22", "rpérez@ucm.com", "123456789", true,true);
 
         // Configurar mock para que las consultas devuelvan listas vacías
         Query stubQuery = mock(Query.class);
@@ -203,7 +203,7 @@ class SAEmpleadoImpTest {
     @Test
     void testCorreoFormatoIncorrecto() {
         // Crear un empleado con teléfono en formato incorrecto
-        TEmpleado stubEmpleado = new TEmpleado("12345678C", "Hola", "Adios McDonal", "correo_incorrecto", "123456789", true);
+        TEmpleado stubEmpleado = new TEmpleado("12345678C", "Hola", "Adios McDonal", "correo_incorrecto", "123456789", true,true);
 
         // Configurar mock para que las consultas devuelvan listas vacías
         Query stubQuery = mock(Query.class);
@@ -232,7 +232,7 @@ class SAEmpleadoImpTest {
     @Test
     void testAltaEmpleadoExitoso() {
         // Crear un empleado con datos válidos
-        TEmpleado stubEmpleado = new TEmpleado("12345678D", "Pepa", "Pig de Magdalena", "pepamagda02@hotmail.com", "987654321", true);
+        TEmpleado stubEmpleado = new TEmpleado("12345678D", "Pepa", "Pig de Magdalena", "pepamagda02@hotmail.com", "987654321", true,true);
 
         // Configurar mock para que las consultas devuelvan listas vacías
         Query stubQuery = mock(Query.class);
@@ -277,7 +277,7 @@ class SAEmpleadoImpTest {
         when(stubTurno.getFechaHoraFin()).thenReturn(fechaFin);
 
         // Mockear empleados y disponibilidades
-        TEmpleado tEmpleado1 = new TEmpleado("12345678E", "Juan", "Pérez", "juan@ucm.com", "123456789", true);
+        TEmpleado tEmpleado1 = new TEmpleado("12345678E", "Juan", "Pérez", "juan@ucm.com", "123456789", true,true);
         Empleado empleado1 = new Empleado(tEmpleado1);
         empleado1.setId(1);
 
@@ -367,7 +367,7 @@ class SAEmpleadoImpTest {
         // Simulación de error en persistencia
         doThrow(new RuntimeException("Error en persistencia")).when(stubEntityManager).persist(any());
 
-        TEmpleado empleado = new TEmpleado("12345678D", "Si", "No Si", "hasta@luego.com", "987654321", true);
+        TEmpleado empleado = new TEmpleado("12345678D", "Si", "No Si", "hasta@luego.com", "987654321", true,true);
 
         int resultado = saEmpleado.altaEmpleado(empleado);
 
@@ -393,8 +393,8 @@ class SAEmpleadoImpTest {
         Empleado emp1 = mock(Empleado.class);
         Empleado emp2 = mock(Empleado.class);
 
-        when(emp1.toTransfer()).thenReturn(new TEmpleado(1, "12345678A", "Juan", "Pérez", "juan@example.com", "600123456", true));
-        when(emp2.toTransfer()).thenReturn(new TEmpleado(2, "87654321B", "María", "Gómez", "maria@example.com", "611987654", true));
+        when(emp1.toTransfer()).thenReturn(new TEmpleado(1, "12345678A", "Juan", "Pérez", "juan@example.com", "600123456", true,true));
+        when(emp2.toTransfer()).thenReturn(new TEmpleado(2, "87654321B", "María", "Gómez", "maria@example.com", "611987654", true,true));
 
         empleadosFalsos.add(emp1);
         empleadosFalsos.add(emp2);

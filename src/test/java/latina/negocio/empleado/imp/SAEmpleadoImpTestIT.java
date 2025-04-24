@@ -40,7 +40,7 @@ public class SAEmpleadoImpTestIT {
     public void altaEmpleadoCorrecto(){
         EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
-        TEmpleado emp = new TEmpleado("12345678A", "Camilo" , "Suárez", "elsemental@hotmail.com", "651341570", true);
+        TEmpleado emp = new TEmpleado("12345678A", "Camilo" , "Suárez", "elsemental@hotmail.com", "651341570", true,true);
         int id = saEmpleadoImp.altaEmpleado(emp);
         assertTrue(id >= 0, "El ID del empleado debe ser mayor o igual a 0");
         Empleado employee = em.find(Empleado.class, id);
@@ -51,9 +51,9 @@ public class SAEmpleadoImpTestIT {
     public void altaEmpleadoRepetidoDNI(){
         EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
-        TEmpleado emp = new TEmpleado("12345678A", "Camilo" , "Suárez", "elsemental@hotmail.com", "651341570", true);
+        TEmpleado emp = new TEmpleado("12345678A", "Camilo" , "Suárez", "elsemental@hotmail.com", "651341570", true,true);
         saEmpleadoImp.altaEmpleado(emp);
-        TEmpleado emp2 = new TEmpleado("12345678A", "Camilo" , "Suárez", "marianoelmarciano@hotmail.com", "651341570", true);
+        TEmpleado emp2 = new TEmpleado("12345678A", "Camilo" , "Suárez", "marianoelmarciano@hotmail.com", "651341570", true,true);
         int id = saEmpleadoImp.altaEmpleado(emp2);
         assertTrue(id == -1, "El ID del empleado debe ser mayor o igual a 0");
     }
@@ -62,9 +62,9 @@ public class SAEmpleadoImpTestIT {
     public void altaEmpleadoRepetidoCorreo(){
         EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
-        TEmpleado emp = new TEmpleado("12345678A", "Camilo" , "Suárez", "elsemental@hotmail.com", "651341570", true);
+        TEmpleado emp = new TEmpleado("12345678A", "Camilo" , "Suárez", "elsemental@hotmail.com", "651341570", true,true);
         saEmpleadoImp.altaEmpleado(emp);
-        TEmpleado emp2 = new TEmpleado("87654321A", "Pedro" , "Pablo", "elsemental@hotmail.com", "651343570", true);
+        TEmpleado emp2 = new TEmpleado("87654321A", "Pedro" , "Pablo", "elsemental@hotmail.com", "651343570", true,true);
         int id = saEmpleadoImp.altaEmpleado(emp2);
         assertTrue(id == -2, "El ID del empleado debe ser mayor o igual a 0");
     }
@@ -73,7 +73,7 @@ public class SAEmpleadoImpTestIT {
     public void altaEmpleadoDNIIncorrecto(){
         EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
-        TEmpleado emp = new TEmpleado("123456789A", "Camilo" , "Suárez", "elsemental@hotmail.com", "651341570", true);
+        TEmpleado emp = new TEmpleado("123456789A", "Camilo" , "Suárez", "elsemental@hotmail.com", "651341570", true,true);
         int id = saEmpleadoImp.altaEmpleado(emp);
         assertTrue(id == -3, "El ID del empleado debe ser mayor o igual a 0");
     }
@@ -82,7 +82,7 @@ public class SAEmpleadoImpTestIT {
     public void altaEmpleadoNumeroIncorrecto(){
         EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
-        TEmpleado emp = new TEmpleado("12345677A", "Camilo" , "Suárez", "tumorenito17@hotmail.com", "6513415709", true);
+        TEmpleado emp = new TEmpleado("12345677A", "Camilo" , "Suárez", "tumorenito17@hotmail.com", "6513415709", true,true);
         int id = saEmpleadoImp.altaEmpleado(emp);
         assertTrue(id == -4, "El ID del empleado debe ser mayor o igual a 0");
     }
@@ -91,7 +91,7 @@ public class SAEmpleadoImpTestIT {
     public void altaEmpleadoNombreInCorrecto(){
         EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
-        TEmpleado emp = new TEmpleado("12345678A", "C4mil0" , "Suárez", "tumorenito17@hotmail.com", "651341570", true);
+        TEmpleado emp = new TEmpleado("12345678A", "C4mil0" , "Suárez", "tumorenito17@hotmail.com", "651341570", true,true);
         int id = saEmpleadoImp.altaEmpleado(emp);
         assertTrue(id == -5, "El ID del empleado debe ser mayor o igual a 0");
     }
@@ -100,7 +100,7 @@ public class SAEmpleadoImpTestIT {
     public void altaEmpleadoApellidoIncorrecto(){
         EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
-        TEmpleado emp = new TEmpleado("12345678A", "Camilo" , "Su4rez", "tumorenito17@hotmail.com", "651341570", true);
+        TEmpleado emp = new TEmpleado("12345678A", "Camilo" , "Su4rez", "tumorenito17@hotmail.com", "651341570", true,true);
         int id = saEmpleadoImp.altaEmpleado(emp);
         assertTrue(id == -6, "El ID del empleado debe ser mayor o igual a 0");
     }
@@ -109,7 +109,7 @@ public class SAEmpleadoImpTestIT {
     public void altaEmpleadoCorreoIncorrecto(){
         EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
         em.getTransaction().begin();
-        TEmpleado emp = new TEmpleado("12345678A", "Camilo" , "Suarez", "tumorenito17@!@hotmail.com", "651341570", true);
+        TEmpleado emp = new TEmpleado("12345678A", "Camilo" , "Suarez", "tumorenito17@!@hotmail.com", "651341570", true,true);
         int id = saEmpleadoImp.altaEmpleado(emp);
         assertTrue(id == -7, "El ID del empleado debe ser mayor o igual a 0");
     }

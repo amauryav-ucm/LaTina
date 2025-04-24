@@ -33,6 +33,12 @@ public class SARegistroImp implements SARegistro {
             Query q = em.createNamedQuery("Empleado.findByDNI");
             q.setParameter("DNI", tEmpleado.getDNI());
             List<Empleado> emp = q.getResultList();
+
+            if(emp.isEmpty()){
+                trans.rollback();
+                return -1; // EL EMPLEADO NO EXISTE
+            }
+
             Empleado empleado = emp.get(0);
 
             Query q2 = em.createNamedQuery("Registro.findByEmpleado");
@@ -40,11 +46,8 @@ public class SARegistroImp implements SARegistro {
             q2.setMaxResults(1);
             List<Registro> registros = q2.getResultList();
 
-            if(emp.isEmpty()){
-                trans.rollback();
-                return -1; // EL EMPLEADO NO EXISTE
-            }
-            else if (!registros.isEmpty()) {
+
+             if (!registros.isEmpty()) {
                 trans.rollback();
                 return -2; // Ya hay un fichaje de entrada
             }else{

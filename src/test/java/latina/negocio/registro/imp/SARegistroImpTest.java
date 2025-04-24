@@ -20,129 +20,106 @@ class SARegistroImpTest {
 
     @Test
     void testFicharEntrada_EmpleadoNoExiste() {
-        EntityTransaction stubTransaction = mock(EntityTransaction.class);
-        EntityManager stubEntityManager = mock(EntityManager.class);
-        Query stubQuery = mock(Query.class);
+        EntityTransaction tx = mock(EntityTransaction.class);
+        EntityManager em = mock(EntityManager.class);
+        Query q1 = mock(Query.class);
 
-        when(stubEntityManager.getTransaction()).thenReturn(stubTransaction);
-        when(stubEntityManager.createNamedQuery("Empleado.findByDNI")).thenReturn(stubQuery);
-        when(stubQuery.getResultList()).thenReturn(new ArrayList<>());
+        when(em.getTransaction()).thenReturn(tx);
+        when(em.createNamedQuery("Empleado.findByDNI")).thenReturn(q1);
+        when(q1.getResultList()).thenReturn(new ArrayList<>());
 
-        SARegistroImp saRegistro = Mockito.spy(new SARegistroImp());
-        doReturn(stubEntityManager).when(saRegistro).createEntityManager();
+        SARegistroImp sa = Mockito.spy(new SARegistroImp());
+        doReturn(em).when(sa).createEntityManager();
 
-        TEmpleado empleado = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correoo@example.com", "123456788", true, false);
-        int resultado = saRegistro.ficharEntrada(empleado, new Timestamp(System.currentTimeMillis()));
+        TEmpleado tEmp = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correo@example.com", "123456788", true, false);
+        int resultado = sa.ficharEntrada(tEmp, new Timestamp(System.currentTimeMillis()));
 
-        verify(stubTransaction, times(1)).rollback();
+        verify(tx, times(1)).rollback();
         assertEquals(-1, resultado);
     }
 
     @Test
+    void testFicharEntrada_RegistroYaExiste() {
+        EntityTransaction tx = mock(EntityTransaction.class);
+        EntityManager em = mock(EntityManager.class);
+        Query q1 = mock(Query.class);
+        Query q2 = mock(Query.class);
+
+        Empleado empleado = mock(Empleado.class);
+        when(empleado.getId()).thenReturn(1);
+
+        List<Empleado> empleados = new ArrayList<>();
+        empleados.add(empleado);
+
+        Registro registroExistente = mock(Registro.class);
+        List<Registro> registros = new ArrayList<>();
+        registros.add(registroExistente);
+
+        when(em.getTransaction()).thenReturn(tx);
+        when(em.createNamedQuery("Empleado.findByDNI")).thenReturn(q1);
+        when(em.createNamedQuery("Registro.findByEmpleado")).thenReturn(q2);
+        when(q1.getResultList()).thenReturn(empleados);
+        when(q2.getResultList()).thenReturn(registros);
+
+        SARegistroImp sa = Mockito.spy(new SARegistroImp());
+        doReturn(em).when(sa).createEntityManager();
+
+        TEmpleado tEmp = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correo@example.com", "123456788", true, false);
+        int resultado = sa.ficharEntrada(tEmp, new Timestamp(System.currentTimeMillis()));
+
+        verify(tx, times(1)).rollback();
+        assertEquals(-2, resultado);
+    }
+
+    @Test
     void testFicharEntrada_Exito() {
-        EntityTransaction stubTransaction = mock(EntityTransaction.class);
-        EntityManager stubEntityManager = mock(EntityManager.class);
-        Query stubQuery = mock(Query.class);
+        EntityTransaction tx = mock(EntityTransaction.class);
+        EntityManager em = mock(EntityManager.class);
+        Query q1 = mock(Query.class);
+        Query q2 = mock(Query.class);
 
-        Empleado mockEmpleado = mock(Empleado.class);
-        List<Empleado> lista = new ArrayList<>();
-        lista.add(mockEmpleado);
+        Empleado empleado = mock(Empleado.class);
+        when(empleado.getId()).thenReturn(1);
 
-        when(stubEntityManager.getTransaction()).thenReturn(stubTransaction);
-        when(stubEntityManager.createNamedQuery("Empleado.findByDNI")).thenReturn(stubQuery);
-        when(stubQuery.getResultList()).thenReturn(lista);
+        List<Empleado> empleados = List.of(empleado);
+        List<Registro> registros = new ArrayList<>();
 
-        SARegistroImp saRegistro = Mockito.spy(new SARegistroImp());
-        doReturn(stubEntityManager).when(saRegistro).createEntityManager();
+        when(em.getTransaction()).thenReturn(tx);
+        when(em.createNamedQuery("Empleado.findByDNI")).thenReturn(q1);
+        when(q1.getResultList()).thenReturn(empleados);
+        when(em.createNamedQuery("Registro.findByEmpleado")).thenReturn(q2);
+        when(q2.getResultList()).thenReturn(registros);
 
-        TEmpleado empleado = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correoo@example.com", "123456788", true, false);
-        int resultado = saRegistro.ficharEntrada(empleado, new Timestamp(System.currentTimeMillis()));
+        SARegistroImp sa = Mockito.spy(new SARegistroImp());
+        doReturn(em).when(sa).createEntityManager();
 
-        verify(stubTransaction, times(1)).commit();
-        verify(stubEntityManager, times(1)).persist(any(Registro.class));
+        TEmpleado tEmp = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correo@example.com", "123456788", true, false);
+        int resultado = sa.ficharEntrada(tEmp, new Timestamp(System.currentTimeMillis()));
+
+        verify(em, times(1)).persist(any(Registro.class));
+        verify(tx, times(1)).commit();
         assertEquals(1, resultado);
     }
-    /*@Test
+
+    @Test
     void testFicharEntrada_Exception() {
-        // Simulando una excepción en el proceso
-        EntityTransaction stubTransaction = mock(EntityTransaction.class);
-        EntityManager stubEntityManager = mock(EntityManager.class);
-        Query stubQuery = mock(Query.class);
+        EntityTransaction tx = mock(EntityTransaction.class);
+        EntityManager em = mock(EntityManager.class);
+        Query q1 = mock(Query.class);
 
-        // Configurando la simulación para lanzar una excepción en getResultList
-        when(stubEntityManager.getTransaction()).thenReturn(stubTransaction);
-        when(stubEntityManager.createNamedQuery("Empleado.findByDNI")).thenReturn(stubQuery);
-        when(stubQuery.getResultList()).thenThrow(new RuntimeException("Error de base de datos"));
+        when(em.getTransaction()).thenReturn(tx);
+        when(em.createNamedQuery("Empleado.findByDNI")).thenReturn(q1);
+        when(q1.getResultList()).thenThrow(new RuntimeException("DB error"));
 
-        // Creamos el objeto SARegistroImp como un espía
-        SARegistroImp saRegistro = Mockito.spy(new SARegistroImp());
-        // Le decimos que devuelva el EntityManager simulado cuando se llame a createEntityManager
-        doReturn(stubEntityManager).when(saRegistro).createEntityManager();
+        when(tx.isActive()).thenReturn(true);
 
-        // Creamos un TEmpleado para pasar al método
-        TEmpleado empleado = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correoo@example.com", "123456788", true);
+        SARegistroImp sa = Mockito.spy(new SARegistroImp());
+        doReturn(em).when(sa).createEntityManager();
 
-        // Ejecutamos el método
-        int resultado = saRegistro.ficharEntrada(empleado, new Timestamp(System.currentTimeMillis()));
+        TEmpleado tEmp = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correo@example.com", "123456788", true, false);
+        int resultado = sa.ficharEntrada(tEmp, new Timestamp(System.currentTimeMillis()));
 
-        // Verificamos que el rollback haya ocurrido
-        verify(stubTransaction, times(1)).rollback();
-
-        // Aseguramos que el resultado sea -4 (código de error para excepción general)
+        verify(tx, times(1)).rollback();
         assertEquals(-4, resultado);
-
-        // Verificación adicional para asegurarnos de que no se hizo commit
-        verify(stubTransaction, times(0)).commit();
-    }*/
-
-
-
-    @Test
-    void testFicharEntrada_TransaccionNoActiva() {
-        EntityTransaction stubTransaction = mock(EntityTransaction.class);
-        EntityManager stubEntityManager = mock(EntityManager.class);
-        Query stubQuery = mock(Query.class);
-
-        // La transacción no está activa, por lo que no se debería hacer commit ni persist
-        when(stubEntityManager.getTransaction()).thenReturn(stubTransaction);
-        when(stubEntityManager.createNamedQuery("Empleado.findByDNI")).thenReturn(stubQuery);
-        when(stubQuery.getResultList()).thenReturn(new ArrayList<>()); // Empleado no existe
-
-        // Simulamos que la transacción ya está marcada como no activa
-        when(stubTransaction.isActive()).thenReturn(false);
-
-        SARegistroImp saRegistro = Mockito.spy(new SARegistroImp());
-        doReturn(stubEntityManager).when(saRegistro).createEntityManager();
-
-        TEmpleado empleado = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correoo@example.com", "123456788", true, false);
-        int resultado = saRegistro.ficharEntrada(empleado, new Timestamp(System.currentTimeMillis()));
-
-        verify(stubTransaction, never()).commit(); // No debe intentar hacer commit
-        verify(stubEntityManager, never()).persist(any(Registro.class)); // No debe persistir nada
-        assertEquals(-1, resultado); // El empleado no existe, por lo que el código debería ser -1
     }
-
-    @Test
-    void testFicharEntrada_RollbackOnFailure() {
-        // Simulando que se intenta fichar pero ocurre algún fallo (por ejemplo, empleado no existe)
-        EntityTransaction stubTransaction = mock(EntityTransaction.class);
-        EntityManager stubEntityManager = mock(EntityManager.class);
-        Query stubQuery = mock(Query.class);
-
-        when(stubEntityManager.getTransaction()).thenReturn(stubTransaction);
-        when(stubEntityManager.createNamedQuery("Empleado.findByDNI")).thenReturn(stubQuery);
-        when(stubQuery.getResultList()).thenReturn(new ArrayList<>()); // Empleado no existe
-
-        SARegistroImp saRegistro = Mockito.spy(new SARegistroImp());
-        doReturn(stubEntityManager).when(saRegistro).createEntityManager();
-
-        TEmpleado empleado = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correoo@example.com", "123456788", true, false);
-        int resultado = saRegistro.ficharEntrada(empleado, new Timestamp(System.currentTimeMillis()));
-
-        // Verificar que la transacción se haga rollback si algo sale mal
-        verify(stubTransaction, times(1)).rollback(); // Debe llamar a rollback
-        assertEquals(-1, resultado); // El empleado no existe, lo que retorna -1
-    }
-
-
 }
