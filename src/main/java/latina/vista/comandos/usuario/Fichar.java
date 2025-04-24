@@ -11,7 +11,7 @@ import netscape.javascript.JSObject;
 import java.sql.Timestamp;
 import java.time.Instant;
 
-public class FicharEntrada implements Comando {
+public class Fichar implements Comando {
     @Override
     public void ejecutar(Object datos, VistaPrincipal vista) {
         try {
@@ -28,20 +28,24 @@ public class FicharEntrada implements Comando {
             //Devuelve el empleado desde el SA
             TEmpleado empleado = SAFactory.getInstance().createSAUsuario().conseguirEmpleado(user);
 
-
             //Llama al SARegistro para fichar la entrada
 
             int result = -1;
             if(tipo.equals("entrada")){
                 result = SAFactory.getInstance().createSARegistro().ficharEntrada(empleado, t);
             }
-            else if(tipo.equals("salida")){
+            else if(tipo.equals("salida")) {
                 result = SAFactory.getInstance().createSARegistro().ficharSalida(empleado, t);
             }
             WebEngine webEngine = vista.getWebView().getEngine();
+
             if (result == 1) {
                 webEngine.executeScript("mostrarMensaje('Entrada registrada correctamente')");
-            } else {
+            }
+            else if(result == -2){
+                webEngine.executeScript("mostrarMensaje('Ya se ha fichado la entrada')");
+            }
+            else {
                 webEngine.executeScript("mostrarMensaje('Error al registrar la entrada')");
             }
 

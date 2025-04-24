@@ -31,7 +31,7 @@ class SARegistroImpTest {
         SARegistroImp saRegistro = Mockito.spy(new SARegistroImp());
         doReturn(stubEntityManager).when(saRegistro).createEntityManager();
 
-        TEmpleado empleado = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correoo@example.com", "123456788", true);
+        TEmpleado empleado = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correoo@example.com", "123456788", true, false);
         int resultado = saRegistro.ficharEntrada(empleado, new Timestamp(System.currentTimeMillis()));
 
         verify(stubTransaction, times(1)).rollback();
@@ -55,7 +55,7 @@ class SARegistroImpTest {
         SARegistroImp saRegistro = Mockito.spy(new SARegistroImp());
         doReturn(stubEntityManager).when(saRegistro).createEntityManager();
 
-        TEmpleado empleado = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correoo@example.com", "123456788", true);
+        TEmpleado empleado = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correoo@example.com", "123456788", true, false);
         int resultado = saRegistro.ficharEntrada(empleado, new Timestamp(System.currentTimeMillis()));
 
         verify(stubTransaction, times(1)).commit();
@@ -114,7 +114,7 @@ class SARegistroImpTest {
         SARegistroImp saRegistro = Mockito.spy(new SARegistroImp());
         doReturn(stubEntityManager).when(saRegistro).createEntityManager();
 
-        TEmpleado empleado = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correoo@example.com", "123456788", true);
+        TEmpleado empleado = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correoo@example.com", "123456788", true, false);
         int resultado = saRegistro.ficharEntrada(empleado, new Timestamp(System.currentTimeMillis()));
 
         verify(stubTransaction, never()).commit(); // No debe intentar hacer commit
@@ -136,7 +136,7 @@ class SARegistroImpTest {
         SARegistroImp saRegistro = Mockito.spy(new SARegistroImp());
         doReturn(stubEntityManager).when(saRegistro).createEntityManager();
 
-        TEmpleado empleado = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correoo@example.com", "123456788", true);
+        TEmpleado empleado = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correoo@example.com", "123456788", true, false);
         int resultado = saRegistro.ficharEntrada(empleado, new Timestamp(System.currentTimeMillis()));
 
         // Verificar que la transacción se haga rollback si algo sale mal

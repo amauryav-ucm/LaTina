@@ -28,12 +28,25 @@ public class SARegistroImp implements SARegistro {
             em = createEntityManager();
             trans = em.getTransaction();
             trans.begin();
+
+
             Query q = em.createNamedQuery("Empleado.findByDNI");
             q.setParameter("DNI", tEmpleado.getDNI());
             List<Empleado> emp = q.getResultList();
+            Empleado empleado = emp.get(0);
+
+            Query q2 = em.createNamedQuery("Registro.findByEmpleado");
+            q2.setParameter("empleadoId", empleado.getId());
+            q2.setMaxResults(1);
+            List<Registro> registros = q2.getResultList();
+
             if(emp.isEmpty()){
                 trans.rollback();
                 return -1; // EL EMPLEADO NO EXISTE
+            }
+            else if (!registros.isEmpty()) {
+                trans.rollback();
+                return -2; // Ya hay un fichaje de entrada
             }else{
                 Registro reg = new Registro(emp.get(0), hora, 0);
                 em.persist(reg);
