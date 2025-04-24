@@ -37,7 +37,7 @@ function recogerDatosFichaje(tipo) {
     const datosFichaje = {
         tipo: tipo,
         fecha: new Date().toISOString(),
-        hora: formatearHora(new Date()),
+        hora: formatearHora(new Date()), //creo q esto no es necesario, con la fecha basta
         //empleadoId: obtenerIdEmpleado()
         empleadoId: localStorage.getItem("idEmpleado"),
         usuario: localStorage.getItem("usuario")

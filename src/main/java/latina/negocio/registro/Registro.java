@@ -27,18 +27,6 @@ public class Registro {
     @JoinColumn(name = "empleado_id")
     private Empleado empleado;
 
-    public Empleado getEmpleado() {
-        return empleado;
-    }
-    public void setEmpleado(Empleado empleado) {
-        this.empleado = empleado;
-    }
-    public Turno getTurno() {
-        return turno;
-    }
-    public void setTurno(Turno turno) {
-        this.turno = turno;
-    }
 
     public Registro(){}
 
@@ -57,6 +45,64 @@ public class Registro {
         this.hInicio = registro.gethInicio();
         this.hFin = registro.gethFin();
     }
+
+    // Getters and Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getnHoras() {
+        return nHoras;
+    }
+
+    public void setnHoras(int nHoras) {
+        this.nHoras = nHoras;
+    }
+
+    public double getSalario() {
+        return salario;
+    }
+
+    public void setSalario(double salario) {
+        this.salario = salario;
+    }
+
+    public Timestamp gethInicio() {
+        return hInicio;
+    }
+
+    public void sethInicio(Timestamp hInicio) {
+        this.hInicio = hInicio;
+    }
+
+    public Timestamp gethFin() {
+        return hFin;
+    }
+
+    public void sethFin(Timestamp hFin) {
+        this.hFin = hFin;
+    }
+
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }
+
+    public Turno getTurno() {
+        return turno;
+    }
+
+    public void setTurno(Turno turno) {
+        this.turno = turno;
+    }
+
 
     public TRegistro toTransfer(){
         TRegistro tReg = new TRegistro(id, turno.getId(), empleado.getId(), hInicio, hFin, salario, nHoras );

@@ -8,11 +8,11 @@ import latina.negocio.empleado.Empleado;
 import latina.negocio.empleado.TEmpleado;
 import latina.negocio.registro.Registro;
 import latina.negocio.registro.SARegistro;
-import latina.negocio.rol.Rol;
-import latina.negocio.turno.Turno;
+import latina.negocio.registro.TRegistro;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SARegistroImp implements SARegistro {
     //10101010J', 1, 'Pérez Gómez', 'correoo@example.com', 'Juan', '123456788');
@@ -28,7 +28,6 @@ public class SARegistroImp implements SARegistro {
             em = createEntityManager();
             trans = em.getTransaction();
             trans.begin();
-            Timestamp ahora = new Timestamp(System.currentTimeMillis());
             Query q = em.createNamedQuery("Empleado.findByDNI");
             q.setParameter("DNI", tEmpleado.getDNI());
             List<Empleado> emp = q.getResultList();
@@ -36,7 +35,7 @@ public class SARegistroImp implements SARegistro {
                 trans.rollback();
                 return -1; // EL EMPLEADO NO EXISTE
             }else{
-                Registro reg = new Registro(emp.get(0),ahora, 0);
+                Registro reg = new Registro(emp.get(0), hora, 0);
                 em.persist(reg);
             }
 
@@ -56,6 +55,127 @@ public class SARegistroImp implements SARegistro {
             }
         }
     }
+
+    public int ficharSalida(TEmpleado tEmpleado, Timestamp hora) {
+        /*
+        //Está mas o menos hecho
+        EntityManager em = null;
+
+        EntityTransaction trans = null;
+
+        try {
+            em = createEntityManager();
+            trans = em.getTransaction();
+            trans.begin();
+
+            // Buscar al empleado
+            Query q = em.createNamedQuery("Empleado.findByDNI");
+            q.setParameter("DNI", tEmpleado.getDNI());
+            List<Empleado> empleados = q.getResultList();
+
+            if (empleados.isEmpty()) {
+                trans.rollback();
+                return -1; // Empleado no encontrado
+            }
+
+            Empleado empleado = empleados.get(0);
+
+            // Buscar el último registro sin hFin
+            Query q2 = em.createNamedQuery("Registro.findByEmpleado");
+            q2.setParameter("empleadoId", empleado.getId());
+            q2.setMaxResults(1);
+            List<Registro> registros = q2.getResultList();
+
+            if (registros.isEmpty()) {
+                trans.rollback();
+                return -2; // No hay entrada activa para cerrar
+            }
+
+            Registro registro = registros.get(0);
+            registro.sethFin(hora);
+
+            // Calcular nHoras
+            long diffMillis = hora.getTime() - registro.gethInicio().getTime();
+            int nHoras = (int) (diffMillis / (1000 * 60 * 60)); // redondea hacia abajo
+            registro.setnHoras(nHoras);
+
+            // Calcular salario si hay turno asociado, si no dejar en 0
+            if (registro.getTurno() != null) {
+                registro.setSalario(registro.getTurno().getRol().getSalario() * nHoras);
+            } else {
+                registro.setSalario(0);
+            }
+
+            em.merge(registro);
+            trans.commit();
+            return 1; // Salida fichada correctamente
+
+        } catch (Exception e) {
+            if (trans != null && trans.isActive()) {
+                trans.rollback();
+            }
+            e.printStackTrace();
+            return -4; // Error general
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+        */
+        return -1;
+    }
+
+    @Override
+    public TRegistro obtenerRegistro(int idRegistro) {
+        EntityManager em = null;
+
+        try {
+            em = createEntityManager();
+            Registro registro = em.find(Registro.class, idRegistro);
+
+            if (registro == null) {
+                return null;
+            }
+
+            return registro.toTransfer();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    @Override
+    public List<TRegistro> listarRegistrosPorEmpleado(int idEmpleado) {
+        EntityManager em = null;
+
+        try {
+            em = createEntityManager();
+            Query q = em.createNamedQuery("Registro.findByEmpleado");
+            q.setParameter("empleadoId", idEmpleado);
+
+            List<Registro> registros = q.getResultList();
+
+            // Reemplazado .toList() por .collect(Collectors.toList()) para compatibilidad
+            return registros.stream()
+                    .map(registro -> registro.toTransfer())
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+
     protected EntityManager createEntityManager() {
         return EMFContainer.getInstance().getEMF().createEntityManager();
     }

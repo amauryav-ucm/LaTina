@@ -9,6 +9,7 @@ import latina.vista.comandos.Comando;
 import netscape.javascript.JSObject;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 
 public class FicharEntrada implements Comando {
     @Override
@@ -17,15 +18,26 @@ public class FicharEntrada implements Comando {
             JSObject jsData = (JSObject) datos;
             //Recupera el usuario del localStorage
             String usuario = jsData.getMember("usuario").toString();
+            String fechaIso = jsData.getMember("fecha").toString();
+            Instant instant = Instant.parse(fechaIso);
+            Timestamp t = Timestamp.from(instant);
+            String tipo = jsData.getMember("tipo").toString();
+
             //Crea TUsuario
             TUsuario user = new TUsuario(usuario, "", false, true);
             //Devuelve el empleado desde el SA
             TEmpleado empleado = SAFactory.getInstance().createSAUsuario().conseguirEmpleado(user);
 
-            Timestamp entrada = new Timestamp(System.currentTimeMillis());
 
             //Llama al SARegistro para fichar la entrada
-            int result = SAFactory.getInstance().createSARegistro().ficharEntrada(empleado, entrada);
+
+            int result = -1;
+            if(tipo.equals("entrada")){
+                result = SAFactory.getInstance().createSARegistro().ficharEntrada(empleado, t);
+            }
+            else if(tipo.equals("salida")){
+                result = SAFactory.getInstance().createSARegistro().ficharSalida(empleado, t);
+            }
             WebEngine webEngine = vista.getWebView().getEngine();
             if (result == 1) {
                 webEngine.executeScript("mostrarMensaje('Entrada registrada correctamente')");
