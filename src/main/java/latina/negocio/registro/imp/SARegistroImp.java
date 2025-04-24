@@ -16,9 +16,9 @@ import java.util.List;
 
 public class SARegistroImp implements SARegistro {
     //10101010J', 1, 'Pérez Gómez', 'correoo@example.com', 'Juan', '123456788');
-    TEmpleado emple = new TEmpleado("10101010J","Juan", "Pérez Gómez","correoo@example.com","123456788", true , false);
-    Timestamp now = new Timestamp(System.currentTimeMillis());
-    int a = ficharEntrada(emple, now);
+    //TEmpleado emple = new TEmpleado("10101010J","Juan", "Pérez Gómez","correoo@example.com","123456788", true , false);
+    //Timestamp now = new Timestamp(System.currentTimeMillis());
+    //int a = ficharEntrada(emple, now);
 
     @Override
     public int ficharEntrada(TEmpleado tEmpleado, Timestamp hora) {
