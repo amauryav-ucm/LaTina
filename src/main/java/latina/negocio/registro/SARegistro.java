@@ -9,7 +9,5 @@ public interface SARegistro {
     public int ficharEntrada(TEmpleado tEmpleado, Timestamp hora);//con la hora y empleado busco el turno;
     public int ficharSalida(TEmpleado tEmpleado, Timestamp hora);//con la hora y empleado busco el turno;
 
-    TRegistro obtenerRegistro(int idRegistro);
 
-    List<TRegistro> listarRegistrosPorEmpleado(int idEmpleado);
 }

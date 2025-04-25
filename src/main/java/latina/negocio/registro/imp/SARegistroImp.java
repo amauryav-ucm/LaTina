@@ -73,8 +73,9 @@ public class SARegistroImp implements SARegistro {
     }
 
     public int ficharSalida(TEmpleado tEmpleado, Timestamp hora) {
-        /*
+
         //Está mas o menos hecho
+        /*
         EntityManager em = null;
 
         EntityTransaction trans = null;
@@ -138,57 +139,7 @@ public class SARegistroImp implements SARegistro {
             }
         }
         */
-        return -1;
-    }
-
-    @Override
-    public TRegistro obtenerRegistro(int idRegistro) {
-        EntityManager em = null;
-
-        try {
-            em = createEntityManager();
-            Registro registro = em.find(Registro.class, idRegistro);
-
-            if (registro == null) {
-                return null;
-            }
-
-            return registro.toTransfer();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
-
-    @Override
-    public List<TRegistro> listarRegistrosPorEmpleado(int idEmpleado) {
-        EntityManager em = null;
-
-        try {
-            em = createEntityManager();
-            Query q = em.createNamedQuery("Registro.findByEmpleado");
-            q.setParameter("empleadoId", idEmpleado);
-
-            List<Registro> registros = q.getResultList();
-
-            // Reemplazado .toList() por .collect(Collectors.toList()) para compatibilidad
-            return registros.stream()
-                    .map(registro -> registro.toTransfer())
-                    .collect(Collectors.toList());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
+        return -1; //Se quita esto al descomentarlo todo
     }
 
 
