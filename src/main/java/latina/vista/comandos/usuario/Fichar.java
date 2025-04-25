@@ -33,21 +33,22 @@ public class Fichar implements Comando {
             int result = -1;
             if(tipo.equals("entrada")){
                 result = SAFactory.getInstance().createSARegistro().ficharEntrada(empleado, t);
+                WebEngine webEngine = vista.getWebView().getEngine();
+
+                if (result == 1) {
+                    webEngine.executeScript("mostrarMensaje('Entrada registrada correctamente')");
+                }
+                else if(result == -2){
+                    webEngine.executeScript("mostrarMensaje('Ya se ha fichado la entrada')");
+                }
+                else {
+                    webEngine.executeScript("mostrarMensaje('Error al registrar la entrada')");
+                }
             }
             else if(tipo.equals("salida")) {
                 result = SAFactory.getInstance().createSARegistro().ficharSalida(empleado, t);
             }
-            WebEngine webEngine = vista.getWebView().getEngine();
 
-            if (result == 1) {
-                webEngine.executeScript("mostrarMensaje('Entrada registrada correctamente')");
-            }
-            else if(result == -2){
-                webEngine.executeScript("mostrarMensaje('Ya se ha fichado la entrada')");
-            }
-            else {
-                webEngine.executeScript("mostrarMensaje('Error al registrar la entrada')");
-            }
 
         } catch (Exception e) {
             e.printStackTrace();
