@@ -8,35 +8,64 @@ import java.sql.Timestamp;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(name="Registro.findByEmpleado", query="SELECT r FROM Registro r WHERE r.empleado.id = :empleadoId")
+        @NamedQuery(
+                name  = "Registro.findByEmpleado",
+                query = "SELECT r FROM Registro r WHERE r.empleado.id = :empleadoId"
+        ),
+        @NamedQuery(
+                name  = "Registro.findByEmpleadoAndTurno",
+                query = "SELECT r FROM Registro r WHERE r.empleado.id = :empleadoId AND r.turno.id = :turnoId"
+        ),
+        @NamedQuery(
+                name  = "Registro.findLatestOpenByEmpleado",
+                query = "SELECT r FROM Registro r WHERE r.empleado.id = :empleadoId AND r.hFin IS NULL"
+        )
 })
 public class Registro {
-   // id/ id turno/ id empleado/ nhoras/ salario/ hInicio / hFin
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(unique = true, nullable = false)
+
+    @Column(nullable = false)
     private int nHoras;
+
     private double salario;
+
     private Timestamp hInicio;
+
     private Timestamp hFin;
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "turno_id")
+
+    /**
+     * Un registro está asociado a un único turno (1-1)
+     */
+    @OneToOne(optional = true)
+    @JoinColumn(name = "turno_id", unique = true)
     private Turno turno;
-    @ManyToOne(optional = true)
-    @JoinColumn(name = "empleado_id")
+
+    /**
+     * Varios registros pueden pertenecer a un mismo empleado (N-1 desde Registro)
+     * y en el lado Empleado, 1 empleado -> N registros
+     */
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "empleado_id", nullable = false)
     private Empleado empleado;
 
-
-    public Registro(){}
-
-    public Registro( Empleado emp,Timestamp horactual , int nHoras){
-        this.nHoras = nHoras;
-        this.empleado = emp;
-        this.hInicio = horactual;
+    public Registro() {
     }
 
-    public Registro(TRegistro registro, Turno turno, Empleado empleado){
+    /**
+     * Constructor para iniciar un registro en curso
+     */
+    public Registro(Empleado empleado, Timestamp hInicio, int nHoras) {
+        this.empleado = empleado;
+        this.hInicio = hInicio;
+        this.nHoras = nHoras;
+    }
+
+    /**
+     * Constructor desde DTO
+     */
+    public Registro(TRegistro registro, Turno turno, Empleado empleado) {
         this.id = registro.getId();
         this.nHoras = registro.getnHoras();
         this.salario = registro.getSalario();
@@ -46,7 +75,7 @@ public class Registro {
         this.hFin = registro.gethFin();
     }
 
-    // Getters and Setters
+    // Getters y setters
     public int getId() {
         return id;
     }
@@ -87,14 +116,6 @@ public class Registro {
         this.hFin = hFin;
     }
 
-    public Empleado getEmpleado() {
-        return empleado;
-    }
-
-    public void setEmpleado(Empleado empleado) {
-        this.empleado = empleado;
-    }
-
     public Turno getTurno() {
         return turno;
     }
@@ -103,9 +124,27 @@ public class Registro {
         this.turno = turno;
     }
 
+    public Empleado getEmpleado() {
+        return empleado;
+    }
 
-    public TRegistro toTransfer(){
-        TRegistro tReg = new TRegistro(id, turno.getId(), empleado.getId(), hInicio, hFin, salario, nHoras );
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }
+
+    /**
+     * Convertir a DTO
+     */
+    public TRegistro toTransfer() {
+        TRegistro tReg = new TRegistro(
+                id,
+                turno != null ? turno.getId() : null,
+                empleado.getId(),
+                hInicio,
+                hFin,
+                salario,
+                nHoras
+        );
         return tReg;
     }
 }

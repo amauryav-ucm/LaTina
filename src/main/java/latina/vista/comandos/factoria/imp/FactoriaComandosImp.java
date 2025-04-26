@@ -60,9 +60,6 @@ public class FactoriaComandosImp extends FactoriaComandos {
             case REGISTRAR_FICHAJE:
                 comando = new Fichar();
                 break;
-            case ACTUALIZAR_ESTADO_FICHAJE:
-                comando = new ActualizarEstadoFichaje();
-                break;
             default:
                 break;
         }

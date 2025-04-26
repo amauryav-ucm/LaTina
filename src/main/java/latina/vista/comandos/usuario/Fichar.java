@@ -28,26 +28,25 @@ public class Fichar implements Comando {
             //Devuelve el empleado desde el SA
             TEmpleado empleado = SAFactory.getInstance().createSAUsuario().conseguirEmpleado(user);
 
-            //Llama al SARegistro para fichar la entrada
+            WebEngine webEngine = vista.getWebView().getEngine();
 
-            int result = -1;
+            int result;
+            String finalMensaje = "";
             if(tipo.equals("entrada")){
                 result = SAFactory.getInstance().createSARegistro().ficharEntrada(empleado, t);
-                WebEngine webEngine = vista.getWebView().getEngine();
 
-                if (result == 1) {
-                    webEngine.executeScript("mostrarMensaje('Entrada registrada correctamente')");
-                }
-                else if(result == -2){
-                    webEngine.executeScript("mostrarMensaje('Ya se ha fichado la entrada')");
-                }
-                else {
-                    webEngine.executeScript("mostrarMensaje('Error al registrar la entrada')");
-                }
+                if (result == 1) finalMensaje = "Entrada registrada correctamente";
+                else if (result == -1) finalMensaje = "El empleado no existe";
+                else if (result == -2) finalMensaje = "Ya se ha fichado la entrada";
+                else if (result == -3) finalMensaje = "Solo se puede fichar con 15 minutos de antelación";
+                else finalMensaje = "Error desconocido";
+
             }
             else if(tipo.equals("salida")) {
                 result = SAFactory.getInstance().createSARegistro().ficharSalida(empleado, t);
             }
+
+            webEngine.executeScript(String.format("mostrarMensaje('%s')", finalMensaje));
 
 
         } catch (Exception e) {

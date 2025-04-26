@@ -116,7 +116,6 @@ function enviarFichaje(datos) {
     if (window.java && window.java.accion) {
         try {
             window.java.accion("REGISTRAR_FICHAJE", datos);
-            window.java.accion("ACTUALIZAR_ESTADO_FICHAJE", datos);
             //registrarEnHistorialLocal(datos);
             return;
         } catch (e) {
