@@ -3,14 +3,18 @@ package latina.negocio.registro.imp;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import latina.integracion.emfc.EMFContainer;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.empleado.TEmpleado;
 import latina.negocio.registro.Registro;
 import latina.negocio.registro.SARegistro;
 import latina.negocio.registro.TRegistro;
+import latina.negocio.turno.Turno;
 
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,54 +27,78 @@ public class SARegistroImp implements SARegistro {
     @Override
     public int ficharEntrada(TEmpleado tEmpleado, Timestamp hora) {
         EntityManager em = null;
-        EntityTransaction trans = null;
+        EntityTransaction tx = null;
         try {
             em = createEntityManager();
-            trans = em.getTransaction();
-            trans.begin();
+            tx = em.getTransaction();
+            tx.begin();
 
+            // 1. Recuperar el empleado por DNI
+            TypedQuery<Empleado> qEmp = em.createNamedQuery("Empleado.findByDNI", Empleado.class);
+            qEmp.setParameter("DNI", tEmpleado.getDNI());
+            List<Empleado> listaEmp = qEmp.getResultList();
+            if (listaEmp.isEmpty()) {
+                tx.rollback();
+                return -1; // Empleado no existe
+            }
+            Empleado empleado = listaEmp.get(0);
 
-            Query q = em.createNamedQuery("Empleado.findByDNI");
-            q.setParameter("DNI", tEmpleado.getDNI());
-            List<Empleado> emp = q.getResultList();
-
-            if(emp.isEmpty()){
-                trans.rollback();
-                return -1; // EL EMPLEADO NO EXISTE
+            // 2. Verificar que no tenga ya un registro abierto (hFin == null)
+            TypedQuery<Registro> qReg = em.createNamedQuery("Registro.findLatestOpenByEmpleado", Registro.class);
+            qReg.setParameter("empleadoId", empleado.getId());
+            qReg.setMaxResults(1);
+            if (!qReg.getResultList().isEmpty()) {
+                tx.rollback();
+                return -2; // Ya hay un fichaje de entrada sin salida
             }
 
-            Empleado empleado = emp.get(0);
+            // 3. Calcular hora + 15 minutos
+            Instant now = hora.toInstant();
+            Instant horaMas15 = now.plus(15, ChronoUnit.MINUTES);
+            Timestamp tsHoraMas15 = Timestamp.from(horaMas15);
 
-            Query q2 = em.createNamedQuery("Registro.findByEmpleado");
-            q2.setParameter("empleadoId", empleado.getId());
-            q2.setMaxResults(1);
-            List<Registro> registros = q2.getResultList();
+            // 4. Buscar turno que cubra hora + 15 minutos
+            TypedQuery<Turno> qTurno = em.createQuery(
+                    "SELECT t FROM Turno t " +
+                            "WHERE t.empleado.id = :empId " +
+                            "AND t.fechaHoraInicio <= :horaMas15 " +
+                            "AND t.fechaHoraFin > :horaMas15",
+                    Turno.class
+            );
+            qTurno.setParameter("empId", empleado.getId());
+            qTurno.setParameter("horaMas15", tsHoraMas15);
+            List<Turno> listaTurnos = qTurno.getResultList();
+            if (listaTurnos.isEmpty()) {
+                tx.rollback();
+                return -3; // No hay turno en el intervalo permitido
+            }
+            Turno turno = listaTurnos.get(0);
 
-
-             if (!registros.isEmpty()) {
-                trans.rollback();
-                return -2; // Ya hay un fichaje de entrada
-            }else{
-                Registro reg = new Registro(emp.get(0), hora, 0);
-                em.persist(reg);
+            // 5. Verificar que la hora actual esté dentro de la ventana de fichaje
+            Instant inicioVentana = turno.getFechaHoraInicio().toInstant().minus(15, ChronoUnit.MINUTES);
+            Instant finVentana = turno.getFechaHoraFin().toInstant().minus(15, ChronoUnit.MINUTES);
+            if (now.isBefore(inicioVentana) || !now.isBefore(finVentana)) {
+                tx.rollback();
+                return -5; // Hora fuera de la ventana de fichaje permitida
             }
 
-            trans.commit();
+            // 6. Crear y persistir el nuevo registro de entrada
+            Registro reg = new Registro(empleado, hora, 0);
+            reg.setTurno(turno);
+            em.persist(reg);
 
-            return 1; //FUE CORRECTAMENTE
+            tx.commit();
+            return 1; // Fichaje de entrada correcto
 
         } catch (Exception e) {
-            if (trans != null && trans.isActive()) {
-                trans.rollback();
-            }
+            if (tx != null && tx.isActive()) tx.rollback();
             e.printStackTrace();
-            return -4; // Código de error para excepción general
+            return -4; // Error general
         } finally {
-            if (em != null) {
-                em.close();
-            }
+            if (em != null) em.close();
         }
     }
+
 
     public int ficharSalida(TEmpleado tEmpleado, Timestamp hora) {
 
