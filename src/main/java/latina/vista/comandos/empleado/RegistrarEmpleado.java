@@ -23,7 +23,7 @@ public class RegistrarEmpleado implements Comando {
             String email = ((JSObject) datos).getMember("email").toString();
             String telefono = ((JSObject) datos).getMember("telefono").toString();
 
-            TEmpleado tEmpleado = new TEmpleado(dni, nombre, apellidos, email, telefono, true, false);
+            TEmpleado tEmpleado = new TEmpleado(dni, nombre, apellidos, email, telefono, true);
             SAEmpleado sae = SAFactory.getInstance().createSAEmpleado();
             int result = sae.altaEmpleado(tEmpleado);
             String contrasenya = sae.generarContrasenya();

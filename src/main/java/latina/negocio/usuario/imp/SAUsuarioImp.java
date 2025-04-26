@@ -77,7 +77,7 @@ public class SAUsuarioImp implements SAUsuario {
         List<Empleado> empleados = q.getResultList();
         em.close();
         Empleado emp = empleados.get(0);
-        return new TEmpleado(emp.getId(), emp.getDNI(), emp.getNombre(), emp.getApellidos(), emp.getCorreo(), emp.getTelefono(), true, emp.isHaFichadoEntrada());
+        return new TEmpleado(emp.getId(), emp.getDNI(), emp.getNombre(), emp.getApellidos(), emp.getCorreo(), emp.getTelefono(), true);
     }
 
     public EntityManager crearEntityManager() {

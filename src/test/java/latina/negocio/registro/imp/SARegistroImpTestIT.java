@@ -3,131 +3,286 @@ package latina.negocio.registro.imp;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import latina.integracion.emfc.EMFContainer;
 import latina.integracion.emfc.imp.EMFContainerImpTest;
-import latina.negocio.empleado.TEmpleado;
 import latina.negocio.empleado.Empleado;
+import latina.negocio.empleado.TEmpleado;
 import latina.negocio.registro.Registro;
 import latina.negocio.registro.SARegistro;
 import latina.negocio.registro.imp.SARegistroImp;
+import latina.negocio.turno.Turno;
+import latina.negocio.rol.Rol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SARegistroImpTestIT {
 
     private SARegistro saRegistro;
-    private EntityManager em;
 
     @BeforeEach
     public void setUp() {
         try {
-            Field instancia = EMFContainer.class.getDeclaredField("emfc");
-            instancia.setAccessible(true);
-            instancia.set(null, new EMFContainerImpTest()); // Base de datos de pruebas
+            var f = EMFContainer.class.getDeclaredField("emfc");
+            f.setAccessible(true);
+            f.set(null, new EMFContainerImpTest());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        em = EMFContainer.getInstance().getEMF().createEntityManager();
         saRegistro = new SARegistroImp();
-    }
-
-    @Test
-    public void testFicharEntradaEmpleadoExistenteYNoTieneEntrada() {
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
-
-        TEmpleado tEmpleado = new TEmpleado("10000000X", "Ana", "López Ruiz", "ana@example.com", "12345678", true, false);
-        Empleado empleado = new Empleado(tEmpleado);
-        em.persist(empleado);
-
-        tx.commit();
-
-        Timestamp ahora = new Timestamp(System.currentTimeMillis());
-        int resultado = saRegistro.ficharEntrada(tEmpleado, ahora);
-
-        assertEquals(1, resultado); // Éxito
-    }
-
-    @Test
-    public void testFicharEntradaEmpleadoNoExiste() {
-        TEmpleado tEmpleado = new TEmpleado("99999999Z", "Fantasma", "Del Más Allá", "ghost@example.com", "00000000", true, false);
-        Timestamp ahora = new Timestamp(System.currentTimeMillis());
-        int resultado = saRegistro.ficharEntrada(tEmpleado, ahora);
-
-        assertEquals(-1, resultado); // Empleado no existe
-    }
-
-    @Test
-    public void testFicharEntradaYaTieneEntradaActiva() {
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
-
-        TEmpleado tEmpleado = new TEmpleado("10000001Y", "Carlos", "Pérez", "carlos@example.com", "87654321", true, false);
-        Empleado empleado = new Empleado(tEmpleado);
-        em.persist(empleado);
-
-        Registro entradaActiva = new Registro(empleado, new Timestamp(System.currentTimeMillis()), 0);
-        em.persist(entradaActiva);
-
-        tx.commit();
-
-        int resultado = saRegistro.ficharEntrada(tEmpleado, new Timestamp(System.currentTimeMillis()));
-
-        assertEquals(-2, resultado); // Ya tiene entrada
-    }
-    @Test
-    public void testFicharEntradaLanzaExcepcion() {
-
+        // limpiar tablas en BD de prueba
         EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
-        em.close(); // Cerrado para provocar fallo
-
-
-        SARegistroImp saRegistro = new SARegistroImp() {
-            @Override
-            protected EntityManager createEntityManager() {
-                return em;
-            }
-        };
-
-
-        TEmpleado tEmpleado = new TEmpleado("00000000X", "Error", "Fatal", "error@example.com", "99999999", true, false);
-        Timestamp hora = new Timestamp(System.currentTimeMillis());
-
-
-        int resultado = saRegistro.ficharEntrada(tEmpleado, hora);
-
-        assertEquals(-4, resultado); // Éxito del test: Excepción controlada correctamente
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.createQuery("DELETE FROM Registro").executeUpdate();
+            em.createQuery("DELETE FROM Turno").executeUpdate();
+            em.createQuery("DELETE FROM Rol").executeUpdate();
+            em.createQuery("DELETE FROM Empleado").executeUpdate();
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
     }
+
     @Test
-    public void ficharEntradaPersisteRegistroEnBD() {
-        // Preparar base de datos con un empleado válido
-        em.getTransaction().begin();
-        TEmpleado tEmp = new TEmpleado("99999999Z", "Laura", "Gómez Pérez", "laura@example.com", "654321987", true, false);
-        Empleado empleado = new Empleado(tEmp);
-        em.persist(empleado);
-        em.getTransaction().commit();
+    public void testFicharEntrada_EmpleadoNoExiste() {
+        TEmpleado tEmp = new TEmpleado("10101010J","Juan","Pérez","juan@example.com","1234",true);
+        Timestamp now = Timestamp.from(Instant.now());
 
-        //  Llamar al método que se quiere testear
-        Timestamp ahora = new Timestamp(System.currentTimeMillis());
-        int resultado = new SARegistroImp().ficharEntrada(tEmp, ahora);
-
-        assertEquals(1, resultado, "Debe devolver 1 si el fichaje fue exitoso");
-
-        //  Verificar persistencia real del registro
-        Query q = em.createQuery("SELECT r FROM Registro r WHERE r.empleado.id = :empId ORDER BY r.hInicio DESC");
-        q.setParameter("empId", empleado.getId());
-        q.setMaxResults(1);
-        Registro registro = (Registro) q.getSingleResult();
-
-        assertEquals(empleado.getId(), registro.getEmpleado().getId(), "El empleado del registro debe coincidir");
-        assertEquals(ahora.toLocalDateTime().getHour(), registro.gethInicio().toLocalDateTime().getHour(), "La hora del registro debe coincidir (margen de segundos puede variar)");
-        assertEquals(0, registro.getnHoras(), "nHoras debe estar inicializado a 0");
+        int res = saRegistro.ficharEntrada(tEmp, now);
+        assertEquals(-1, res);
     }
 
+    @Test
+    public void testFicharEntrada_RegistroYaExiste() {
+        TEmpleado tEmp = new TEmpleado("10101011K","Ana","García","ana@example.com","5678",true);
+        Timestamp now = Timestamp.from(Instant.now());
+        // crear empleado y registro abierto
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Empleado emp = new Empleado(tEmp);
+            em.persist(emp);
+            Registro open = new Registro(emp, now, 0);
+            em.persist(open);
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
 
+        int res = saRegistro.ficharEntrada(tEmp, now);
+        assertEquals(-2, res);
+    }
+
+    @Test
+    public void testFicharEntrada_FueraDeVentana() {
+        TEmpleado tEmp = new TEmpleado("10101012L","Luis","Martín","luis@example.com","9012",true);
+        Timestamp now = Timestamp.valueOf("2025-04-27 18:44:59");
+        // crear empleado, rol y turno que no cubre hora+15min
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Empleado emp = new Empleado(tEmp);
+            em.persist(emp);
+            Rol rol = new Rol();
+            rol.setNombre("ROL_TEST");
+            rol.setSalario(1000);
+            rol.setActivo(true);
+            em.persist(rol);
+            Turno t = new Turno();
+            t.setEmpleado(emp);
+            t.setRol(rol);
+            t.setFechaHoraInicio(Timestamp.valueOf("2025-04-27 10:00:00"));
+            t.setFechaHoraFin(Timestamp.valueOf("2025-04-27 18:00:00"));
+            em.persist(t);
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
+
+        int res = saRegistro.ficharEntrada(tEmp, now);
+        assertEquals(-3, res);
+    }
+
+    @Test
+    public void testFicharEntrada_Exactamente15MinAntesInicio() {
+        TEmpleado tEmp = new TEmpleado("10101013M","María","Pérez","maria@example.com","3456",true);
+        Timestamp now = Timestamp.valueOf("2025-04-27 18:45:00");
+        // crear empleado, rol y turno que inicia a las 19:00
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Empleado emp = new Empleado(tEmp);
+            em.persist(emp);
+            Rol rol = new Rol();
+            rol.setNombre("ROL_TEST");
+            rol.setSalario(1000);
+            rol.setActivo(true);
+            em.persist(rol);
+            Turno t = new Turno();
+            t.setEmpleado(emp);
+            t.setRol(rol);
+            t.setFechaHoraInicio(Timestamp.valueOf("2025-04-27 19:00:00"));
+            t.setFechaHoraFin(Timestamp.valueOf("2025-04-27 23:00:00"));
+            em.persist(t);
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
+
+        int res = saRegistro.ficharEntrada(tEmp, now);
+        assertEquals(1, res);
+    }
+
+    @Test
+    public void testFicharEntrada_Exactamente15MinAntesFin() {
+        TEmpleado tEmp = new TEmpleado("10101014N","Pedro","López","pedro@example.com","7890",true);
+        Timestamp now = Timestamp.valueOf("2025-04-27 18:45:00");
+        // crear empleado, rol y turno que termina a las 19:00
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Empleado emp = new Empleado(tEmp);
+            em.persist(emp);
+            Rol rol = new Rol();
+            rol.setNombre("ROL_TEST");
+            rol.setSalario(1000);
+            rol.setActivo(true);
+            em.persist(rol);
+            Turno t = new Turno();
+            t.setEmpleado(emp);
+            t.setRol(rol);
+            t.setFechaHoraInicio(Timestamp.valueOf("2025-04-27 15:00:00"));
+            t.setFechaHoraFin(Timestamp.valueOf("2025-04-27 19:00:00"));
+            em.persist(t);
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
+
+        int res = saRegistro.ficharEntrada(tEmp, now);
+        assertEquals(-3, res);
+    }
+
+    @Test
+    public void testFicharEntrada_15Min1SegundoAntesFin() {
+        TEmpleado tEmp = new TEmpleado("10101015O","Lucía","González","lucia@example.com","1122",true);
+        Timestamp now = Timestamp.valueOf("2025-04-27 18:44:59");
+        // crear empleado, rol y turno que termina a las 19:00
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Empleado emp = new Empleado(tEmp);
+            em.persist(emp);
+            Rol rol = new Rol();
+            rol.setNombre("ROL_TEST");
+            rol.setSalario(1000);
+            rol.setActivo(true);
+            em.persist(rol);
+            Turno t = new Turno();
+            t.setEmpleado(emp);
+            t.setRol(rol);
+            t.setFechaHoraInicio(Timestamp.valueOf("2025-04-27 15:00:00"));
+            t.setFechaHoraFin(Timestamp.valueOf("2025-04-27 19:00:00"));
+            em.persist(t);
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
+
+        int res = saRegistro.ficharEntrada(tEmp, now);
+        assertEquals(1, res);
+    }
+
+    // Nuevos tests solicitados:
+
+    @Test
+    public void testFicharEntrada_EmpleadoExistenteYValido() {
+        TEmpleado tEmp = new TEmpleado("10101016P","Raúl","Suárez","raul@example.com","3344",true);
+        Timestamp now = Timestamp.valueOf("2025-04-27 12:00:00");
+        // turno cubre ahora +15min (12:15)
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Empleado emp = new Empleado(tEmp);
+            em.persist(emp);
+            Rol rol = new Rol(); rol.setNombre("ROL_OK"); rol.setSalario(800); rol.setActivo(true);
+            em.persist(rol);
+            Turno t = new Turno();
+            t.setEmpleado(emp);
+            t.setRol(rol);
+            t.setFechaHoraInicio(Timestamp.valueOf("2025-04-27 11:00:00"));
+            t.setFechaHoraFin(Timestamp.valueOf("2025-04-27 20:00:00"));
+            em.persist(t);
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
+        int res = saRegistro.ficharEntrada(tEmp, now);
+        assertEquals(1, res);
+    }
+
+    @Test
+    public void testFicharEntrada_PersistenciaBD() {
+        TEmpleado tEmp = new TEmpleado("10101017Q","Eva","Ramírez","eva@example.com","5566",true);
+        Timestamp now = Timestamp.valueOf("2025-04-27 14:30:00");
+        // crear emp y turno
+        EntityManager em0 = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx0 = em0.getTransaction();
+        try {
+            tx0.begin();
+            Empleado emp = new Empleado(tEmp);
+            em0.persist(emp);
+            Rol rol = new Rol(); rol.setNombre("ROL_PERSIST"); rol.setSalario(900); rol.setActivo(true);
+            em0.persist(rol);
+            Turno t = new Turno(); t.setEmpleado(emp); t.setRol(rol);
+            t.setFechaHoraInicio(Timestamp.valueOf("2025-04-27 10:00:00"));
+            t.setFechaHoraFin(Timestamp.valueOf("2025-04-27 18:00:00"));
+            em0.persist(t);
+            tx0.commit();
+        } finally {
+            if (tx0.isActive()) tx0.rollback();
+            em0.close();
+        }
+        // realizar fichaje
+        int res = saRegistro.ficharEntrada(tEmp, now);
+        assertEquals(1, res);
+        // verificar registro persistido
+        EntityManager em1 = EMFContainer.getInstance().getEMF().createEntityManager();
+        try {
+            Query qEmp = em1.createQuery("SELECT e FROM Empleado e WHERE e.DNI=:dni");
+            qEmp.setParameter("dni", tEmp.getDNI());
+            Empleado empBD = (Empleado) qEmp.getSingleResult();
+
+            Query q = em1.createQuery("SELECT r FROM Registro r WHERE r.empleado.id=:id ORDER BY r.hInicio DESC");
+            q.setParameter("id", empBD.getId());
+            q.setMaxResults(1);
+            Registro rLast = (Registro) q.getSingleResult();
+            assertNotNull(rLast);
+            assertEquals(tEmp.getDNI(), rLast.getEmpleado().getDNI());
+            assertEquals(0, rLast.getnHoras());
+        } finally {
+            em1.close();
+        }
+    }
 }

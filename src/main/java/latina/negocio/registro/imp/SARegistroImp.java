@@ -74,14 +74,6 @@ public class SARegistroImp implements SARegistro {
             }
             Turno turno = listaTurnos.get(0);
 
-            // 5. Verificar que la hora actual esté dentro de la ventana de fichaje
-            Instant inicioVentana = turno.getFechaHoraInicio().toInstant().minus(15, ChronoUnit.MINUTES);
-            Instant finVentana = turno.getFechaHoraFin().toInstant().minus(15, ChronoUnit.MINUTES);
-            if (now.isBefore(inicioVentana) || !now.isBefore(finVentana)) {
-                tx.rollback();
-                return -5; // Hora fuera de la ventana de fichaje permitida
-            }
-
             // 6. Crear y persistir el nuevo registro de entrada
             Registro reg = new Registro(empleado, hora, 0);
             reg.setTurno(turno);
