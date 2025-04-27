@@ -4,7 +4,6 @@ import javafx.scene.web.WebEngine;
 import latina.VistaPrincipal;
 import latina.negocio.empleado.TEmpleado;
 import latina.negocio.factoria.SAFactory;
-import latina.negocio.registro.TRegistro;
 import latina.negocio.usuario.TUsuario;
 import latina.vista.comandos.Comando;
 import netscape.javascript.JSObject;
@@ -39,16 +38,17 @@ public class Fichar implements Comando {
                 if (result == 1) finalMensaje = "Entrada registrada correctamente";
                 else if (result == -1) finalMensaje = "El empleado no existe";
                 else if (result == -2) finalMensaje = "Ya se ha fichado la entrada";
-                else if (result == -3) finalMensaje = "Solo se puede fichar con 15 minutos de antelación";
+                else if (result == -3) finalMensaje = "Solo se puede fichar con 15 minutos de antelación del turno";
                 else finalMensaje = "Error desconocido";
 
             }
             else if(tipo.equals("salida")) {
                 result = SAFactory.getInstance().createSARegistro().ficharSalida(empleado, t);
-                if (result > 0)
-                {
-                    TRegistro tRegistro = SAFactory.getInstance().createSARegistro().getRegistro(result);
-                }
+                if (result == 1) finalMensaje = "Salida registrada correctamente";
+                else if (result == -1) finalMensaje = "El empleado no existe";
+                else if (result == -2) finalMensaje = "Ya se ha fichado la salida";
+                else if (result == -3) finalMensaje = "Solo se puede fichar una vez comience el turno";
+                else finalMensaje = "Error desconocido";
             }
 
             webEngine.executeScript(String.format("mostrarMensaje('%s')", finalMensaje));

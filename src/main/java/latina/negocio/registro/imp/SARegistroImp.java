@@ -132,6 +132,12 @@ public class SARegistroImp implements SARegistro {
             }
 
             Registro registro = registros.get(0);
+
+            if (hora.before(registro.getTurno().getFechaHoraInicio())) {
+                trans.rollback();
+                return -3; //No ha empezado el turno
+            }
+
             registro.sethFin(hora);
 
             // Calcular nHoras
@@ -148,8 +154,7 @@ public class SARegistroImp implements SARegistro {
 
             em.merge(registro);
             trans.commit();
-            return registro.getId(); // Salida fichada correctamente
-
+            return 1; // Salida fichada correctamente
         } catch (Exception e) {
             if (trans != null && trans.isActive()) {
                 trans.rollback();
