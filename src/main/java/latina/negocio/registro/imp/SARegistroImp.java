@@ -142,7 +142,14 @@ public class SARegistroImp implements SARegistro {
 
             // Calcular nHoras
             long diffMillis = hora.getTime() - registro.gethInicio().getTime();
-            int nHoras = (int) (diffMillis / (1000 * 60 * 60)); // redondea hacia abajo
+            //int nHoras = (int) (diffMillis / (1000 * 60 * 60)); // redondea hacia abajo
+            long minutos = TimeUnit.MILLISECONDS.toMinutes(diffMillis);
+            long mediasCompletas = minutos / 30; // Calcula las medias horas completas que se han trabajado
+            long mediasIncompletas = minutos % 30; // Calcula las medias horas incompletas que se han trabajado
+            if (mediasIncompletas >= 15) { //Si se han trabajado más de 15 minutos se cuenta como media hora trabajada
+                mediasCompletas++;
+            }
+            double nHoras = mediasCompletas * 0.5;
             registro.setnHoras(nHoras);
 
             // Calcular salario si hay turno asociado, si no dejar en 0

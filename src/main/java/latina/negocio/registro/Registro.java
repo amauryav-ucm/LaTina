@@ -27,7 +27,8 @@ public class Registro {
     private int id;
 
     @Column(nullable = false)
-    private int nHoras;
+    //private int nHoras;
+    private double nHoras;
 
     private double salario;
 
@@ -84,11 +85,13 @@ public class Registro {
         this.id = id;
     }
 
-    public int getnHoras() {
-        return nHoras;
-    }
+    /*public int getnHoras() { return nHoras;}*/
+    public double getnHoras() { return nHoras;}
 
-    public void setnHoras(int nHoras) {
+    /*public void setnHoras(int nHoras) {
+        this.nHoras = nHoras;
+    }*/
+    public void setnHoras(double nHoras) {
         this.nHoras = nHoras;
     }
 
