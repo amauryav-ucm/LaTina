@@ -26,10 +26,12 @@ public class BuscarTurnoAFichar implements Comando {
         TTurnoRolEmpleado turno = SAFactory.getInstance().createSATurno().buscarTurnoAFicharEmpleado(empleado);
 
         String parametroTurno = "No se ha encontrado un turno para fichar";
+        String textoRol = "";
         if (turno != null) {
-            parametroTurno = formatearHoras(turno.getFechaHoraInicio()) + " → " + formatearHoras(turno.getFechaHoraFin()) + " | " + turno.getNombreRol();
+            parametroTurno = formatearHoras(turno.getFechaHoraInicio()) + " → " + formatearHoras(turno.getFechaHoraFin());
+            textoRol = turno.getNombreRol();
         }
-        vista.getWebView().getEngine().executeScript(String.format("recibirTurnoAFichar({hayTurno: %d, texto: '%s'})", turno==null?0:1, parametroTurno));
+        vista.getWebView().getEngine().executeScript(String.format("recibirTurnoAFichar({hayTurno: %d, fechaHora: '%s', rol: '%s'})", turno==null?0:1, parametroTurno, textoRol));
 
 
     }

@@ -238,7 +238,7 @@ function recibirEstadoFichaje(result) {
 }
 
 function recibirTurnoAFichar(turno){
-    document.getElementById("info-turno").innerText = turno.texto;
+    document.getElementById("info-turno").innerHTML = `Turno a fichar: <br> ${turno.fechaHora} <br> ${turno.rol}`;
     if(turno.hayTurno == 1){
         window.java.accion(
             "OBTENER_ESTADO_FICHAJE",

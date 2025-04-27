@@ -92,7 +92,7 @@ body {
     color: #2d3748;
 }
 
-.current-date {
+.current-date, .div-info-turno > p {
     text-align: center;
     font-size: 16px;
     color: #718096;
