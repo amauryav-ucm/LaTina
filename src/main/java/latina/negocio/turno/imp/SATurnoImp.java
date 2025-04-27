@@ -8,6 +8,7 @@ import latina.integracion.emfc.EMFContainer;
 import latina.negocio.disponibilidad.Disponibilidad;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.empleado.TEmpleado;
+import latina.negocio.registro.Registro;
 import latina.negocio.rol.Rol;
 import latina.negocio.rol.TRol;
 import latina.negocio.empleado.TEmpleado;
@@ -252,10 +253,24 @@ public class SATurnoImp implements SATurno {
         return listaTurnos;
     }
 
-    public TTurnoRolEmpleado buscarProximoTurnoEmpleado(TEmpleado empleado) {
+    public TTurnoRolEmpleado buscarTurnoAFicharEmpleado(TEmpleado empleado) {
         EntityTransaction tx = null;
         try(EntityManager em = createEntityManager()){
             tx = em.getTransaction();
+
+            // Primero buscamos si hay un turno con registro abierto
+
+            TypedQuery<Registro> qReg = em.createNamedQuery("Registro.findLatestOpenByEmpleado", Registro.class);
+            qReg.setParameter("empleadoId", empleado.getId());
+            qReg.setMaxResults(1);
+            if (!qReg.getResultList().isEmpty()) {
+                Turno turnoR = qReg.getResultList().get(0).getTurno();
+                TTurnoRolEmpleado result =  new TTurnoRolEmpleado(turnoR.toTransfer(), turnoR.getRol().toTransfer());
+                return result; // Ya hay un fichaje de entrada sin salida
+            }
+
+            // Sino buscamos el turno del que se registraria la entrada
+
             // 3. Calcular hora + 15 minutos
             Instant now = Calendar.getInstance().toInstant();
             Instant horaMas15 = now.plus(15, ChronoUnit.MINUTES);
@@ -277,6 +292,11 @@ public class SATurnoImp implements SATurno {
                 return null; // No hay turno en el intervalo permitido
             }
             Turno turno = listaTurnos.get(0);
+
+            if(turno.getRegistro()!=null){
+                tx.rollback();
+                return null; // No hay turno en el intervalo permitido
+            }
             TTurnoRolEmpleado result =  new TTurnoRolEmpleado(turno.toTransfer(), turno.getRol().toTransfer());
             tx.commit();
             return result;

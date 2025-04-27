@@ -1,5 +1,7 @@
 package latina.negocio.turno;
 
+import latina.negocio.empleado.TEmpleado;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -11,4 +13,6 @@ public interface SATurno {
     public List<TTurnoRolEmpleado> getTurnosSemana(Timestamp semana);
     public List<TTurnoRolEmpleado> listarTurnosPorDia(String fecha);
     public int altaTurno(TTurno tTurno);
+
+    public TTurnoRolEmpleado buscarTurnoAFicharEmpleado(TEmpleado empleado);
 }

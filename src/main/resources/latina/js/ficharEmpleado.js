@@ -56,15 +56,7 @@ function ficharEntrada() {
     const datosFichaje = recogerDatosFichaje('entrada');
     if (!datosFichaje) return;
 
-    // Mostrar mensaje al usuario
-    mostrarMensaje(`Entrada registrada a las ${datosFichaje.hora}`);
     datosFichaje.haFichadoEntrada = true;
-
-    // Actualizar el estado en localStorage
-    localStorage.setItem("haFichadoEntrada", "true");
-
-    // Actualizar la interfaz de usuario
-    actualizarBotonesFichaje();
 
     enviarFichaje(datosFichaje);
 }
@@ -166,6 +158,15 @@ function mostrarMensaje(mensaje) {
             if (popup.classList.contains('show')) cerrarMensaje();
         }, 3000);*/
     }
+
+    waitForJavaBridge(() => {
+        window.java.accion(
+            "OBTENER_ESTADO_FICHAJE",
+            {
+                usuario: localStorage.getItem("usuario")
+            })
+    })
+
 }
 
 function updateTime() {
@@ -209,8 +210,14 @@ window.onload = () => {
         window.java.accion(
             "OBTENER_ESTADO_FICHAJE",
             {
-                usuario: localStorage.getItem("usuario")
-            })
+                usuario: localStorage.getItem("usuario"),
+            });
+        window.java.accion(
+            "BUSCAR_TURNO_A_FICHAR",
+            {
+                usuario: localStorage.getItem("usuario"),
+            }
+        );
     })
 }
 
@@ -222,16 +229,19 @@ function waitForJavaBridge(callback) {
     }
 }
 
-function recibirEstadoFichaje(result){
-    if(result == 3){
+function recibirEstadoFichaje(result) {
+    if (result == 3) {
         localStorage.setItem("haFichadoEntrada", true);
-    }
-    else {
+    } else {
         localStorage.setItem("haFichadoEntrada", false);
     }
     actualizarBotonesFichaje();
-    if(result == 2){
+    if (result == 2) {
         mostrarMensaje("Se ha fichado la salida automaticamente. Recuerda siempre fichar tu salida");
     }
 
+}
+
+function recibirTurnoAFichar(turno){
+    document.getElementById("info-turno").innerText = turno.texto;
 }

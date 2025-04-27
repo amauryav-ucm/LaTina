@@ -6,13 +6,9 @@ import latina.vista.comandos.disponibilidad.RegistrarDisponibilidad;
 import latina.vista.comandos.disponibilidad.RellenarEmpleadosRegistrarDisponibildad;
 import latina.vista.comandos.empleado.ObtenerEmpleadosDisponiblesInterfaz;
 import latina.vista.comandos.empleado.RegistrarEmpleado;
-import latina.vista.comandos.turno.AsignarTurnoEmpleado;
-import latina.vista.comandos.turno.VerTurnosSemanales;
+import latina.vista.comandos.turno.*;
 import latina.vista.comandos.factoria.FactoriaComandos;
 import latina.vista.comandos.rol.RegistrarRol;
-import latina.vista.comandos.turno.ObtenerTurnosPorDiaInterfaz;
-import latina.vista.comandos.turno.RegistrarTurno;
-import latina.vista.comandos.turno.RellenarRolesTurno;
 import latina.vista.comandos.usuario.Fichar;
 import latina.vista.comandos.usuario.IniciarSesion;
 import latina.vista.comandos.usuario.ObtenerEstadoRegistro;
@@ -63,6 +59,8 @@ public class FactoriaComandosImp extends FactoriaComandos {
             case OBTENER_ESTADO_FICHAJE:
                 comando = new ObtenerEstadoRegistro();
                 break;
+            case BUSCAR_TURNO_A_FICHAR:
+                comando = new BuscarTurnoAFichar();
             default:
                 break;
         }
