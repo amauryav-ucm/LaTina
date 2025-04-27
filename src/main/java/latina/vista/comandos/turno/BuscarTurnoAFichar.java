@@ -33,7 +33,6 @@ public class BuscarTurnoAFichar implements Comando {
         }
         vista.getWebView().getEngine().executeScript(String.format("recibirTurnoAFichar({hayTurno: %d, fechaHora: '%s', rol: '%s'})", turno==null?0:1, parametroTurno, textoRol));
 
-
     }
 
     private String formatearHoras(Timestamp fecha) {

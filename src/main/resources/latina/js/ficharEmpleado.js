@@ -66,7 +66,7 @@ function ficharSalida() {
     if (!datosFichaje) return;
 
     // Mostrar mensaje al usuario
-    mostrarMensaje(`Salida registrada a las ${datosFichaje.hora}`);
+    //mostrarMensaje(`Salida registrada a las ${datosFichaje.hora}`);
     datosFichaje.haFichadoEntrada = false;
 
     enviarFichaje(datosFichaje);
@@ -245,5 +245,13 @@ function recibirTurnoAFichar(turno){
             {
                 usuario: localStorage.getItem("usuario"),
             });
+    }
+    else //Tiene sentido?
+    {
+        const btnEntrada = document.querySelector(".fichar-btn.entrada");
+        const btnSalida = document.querySelector(".fichar-btn.salida");
+
+        btnEntrada.disabled = true;
+        btnSalida.disabled = true;
     }
 }

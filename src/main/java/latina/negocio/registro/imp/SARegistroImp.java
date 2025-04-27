@@ -102,8 +102,6 @@ public class SARegistroImp implements SARegistro {
 
     public int ficharSalida(TEmpleado tEmpleado, Timestamp hora) {
 
-        //Está mas o menos hecho
-        /*
         EntityManager em = null;
 
         EntityTransaction trans = null;
@@ -126,7 +124,7 @@ public class SARegistroImp implements SARegistro {
             Empleado empleado = empleados.get(0);
 
             // Buscar el último registro sin hFin
-            Query q2 = em.createNamedQuery("Registro.findByEmpleado");
+            Query q2 = em.createNamedQuery("Registro.findLatestOpenByEmpleado");
             q2.setParameter("empleadoId", empleado.getId());
             q2.setMaxResults(1);
             List<Registro> registros = q2.getResultList();
@@ -166,8 +164,6 @@ public class SARegistroImp implements SARegistro {
                 em.close();
             }
         }
-        */
-        return -1; //Se quita esto al descomentarlo todo
     }
 
     public int getEstadoRegistro(TEmpleado empleado) {
