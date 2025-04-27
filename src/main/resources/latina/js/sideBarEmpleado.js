@@ -13,7 +13,8 @@ function inicializarSidebar() {
             </ul>
 
             <div class="sidebar-footer">
-                <span>${nombreUsuario}</span>
+                <span>Empleado con DNI ${nombreUsuario}</span>
+                <img src="../images/empleado.png" alt="Icono de empleado" class="sidebar-user-icon">
             </div>
         </div>
     `;

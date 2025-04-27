@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name = "Usuario.findByNombreUsuario", query = "select obj from Usuario obj where :usuario = obj.usuario ")
+        @NamedQuery(name = "Usuario.findByNombreUsuario", query = "select obj from Usuario obj where :usuario = obj.usuario "),
+        @NamedQuery(name = "Usuario.findGerente", query = "SELECT obj FROM Usuario obj WHERE obj.esGerente = true")
 })
 public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +40,7 @@ public class Usuario {
         return this.usuario;
     }
 
-    public void getUsuario(String usuario)
+    public void setUsuario(String usuario)
     {
         this.usuario = usuario;
     }

@@ -16,6 +16,7 @@ function inicializarSidebar() {
             </ul>
             <div class="sidebar-footer">
                 <span>Gerente</span>
+                <img src="../images/gerente2.png" alt="Icono de gerente" class="sidebar-user-icon">
             </div>
         </div>
     `;

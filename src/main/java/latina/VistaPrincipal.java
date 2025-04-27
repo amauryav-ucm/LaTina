@@ -19,6 +19,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import latina.integracion.emfc.EMFContainer;
 import latina.vista.controlador.Controlador;
 import latina.vista.Eventos;
 import netscape.javascript.JSObject;
@@ -44,7 +45,7 @@ public class VistaPrincipal extends Application {
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setTitle("LaTina - Gestión del Restaurante");
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/latina/images/logo LaTina.png")));
-
+        EMFContainer.getInstance().getEMF().createEntityManager();
         HBox titleBar = createTitleBar(primaryStage);
         webView = new WebView();
         WebEngine webEngine = webView.getEngine();

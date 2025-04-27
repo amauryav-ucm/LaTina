@@ -15,6 +15,9 @@ main {
 h2 {
     font-weight: bold;
     text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 30px;
 }
 
 form {

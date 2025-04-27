@@ -80,6 +80,31 @@ public class SAUsuarioImp implements SAUsuario {
         return new TEmpleado(emp.getId(), emp.getDNI(), emp.getNombre(), emp.getApellidos(), emp.getCorreo(), emp.getTelefono(), true);
     }
 
+    @Override
+    public void inicializarGerente() {
+        EntityTransaction trans = null;
+        try (EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager()) {
+            Query q = em.createNamedQuery("Usuario.findGerente");
+            List<Usuario> gerentes = q.getResultList();
+            if (gerentes.isEmpty()) {
+                trans = em.getTransaction();
+                Usuario gerente = new Usuario();
+                gerente.setUsuario("admin");
+                gerente.setContrasenya("admin123");
+                gerente.setEsGerente(true);
+                gerente.setActivo(true);
+                em.getTransaction().begin();
+                em.persist(gerente);
+                em.getTransaction().commit();
+            }
+        } catch (Exception e) {
+            if (trans != null && trans.isActive()) {
+                trans.rollback();
+            }
+
+        }
+    }
+
     public EntityManager crearEntityManager() {
         return EMFContainer.getInstance().getEMF().createEntityManager();
     }
