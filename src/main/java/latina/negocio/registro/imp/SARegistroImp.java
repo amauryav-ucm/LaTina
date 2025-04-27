@@ -12,14 +12,11 @@ import latina.negocio.registro.SARegistro;
 import latina.negocio.registro.TRegistro;
 import latina.negocio.turno.Turno;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class SARegistroImp implements SARegistro {
     //10101010J', 1, 'Pérez Gómez', 'correoo@example.com', 'Juan', '123456788');
@@ -151,7 +148,7 @@ public class SARegistroImp implements SARegistro {
 
             em.merge(registro);
             trans.commit();
-            return 1; // Salida fichada correctamente
+            return registro.getId(); // Salida fichada correctamente
 
         } catch (Exception e) {
             if (trans != null && trans.isActive()) {
@@ -164,6 +161,19 @@ public class SARegistroImp implements SARegistro {
                 em.close();
             }
         }
+    }
+
+    @Override
+    public TRegistro getRegistro(int id)
+    {
+        Registro reg;
+        try(EntityManager em = createEntityManager()) {
+            reg = em.find(Registro.class, id);
+            return new TRegistro(reg.getId(), reg.getTurno().getId(), reg.getEmpleado().getId(), reg.gethInicio(), reg.gethFin(), reg.getSalario(), reg.getnHoras());
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public int getEstadoRegistro(TEmpleado empleado) {

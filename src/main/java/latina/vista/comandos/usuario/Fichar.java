@@ -4,6 +4,7 @@ import javafx.scene.web.WebEngine;
 import latina.VistaPrincipal;
 import latina.negocio.empleado.TEmpleado;
 import latina.negocio.factoria.SAFactory;
+import latina.negocio.registro.TRegistro;
 import latina.negocio.usuario.TUsuario;
 import latina.vista.comandos.Comando;
 import netscape.javascript.JSObject;
@@ -44,6 +45,10 @@ public class Fichar implements Comando {
             }
             else if(tipo.equals("salida")) {
                 result = SAFactory.getInstance().createSARegistro().ficharSalida(empleado, t);
+                if (result > 0)
+                {
+                    TRegistro tRegistro = SAFactory.getInstance().createSARegistro().getRegistro(result);
+                }
             }
 
             webEngine.executeScript(String.format("mostrarMensaje('%s')", finalMensaje));
