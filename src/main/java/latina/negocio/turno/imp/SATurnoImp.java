@@ -257,6 +257,7 @@ public class SATurnoImp implements SATurno {
         EntityTransaction tx = null;
         try(EntityManager em = createEntityManager()){
             tx = em.getTransaction();
+            tx.begin();
 
             // Primero buscamos si hay un turno con registro abierto
 

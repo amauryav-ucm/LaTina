@@ -158,13 +158,13 @@ function mostrarMensaje(mensaje) {
             if (popup.classList.contains('show')) cerrarMensaje();
         }, 3000);*/
     }
-
     waitForJavaBridge(() => {
         window.java.accion(
-            "OBTENER_ESTADO_FICHAJE",
+            "BUSCAR_TURNO_A_FICHAR",
             {
-                usuario: localStorage.getItem("usuario")
-            })
+                usuario: localStorage.getItem("usuario"),
+            }
+        );
     })
 
 }
@@ -208,11 +208,6 @@ function cerrarMensaje() {
 window.onload = () => {
     waitForJavaBridge(() => {
         window.java.accion(
-            "OBTENER_ESTADO_FICHAJE",
-            {
-                usuario: localStorage.getItem("usuario"),
-            });
-        window.java.accion(
             "BUSCAR_TURNO_A_FICHAR",
             {
                 usuario: localStorage.getItem("usuario"),
@@ -244,4 +239,11 @@ function recibirEstadoFichaje(result) {
 
 function recibirTurnoAFichar(turno){
     document.getElementById("info-turno").innerText = turno.texto;
+    if(turno.hayTurno == 1){
+        window.java.accion(
+            "OBTENER_ESTADO_FICHAJE",
+            {
+                usuario: localStorage.getItem("usuario"),
+            });
+    }
 }
