@@ -14,7 +14,7 @@ public class EMFContainerImp extends EMFContainer implements AutoCloseable {
     private EntityManagerFactory emf;
 
     public EMFContainerImp() {
-        emf = Persistence.createEntityManagerFactory("LaTinaCode");
+        emf = Persistence.createEntityManagerFactory("H2Test");
     }
 
     @Override

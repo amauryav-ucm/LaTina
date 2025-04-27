@@ -12,10 +12,13 @@ import latina.negocio.registro.SARegistro;
 import latina.negocio.registro.TRegistro;
 import latina.negocio.turno.Turno;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class SARegistroImp implements SARegistro {
@@ -73,6 +76,11 @@ public class SARegistroImp implements SARegistro {
                 return -3; // No hay turno en el intervalo permitido
             }
             Turno turno = listaTurnos.get(0);
+
+            if(turno.getRegistro()!=null){
+                tx.rollback();
+                return -3; // No hay turno en el intervalo permitido
+            }
 
             // 6. Crear y persistir el nuevo registro de entrada
             Registro reg = new Registro(empleado, hora, 0);
@@ -160,6 +168,41 @@ public class SARegistroImp implements SARegistro {
         }
         */
         return -1; //Se quita esto al descomentarlo todo
+    }
+
+    public int getEstadoRegistro(TEmpleado empleado) {
+        EntityTransaction tx = null;
+        try(EntityManager em = createEntityManager()) {
+            tx = em.getTransaction();
+            tx.begin();
+            TypedQuery<Registro> qReg = em.createNamedQuery("Registro.findLatestOpenByEmpleado", Registro.class);
+            qReg.setParameter("empleadoId", empleado.getId());
+            qReg.setMaxResults(1);
+            if (qReg.getResultList().isEmpty()) {
+                tx.commit();
+                // No tiene registros abiertos
+                return 1;
+            }
+            Registro reg = qReg.getResultList().get(0);
+            Timestamp ahora = new Timestamp(System.currentTimeMillis());
+            Timestamp limite = new Timestamp(reg.getTurno().getFechaHoraFin().getTime() + TimeUnit.MINUTES.toMillis(15));
+            if(ahora.after(limite)) {
+                reg.sethFin(limite);
+                em.persist(reg);
+                tx.commit();
+                // Se ha cerrado el registro automaticamente
+                return 2;
+            }
+            else {
+                tx.commit();
+                // Tiene un registro abierto
+                return 3;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null && tx.isActive()) tx.rollback();
+            return -4;
+        }
     }
 
 

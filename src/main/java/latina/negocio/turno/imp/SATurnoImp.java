@@ -18,14 +18,17 @@ import latina.negocio.turno.TTurnoRolEmpleado;
 import latina.negocio.turno.Turno;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class SATurnoImp implements SATurno {
@@ -247,6 +250,41 @@ public class SATurnoImp implements SATurno {
             }
         }
         return listaTurnos;
+    }
+
+    public TTurnoRolEmpleado buscarProximoTurnoEmpleado(TEmpleado empleado) {
+        EntityTransaction tx = null;
+        try(EntityManager em = createEntityManager()){
+            tx = em.getTransaction();
+            // 3. Calcular hora + 15 minutos
+            Instant now = Calendar.getInstance().toInstant();
+            Instant horaMas15 = now.plus(15, ChronoUnit.MINUTES);
+            Timestamp tsHoraMas15 = Timestamp.from(horaMas15);
+
+            // 4. Buscar turno que cubra hora + 15 minutos
+            TypedQuery<Turno> qTurno = em.createQuery(
+                    "SELECT t FROM Turno t " +
+                            "WHERE t.empleado.id = :empId " +
+                            "AND t.fechaHoraInicio <= :horaMas15 " +
+                            "AND t.fechaHoraFin > :horaMas15",
+                    Turno.class
+            );
+            qTurno.setParameter("empId", empleado.getId());
+            qTurno.setParameter("horaMas15", tsHoraMas15);
+            List<Turno> listaTurnos = qTurno.getResultList();
+            if (listaTurnos.isEmpty()) {
+                tx.rollback();
+                return null; // No hay turno en el intervalo permitido
+            }
+            Turno turno = listaTurnos.get(0);
+            TTurnoRolEmpleado result =  new TTurnoRolEmpleado(turno.toTransfer(), turno.getRol().toTransfer());
+            tx.commit();
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null && tx.isActive()) {tx.rollback();}
+            return null;
+        }
     }
 
     protected EntityManager createEntityManager() {

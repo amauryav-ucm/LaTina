@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     inicializarPopup();
-    cargarDatosIniciales();
+    //cargarDatosIniciales();
 });
 
 function inicializarPopup() {
@@ -76,12 +76,6 @@ function ficharSalida() {
     // Mostrar mensaje al usuario
     mostrarMensaje(`Salida registrada a las ${datosFichaje.hora}`);
     datosFichaje.haFichadoEntrada = false;
-
-    // Actualizar el estado en localStorage
-    localStorage.setItem("haFichadoEntrada", "false");
-
-    // Actualizar la interfaz de usuario
-    actualizarBotonesFichaje();
 
     enviarFichaje(datosFichaje);
 }
@@ -195,9 +189,9 @@ function updateTime() {
     dateElement.textContent = now.toLocaleDateString('es-ES', options);
 }
 
-    // Update time every second
-    updateTime();
-    setInterval(updateTime, 1000);
+// Update time every second
+updateTime();
+setInterval(updateTime, 1000);
 
 
 function cerrarMensaje() {
@@ -208,4 +202,36 @@ function cerrarMensaje() {
             popup.style.display = 'none';
         }, 300);
     }
+}
+
+window.onload = () => {
+    waitForJavaBridge(() => {
+        window.java.accion(
+            "OBTENER_ESTADO_FICHAJE",
+            {
+                usuario: localStorage.getItem("usuario")
+            })
+    })
+}
+
+function waitForJavaBridge(callback) {
+    if (window.java && window.java.accion)
+        callback();
+    else {
+        setTimeout(() => waitForJavaBridge(callback), 100);
+    }
+}
+
+function recibirEstadoFichaje(result){
+    if(result == 3){
+        localStorage.setItem("haFichadoEntrada", true);
+    }
+    else {
+        localStorage.setItem("haFichadoEntrada", false);
+    }
+    actualizarBotonesFichaje();
+    if(result == 2){
+        mostrarMensaje("Se ha fichado la salida automaticamente. Recuerda siempre fichar tu salida");
+    }
+
 }
