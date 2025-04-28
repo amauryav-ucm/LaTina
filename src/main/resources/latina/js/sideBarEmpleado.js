@@ -9,6 +9,7 @@ function inicializarSidebar() {
                 <li><a href="ventanaPrincipalEmpleado.html" onclick="java.changeScene('ventanaPrincipalEmpleado.html')">Inicio</a></li>
                 <li><a href="registrarDisponibilidadEmpleado.html" onclick="java.changeScene('registrarDisponibilidadEmpleado.html')">Registrar disponibilidad</a></li>
                 <li><a href="verTurnosParaEmpleado.html" onclick="java.changeScene('verTurnosParaEmpleado.html')">Ver turnos</a></li>
+                <li><a href="ficharEntradaParaEmpleado.html" onclick="java.changeScene('ficharEntradaParaEmpleado.html')">Fichar</a></li>
             </ul>
 
             <div class="sidebar-footer">

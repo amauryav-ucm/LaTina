@@ -5,6 +5,8 @@ import latina.negocio.disponibilidad.imp.SADisponibilidadImp;
 import latina.negocio.empleado.SAEmpleado;
 import latina.negocio.empleado.imp.SAEmpleadoImp;
 import latina.negocio.factoria.SAFactory;
+import latina.negocio.registro.SARegistro;
+import latina.negocio.registro.imp.SARegistroImp;
 import latina.negocio.rol.SARol;
 import latina.negocio.rol.imp.SARolImp;
 import latina.negocio.turno.SATurno;
@@ -36,5 +38,10 @@ public class SAFactoryImp extends SAFactory{
 
     @Override
     public SAUsuario createSAUsuario() { return new SAUsuarioImp(); }
+
+    @Override
+    public SARegistro createSARegistro() {
+        return new SARegistroImp();
+    }
 
 }

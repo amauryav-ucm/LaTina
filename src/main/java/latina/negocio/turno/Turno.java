@@ -3,43 +3,42 @@ package latina.negocio.turno;
 import jakarta.persistence.*;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.rol.Rol;
+import latina.negocio.registro.Registro;
 
 import java.sql.Timestamp;
 
 @Entity
-
 @NamedQueries({
-        @NamedQuery(name = "Turno.findByDia", query = "SELECT t FROM Turno t WHERE CAST(t.fechaHoraInicio AS DATE) = :dia AND t.empleado IS NULL")
-
+        @NamedQuery(
+                name  = "Turno.findByDia",
+                query = "SELECT t FROM Turno t WHERE CAST(t.fechaHoraInicio AS DATE) = :dia AND t.empleado IS NULL"
+        )
 })
-
 public class Turno {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private Timestamp fechaHoraInicio;
-
     private Timestamp fechaHoraFin;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "rol_id")
     private Rol rol;
 
-    // Puede tener un empleado null, que significa que el tueno aun no esta asignado
+    // Puede tener un empleado null, que significa que el turno aún no está asignado
     @ManyToOne(optional = true)
     @JoinColumn(name = "empleado_id")
     private Empleado empleado;
 
-    public Empleado getEmpleado() {
-        return empleado;
-    }
+    /**
+     * Lado inverso de la relación 1-1 con Registro.
+     * Un turno puede tener asociado un único registro de fichaje.
+     */
+    @OneToOne(mappedBy = "turno", fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL)
+    private Registro registro;
 
-    public void setEmpleado(Empleado empleado) {
-        this.empleado = empleado;
-    }
-
-    public Turno(){}
+    public Turno() {}
 
     public Turno(TTurno turno, Rol rol) {
         this.id = turno.getIdTurno();
@@ -49,35 +48,18 @@ public class Turno {
     }
 
     public Turno(TTurno turno, Rol rol, Empleado empleado) {
-        this.id = turno.getIdTurno();
-        this.fechaHoraInicio = turno.getFechaHoraInicio();
-        this.fechaHoraFin = turno.getFechaHoraFin();
-        this.rol = rol;
+        this(turno, rol);
         this.empleado = empleado;
     }
 
-    public Rol getRol() {
-        return rol;
-    }
-
-    public void setRol(Rol rol) {
-        this.rol = rol;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    // Getters y setters
 
     public int getId() {
         return id;
     }
 
-    public Timestamp getFechaHoraFin() {
-        return fechaHoraFin;
-    }
-
-    public void setFechaHoraFin(Timestamp fechaHoraFin) {
-        this.fechaHoraFin = fechaHoraFin;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Timestamp getFechaHoraInicio() {
@@ -88,27 +70,60 @@ public class Turno {
         this.fechaHoraInicio = fechaHoraInicio;
     }
 
-    public TTurno toTransfer(){
+    public Timestamp getFechaHoraFin() {
+        return fechaHoraFin;
+    }
+
+    public void setFechaHoraFin(Timestamp fechaHoraFin) {
+        this.fechaHoraFin = fechaHoraFin;
+    }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
+    }
+
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }
+
+    public Registro getRegistro() {
+        return registro;
+    }
+
+    public void setRegistro(Registro registro) {
+        this.registro = registro;
+    }
+
+    public TTurno toTransfer() {
         TTurno tTurno = new TTurno(id, rol.getId(), fechaHoraInicio, fechaHoraFin, -1);
-        if(estaAsignado()){
+        if (empleado != null) {
             tTurno.setIdEmpleado(empleado.getId());
         }
         return tTurno;
     }
 
     // Si empleado es null es que no se ha asignado el turno
-    public boolean estaAsignado(){
+    public boolean estaAsignado() {
         return empleado != null;
     }
 
     /**
      * @param inicio el inicio de la ventana a comparar
-     * @param fin el final de la ventana a comparar, debe ser posterior a inicio
+     * @param fin    el final de la ventana a comparar, debe ser posterior a inicio
      * @returns true si el turno solapa con la ventana definida por inicio y fin
      */
-    public boolean solapaCon(Timestamp inicio, Timestamp fin){
-        // Se presupone que las horas estan bien cronologicamente
-        return !(fechaHoraInicio.after(fin) || fechaHoraFin.before(inicio) || fechaHoraInicio.equals(fin) || fechaHoraFin.equals(inicio));
+    public boolean solapaCon(Timestamp inicio, Timestamp fin) {
+        return !(fechaHoraInicio.after(fin)
+                || fechaHoraFin.before(inicio)
+                || fechaHoraInicio.equals(fin)
+                || fechaHoraFin.equals(inicio));
     }
-
 }

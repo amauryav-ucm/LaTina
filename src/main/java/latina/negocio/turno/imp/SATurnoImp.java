@@ -8,6 +8,7 @@ import latina.integracion.emfc.EMFContainer;
 import latina.negocio.disponibilidad.Disponibilidad;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.empleado.TEmpleado;
+import latina.negocio.registro.Registro;
 import latina.negocio.rol.Rol;
 import latina.negocio.rol.TRol;
 import latina.negocio.empleado.TEmpleado;
@@ -18,14 +19,17 @@ import latina.negocio.turno.TTurnoRolEmpleado;
 import latina.negocio.turno.Turno;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class SATurnoImp implements SATurno {
@@ -254,6 +258,61 @@ public class SATurnoImp implements SATurno {
             }
         }
         return listaTurnos;
+    }
+
+    public TTurnoRolEmpleado buscarTurnoAFicharEmpleado(TEmpleado empleado) {
+        EntityTransaction tx = null;
+        try(EntityManager em = createEntityManager()){
+            tx = em.getTransaction();
+            tx.begin();
+
+            // Primero buscamos si hay un turno con registro abierto
+
+            TypedQuery<Registro> qReg = em.createNamedQuery("Registro.findLatestOpenByEmpleado", Registro.class);
+            qReg.setParameter("empleadoId", empleado.getId());
+            qReg.setMaxResults(1);
+            if (!qReg.getResultList().isEmpty()) {
+                Turno turnoR = qReg.getResultList().get(0).getTurno();
+                TTurnoRolEmpleado result =  new TTurnoRolEmpleado(turnoR.toTransfer(), turnoR.getRol().toTransfer());
+                return result; // Ya hay un fichaje de entrada sin salida
+            }
+
+            // Sino buscamos el turno del que se registraria la entrada
+
+            // 3. Calcular hora + 15 minutos
+            Instant now = Calendar.getInstance().toInstant();
+            Instant horaMas15 = now.plus(15, ChronoUnit.MINUTES);
+            Timestamp tsHoraMas15 = Timestamp.from(horaMas15);
+
+            // 4. Buscar turno que cubra hora + 15 minutos
+            TypedQuery<Turno> qTurno = em.createQuery(
+                    "SELECT t FROM Turno t " +
+                            "WHERE t.empleado.id = :empId " +
+                            "AND t.fechaHoraInicio <= :horaMas15 " +
+                            "AND t.fechaHoraFin > :horaMas15",
+                    Turno.class
+            );
+            qTurno.setParameter("empId", empleado.getId());
+            qTurno.setParameter("horaMas15", tsHoraMas15);
+            List<Turno> listaTurnos = qTurno.getResultList();
+            if (listaTurnos.isEmpty()) {
+                tx.rollback();
+                return null; // No hay turno en el intervalo permitido
+            }
+            Turno turno = listaTurnos.get(0);
+
+            if(turno.getRegistro()!=null){
+                tx.rollback();
+                return null; // No hay turno en el intervalo permitido
+            }
+            TTurnoRolEmpleado result =  new TTurnoRolEmpleado(turno.toTransfer(), turno.getRol().toTransfer());
+            tx.commit();
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null && tx.isActive()) {tx.rollback();}
+            return null;
+        }
     }
 
     protected EntityManager createEntityManager() {
