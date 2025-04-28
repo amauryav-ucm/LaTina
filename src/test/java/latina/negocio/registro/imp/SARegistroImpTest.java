@@ -2,16 +2,19 @@ package latina.negocio.registro.imp;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import latina.negocio.empleado.Empleado;
 import latina.negocio.empleado.TEmpleado;
 import latina.negocio.registro.Registro;
+import latina.negocio.rol.Rol;
 import latina.negocio.turno.Turno;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -294,5 +297,156 @@ class SARegistroImpTest {
         assertEquals(1, resultado);
     }
 
+    @Test
+    void testFicharSalida_EmpleadoNoExiste() {
+        EntityManager em = mock(EntityManager.class);
+        EntityTransaction tx = mock(EntityTransaction.class);
+        Query q = mock(Query.class);
+
+        when(em.getTransaction()).thenReturn(tx);
+        when(em.createNamedQuery("Empleado.findByDNI")).thenReturn(q);
+        when(q.setParameter(eq("DNI"), any())).thenReturn(q);
+        when(q.getResultList()).thenReturn(Collections.emptyList());
+
+        SARegistroImp sa = spy(new SARegistroImp());
+        doReturn(em).when(sa).createEntityManager();
+
+        TEmpleado tEmp = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correo@example.com", "123456788", true);
+        int resultado = sa.ficharSalida(tEmp, new Timestamp(System.currentTimeMillis()));
+
+        verify(tx).rollback();
+        assertEquals(-1, resultado);
+    }
+
+    @Test
+    void testFicharSalida_NoEntradaActiva() {
+        EntityManager em = mock(EntityManager.class);
+        EntityTransaction tx = mock(EntityTransaction.class);
+        Query qEmp = mock(Query.class);
+        Query qReg = mock(Query.class);
+
+        Empleado empleado = mock(Empleado.class);
+        when(empleado.getId()).thenReturn(1);
+
+        when(em.getTransaction()).thenReturn(tx);
+        when(em.createNamedQuery("Empleado.findByDNI")).thenReturn(qEmp);
+        when(qEmp.setParameter(eq("DNI"), any())).thenReturn(qEmp);
+        when(qEmp.getResultList()).thenReturn(List.of(empleado));
+
+        when(em.createNamedQuery("Registro.findLatestOpenByEmpleado")).thenReturn(qReg);
+        when(qReg.setParameter(eq("empleadoId"), any())).thenReturn(qReg);
+        when(qReg.setMaxResults(1)).thenReturn(qReg);
+        when(qReg.getResultList()).thenReturn(Collections.emptyList());
+
+        SARegistroImp sa = spy(new SARegistroImp());
+        doReturn(em).when(sa).createEntityManager();
+
+        TEmpleado tEmp = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correo@example.com", "123456788", true);
+        int resultado = sa.ficharSalida(tEmp, new Timestamp(System.currentTimeMillis()));
+
+        verify(tx).rollback();
+        assertEquals(-2, resultado);
+    }
+
+    @Test
+    void testFicharSalida_HoraAntesDeInicio() {
+        EntityManager em = mock(EntityManager.class);
+        EntityTransaction tx = mock(EntityTransaction.class);
+        Query qEmp = mock(Query.class);
+        Query qReg = mock(Query.class);
+
+        Empleado empleado = mock(Empleado.class);
+        when(empleado.getId()).thenReturn(1);
+
+        Turno turno = mock(Turno.class);
+        when(turno.getFechaHoraInicio()).thenReturn(new Timestamp(System.currentTimeMillis() + 3600_000)); // Turno empieza en 1h
+
+        Registro registro = mock(Registro.class);
+        when(registro.getTurno()).thenReturn(turno);
+
+        when(em.getTransaction()).thenReturn(tx);
+        when(em.createNamedQuery("Empleado.findByDNI")).thenReturn(qEmp);
+        when(qEmp.setParameter(eq("DNI"), any())).thenReturn(qEmp);
+        when(qEmp.getResultList()).thenReturn(List.of(empleado));
+
+        when(em.createNamedQuery("Registro.findLatestOpenByEmpleado")).thenReturn(qReg);
+        when(qReg.setParameter(eq("empleadoId"), any())).thenReturn(qReg);
+        when(qReg.setMaxResults(1)).thenReturn(qReg);
+        when(qReg.getResultList()).thenReturn(List.of(registro));
+
+        SARegistroImp sa = spy(new SARegistroImp());
+        doReturn(em).when(sa).createEntityManager();
+
+        TEmpleado tEmp = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correo@example.com", "123456788", true);
+        int resultado = sa.ficharSalida(tEmp, new Timestamp(System.currentTimeMillis()));
+
+        verify(tx).rollback();
+        assertEquals(-3, resultado);
+    }
+
+    @Test
+    void testFicharSalida_Exito() {
+        EntityManager em = mock(EntityManager.class);
+        EntityTransaction tx = mock(EntityTransaction.class);
+        Query qEmp = mock(Query.class);
+        Query qReg = mock(Query.class);
+
+        Empleado empleado = mock(Empleado.class);
+        when(empleado.getId()).thenReturn(1);
+
+        Turno turno = mock(Turno.class);
+        Rol rol = mock(Rol.class);
+        when(turno.getFechaHoraInicio()).thenReturn(new Timestamp(System.currentTimeMillis() - 3_600_000)); // hace 1h
+        when(turno.getRol()).thenReturn(rol);
+        when(rol.getSalario()).thenReturn(10.0); // salario base
+
+        Registro registro = mock(Registro.class);
+        when(registro.getTurno()).thenReturn(turno);
+        when(registro.gethInicio()).thenReturn(new Timestamp(System.currentTimeMillis() - 2 * 3_600_000)); // hace 2h
+
+        when(em.getTransaction()).thenReturn(tx);
+        when(em.createNamedQuery("Empleado.findByDNI")).thenReturn(qEmp);
+        when(qEmp.setParameter(eq("DNI"), any())).thenReturn(qEmp);
+        when(qEmp.getResultList()).thenReturn(List.of(empleado));
+
+        when(em.createNamedQuery("Registro.findLatestOpenByEmpleado")).thenReturn(qReg);
+        when(qReg.setParameter(eq("empleadoId"), any())).thenReturn(qReg);
+        when(qReg.setMaxResults(1)).thenReturn(qReg);
+        when(qReg.getResultList()).thenReturn(List.of(registro));
+
+        SARegistroImp sa = spy(new SARegistroImp());
+        doReturn(em).when(sa).createEntityManager();
+
+        Timestamp horaFin = new Timestamp(System.currentTimeMillis());
+        TEmpleado tEmp = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correo@example.com", "123456788", true);
+        int resultado = sa.ficharSalida(tEmp, horaFin);
+
+        verify(em).merge(registro);
+        verify(tx).commit();
+        assertEquals(1, resultado);
+    }
+
+    @Test
+    void testFicharSalida_Exception() {
+        EntityManager em = mock(EntityManager.class);
+        EntityTransaction tx = mock(EntityTransaction.class);
+        Query q = mock(Query.class);
+
+        when(em.getTransaction()).thenReturn(tx);
+        when(em.createNamedQuery("Empleado.findByDNI")).thenReturn(q);
+        when(q.setParameter(eq("DNI"), any())).thenReturn(q);
+        when(q.getResultList()).thenThrow(new RuntimeException("DB error"));
+
+        when(tx.isActive()).thenReturn(true);
+
+        SARegistroImp sa = spy(new SARegistroImp());
+        doReturn(em).when(sa).createEntityManager();
+
+        TEmpleado tEmp = new TEmpleado("10101010J", "Juan", "Pérez Gómez", "correo@example.com", "123456788", true);
+        int resultado = sa.ficharSalida(tEmp, new Timestamp(System.currentTimeMillis()));
+
+        verify(tx).rollback();
+        assertEquals(-4, resultado);
+    }
 
 }
