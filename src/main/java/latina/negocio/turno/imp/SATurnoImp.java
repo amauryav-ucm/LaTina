@@ -120,6 +120,90 @@ public class SATurnoImp implements SATurno {
         }
     }
 
+    @Override
+    public int desasignarTurno(int idTurno, int idEmpleado) {
+        EntityTransaction tx = null;
+        try (EntityManager em = createEntityManager()) {
+            tx = em.getTransaction();
+            tx.begin();
+
+            // Buscar el turno y el empleado por sus IDs
+            Turno turno = em.find(Turno.class, idTurno);
+            Empleado empleado = em.find(Empleado.class, idEmpleado);
+
+            // Verificar si el turno o el empleado no existen
+            if (turno == null || empleado == null) {
+                tx.rollback();
+                return -4; // Error: Turno o empleado no encontrados
+            }
+
+            // Verificar que el turno esté asignado al empleado
+            if (turno.getEmpleado() == null || !turno.getEmpleado().equals(empleado)) {
+                tx.rollback();
+                return -3; // Error: El turno no está asignado a este empleado
+            }
+
+            // Desasignar el turno: quitar la referencia al empleado
+            turno.setEmpleado(null);
+            em.persist(turno); // Persistir el cambio en la base de datos
+
+            // Restaurar la disponibilidad del empleado
+            Disponibilidad nuevaDisponibilidad = new Disponibilidad();
+            nuevaDisponibilidad.setFechaHoraInicio(turno.getFechaHoraInicio());
+            nuevaDisponibilidad.setFechaHoraFin(turno.getFechaHoraFin());
+            nuevaDisponibilidad.setEmpleado(empleado);
+            em.persist(nuevaDisponibilidad); // Persistir la nueva disponibilidad
+
+            // Ahora fusionamos esta nueva disponibilidad con las existentes
+            // Para evitar duplicados o solapamientos innecesarios
+            combinarDisponibilidad(nuevaDisponibilidad.getId(), em);
+
+            tx.commit();
+            return 1; // Operación exitosa
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null && tx.isActive()) tx.rollback();
+            return -5; // Error genérico
+        }
+    }
+
+    private void combinarDisponibilidad(int idDisponibilidad, EntityManager em) {
+        EntityTransaction tx = null;
+        try {
+            tx = em.getTransaction();
+            tx.begin();
+
+            // Obtener la disponibilidad recién creada
+            Disponibilidad nuevaDisponibilidad = em.find(Disponibilidad.class, idDisponibilidad);
+
+            // Buscamos todas las disponibilidades del empleado
+            List<Disponibilidad> lista = nuevaDisponibilidad.getEmpleado().getDisponibilidad();
+
+            for (Disponibilidad disp : lista) {
+                if (nuevaDisponibilidad.seDebeUnirCon(disp)) {
+                    // Actualizamos las horas de la disponibilidad
+                    if (disp.getFechaHoraInicio().before(nuevaDisponibilidad.getFechaHoraInicio())) {
+                        nuevaDisponibilidad.setFechaHoraInicio(disp.getFechaHoraInicio());
+                    }
+                    if (disp.getFechaHoraFin().after(nuevaDisponibilidad.getFechaHoraFin())) {
+                        nuevaDisponibilidad.setFechaHoraFin(disp.getFechaHoraFin());
+                    }
+
+                    // Eliminamos la disponibilidad que se fusionó
+                    Query borrarDisponibilidad = em.createNamedQuery("Disponibilidad.delete");
+                    borrarDisponibilidad.setParameter("id", disp.getId());
+                    borrarDisponibilidad.executeUpdate();
+                }
+            }
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null && tx.isActive()) tx.rollback();
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
     @Override
     public List<TTurnoRolEmpleado> listarTurnosPorDia(String fecha) {
@@ -130,6 +214,32 @@ public class SATurnoImp implements SATurno {
             List<TTurnoRolEmpleado> tturnos = new ArrayList<TTurnoRolEmpleado>();
             List<Turno> turnos = new ArrayList<Turno>();
             Query q = em.createNamedQuery("Turno.findByDia");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate fechaConvertida = LocalDate.parse(fecha, formatter);
+            q.setParameter("dia", fechaConvertida);
+            turnos = q.getResultList();
+            if (turnos != null) {
+                for (Turno turn : turnos) {
+                    tturnos.add(new TTurnoRolEmpleado(turn.toTransfer(), turn.getRol().toTransfer()));
+                }
+                em.getTransaction().commit();
+                return tturnos;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    @Override
+    public List<TTurnoRolEmpleado> listarTurnosAsignadosPorDia(String fecha) {
+        EntityTransaction tx = null;
+        try (EntityManager em = createEntityManager()) {
+            tx = em.getTransaction();
+            tx.begin();
+            List<TTurnoRolEmpleado> tturnos = new ArrayList<>();
+            List<Turno> turnos = new ArrayList<>();
+            Query q = em.createNamedQuery("Turno.findByDiaAsignados");
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate fechaConvertida = LocalDate.parse(fecha, formatter);
             q.setParameter("dia", fechaConvertida);
