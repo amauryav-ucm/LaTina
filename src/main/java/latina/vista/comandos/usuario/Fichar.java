@@ -48,6 +48,7 @@ public class Fichar implements Comando {
                 else if (result == -1) finalMensaje = "El empleado no existe";
                 else if (result == -2) finalMensaje = "Ya se ha fichado la salida";
                 else if (result == -3) finalMensaje = "Solo se puede fichar una vez comience el turno";
+                else if (result == -4) finalMensaje = "Solo se puede fichar hasta 15 minutos después de acabar el turno";
                 else finalMensaje = "Error desconocido";
             }
 
