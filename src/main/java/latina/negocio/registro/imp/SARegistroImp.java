@@ -16,16 +16,11 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class SARegistroImp implements SARegistro {
-    //10101010J', 1, 'Pérez Gómez', 'correoo@example.com', 'Juan', '123456788');
-    //TEmpleado emple = new TEmpleado("10101010J","Juan", "Pérez Gómez","correoo@example.com","123456788", true , false);
-    //Timestamp now = new Timestamp(System.currentTimeMillis());
-    //int a = ficharEntrada(emple, now);
+
 
     @Override
     public int ficharEntrada(TEmpleado tEmpleado, Timestamp hora) {
@@ -102,72 +97,74 @@ public class SARegistroImp implements SARegistro {
 
     public int ficharSalida(TEmpleado tEmpleado, Timestamp hora) {
 
-        //Está mas o menos hecho
-        /*
         EntityManager em = null;
-
-        EntityTransaction trans = null;
-
+        EntityTransaction tx = null;
         try {
             em = createEntityManager();
-            trans = em.getTransaction();
-            trans.begin();
+            tx = em.getTransaction();
+            tx.begin();
 
-            // Buscar al empleado
-            Query q = em.createNamedQuery("Empleado.findByDNI");
-            q.setParameter("DNI", tEmpleado.getDNI());
-            List<Empleado> empleados = q.getResultList();
-
-            if (empleados.isEmpty()) {
-                trans.rollback();
+            // 1) Recuperar empleado
+            TypedQuery<Empleado> qEmp = em.createNamedQuery("Empleado.findByDNI", Empleado.class);
+            qEmp.setParameter("DNI", tEmpleado.getDNI());
+            List<Empleado> listaEmp = qEmp.getResultList();
+            if (listaEmp.isEmpty()) {
+                tx.rollback();
                 return -1; // Empleado no encontrado
             }
+            Empleado empleado = listaEmp.get(0);
 
-            Empleado empleado = empleados.get(0);
-
-            // Buscar el último registro sin hFin
-            Query q2 = em.createNamedQuery("Registro.findByEmpleado");
-            q2.setParameter("empleadoId", empleado.getId());
-            q2.setMaxResults(1);
-            List<Registro> registros = q2.getResultList();
-
-            if (registros.isEmpty()) {
-                trans.rollback();
+            // 2) Recuperar último registro abierto
+            TypedQuery<Registro> qReg = em.createNamedQuery("Registro.findLatestOpenByEmpleado", Registro.class);
+            qReg.setParameter("empleadoId", empleado.getId());
+            qReg.setMaxResults(1);
+            List<Registro> listaReg = qReg.getResultList();
+            if (listaReg.isEmpty()) {
+                tx.rollback();
                 return -2; // No hay entrada activa para cerrar
             }
+            Registro registro = listaReg.get(0);
 
-            Registro registro = registros.get(0);
+            // 3) Cachear datos de turno y tiempos
+            Turno turno = registro.getTurno();
+            Timestamp inicioTurno = turno.getFechaHoraInicio();
+            Timestamp finTurno = turno.getFechaHoraFin();
+            long quinceMinMs = TimeUnit.MINUTES.toMillis(15);
+            Timestamp limiteSalida = new Timestamp(finTurno.getTime() + quinceMinMs);
+
+            // 4) Validaciones de tiempo
+            if (hora.before(inicioTurno)) {
+                tx.rollback();
+                return -3; // No ha empezado el turno
+            }
+            if (!hora.before(limiteSalida)) {
+                tx.rollback();
+                return -4; // Se ha excedido el límite de tiempo
+            }
+
             registro.sethFin(hora);
 
-            // Calcular nHoras
-            long diffMillis = hora.getTime() - registro.gethInicio().getTime();
-            int nHoras = (int) (diffMillis / (1000 * 60 * 60)); // redondea hacia abajo
+            double nHoras = calcular_nHoras(registro.gethInicio(), hora, inicioTurno, finTurno);
             registro.setnHoras(nHoras);
 
-            // Calcular salario si hay turno asociado, si no dejar en 0
-            if (registro.getTurno() != null) {
-                registro.setSalario(registro.getTurno().getRol().getSalario() * nHoras);
-            } else {
-                registro.setSalario(0);
-            }
+            // Calcular salario
 
-            em.merge(registro);
-            trans.commit();
+            registro.setSalario(registro.getTurno().getRol().getSalario() * nHoras);
+
+
+            tx.commit();
             return 1; // Salida fichada correctamente
-
         } catch (Exception e) {
-            if (trans != null && trans.isActive()) {
-                trans.rollback();
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
             }
             e.printStackTrace();
-            return -4; // Error general
+            return -5; // Error general
         } finally {
             if (em != null) {
                 em.close();
             }
         }
-        */
-        return -1; //Se quita esto al descomentarlo todo
     }
 
     public int getEstadoRegistro(TEmpleado empleado) {
@@ -188,7 +185,10 @@ public class SARegistroImp implements SARegistro {
             Timestamp limite = new Timestamp(reg.getTurno().getFechaHoraFin().getTime() + TimeUnit.MINUTES.toMillis(15));
             if(ahora.after(limite)) {
                 reg.sethFin(limite);
-                em.persist(reg);
+                Turno turno = reg.getTurno();
+                double nHoras = calcular_nHoras(reg.gethInicio(), limite, turno.getFechaHoraInicio(), turno.getFechaHoraFin());
+                reg.setnHoras(nHoras);
+                reg.setSalario(turno.getRol().getSalario() * nHoras);
                 tx.commit();
                 // Se ha cerrado el registro automaticamente
                 return 2;
@@ -205,6 +205,22 @@ public class SARegistroImp implements SARegistro {
         }
     }
 
+    private double calcular_nHoras(Timestamp llegada, Timestamp salida, Timestamp inicio, Timestamp fin){
+        // Ajustar dentro del turno
+        long inicioMs = Math.max(llegada.getTime(), inicio.getTime());
+        long finMs    = Math.min(salida.getTime(),   fin.getTime());
+        long diffMs   = finMs - inicioMs;
+        if (diffMs <= 0) return 0.0;
+
+        long halfHourMs    = TimeUnit.MINUTES.toMillis(30);
+        long thresholdMs   = TimeUnit.MINUTES.toMillis(15);
+        long mediasCompletas = diffMs / halfHourMs;
+        long restoMs       = diffMs % halfHourMs;
+        if (restoMs >= thresholdMs) {
+            mediasCompletas++;
+        }
+        return mediasCompletas * 0.5;
+    }
 
     protected EntityManager createEntityManager() {
         return EMFContainer.getInstance().getEMF().createEntityManager();

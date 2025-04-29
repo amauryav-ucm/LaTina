@@ -16,9 +16,11 @@ import latina.negocio.rol.Rol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -284,5 +286,286 @@ public class SARegistroImpTestIT {
         } finally {
             em1.close();
         }
+    }
+
+    @Test
+    public void testFicharSalida_EmpleadoNoExiste() {
+        TEmpleado tEmp = new TEmpleado("11111111A","Alba","Martínez",
+                "alba@example.com","pass",true);
+        Timestamp now = Timestamp.from(Instant.now());
+        int res = saRegistro.ficharSalida(tEmp, now);
+        assertEquals(-1, res);
+    }
+
+    @Test
+    public void testFicharSalida_SinRegistroAbierto() {
+        TEmpleado tEmp = new TEmpleado("22222222B","Carlos","Gómez",
+                "carlos@example.com","pass",true);
+        // crear empleado sin registros
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Empleado emp = new Empleado(tEmp);
+            em.persist(emp);
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
+        int res = saRegistro.ficharSalida(tEmp, Timestamp.from(Instant.now()));
+        assertEquals(-2, res);
+    }
+
+    @Test
+    public void testFicharSalida_HoraAntesDeInicio() {
+        TEmpleado tEmp = new TEmpleado("33333333C","Diana","Ruiz",
+                "diana@example.com","pass",true);
+        Timestamp hInicioTurno = Timestamp.valueOf("2025-04-27 10:00:00");
+        Timestamp hFinTurno    = Timestamp.valueOf("2025-04-27 12:00:00");
+        Timestamp hSalidaAntes  = Timestamp.valueOf("2025-04-27 09:00:00");
+
+        // Persistir empleado+rol+turno+registro abierto
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Empleado emp = new Empleado(tEmp);
+            em.persist(emp);
+            Rol rol = new Rol(); rol.setNombre("R"); rol.setSalario(10.0); rol.setActivo(true);
+            em.persist(rol);
+            Turno turno = new Turno();
+            turno.setEmpleado(emp);
+            turno.setRol(rol);
+            turno.setFechaHoraInicio(hInicioTurno);
+            turno.setFechaHoraFin(hFinTurno);
+            em.persist(turno);
+            Registro r = new Registro(emp, hInicioTurno, 0);
+            r.setTurno(turno);
+            em.persist(r);
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
+
+        int res = saRegistro.ficharSalida(tEmp, hSalidaAntes);
+        assertEquals(-3, res);
+    }
+
+    @Test
+    public void testFicharSalida_ExitoConTurnoYSalario() {
+        TEmpleado tEmp = new TEmpleado("55555555E","Francisco","Torres",
+                "francisco@example.com","pass",true);
+        Timestamp hInicioRegistro = Timestamp.valueOf("2025-04-27 09:00:00");
+        Timestamp hSalida          = Timestamp.valueOf("2025-04-27 14:15:00");
+
+        // Persistir empleado + rol + turno + registro
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Empleado emp = new Empleado(tEmp); em.persist(emp);
+            Rol rol = new Rol(); rol.setNombre("R"); rol.setSalario(20.0); rol.setActivo(true);
+            em.persist(rol);
+            Turno turno = new Turno();
+            turno.setEmpleado(emp);
+            turno.setRol(rol);
+            turno.setFechaHoraInicio(hInicioRegistro);
+            turno.setFechaHoraFin(Timestamp.valueOf("2025-04-27 17:00:00"));
+            em.persist(turno);
+            Registro r = new Registro(emp, hInicioRegistro, 0);
+            r.setTurno(turno); em.persist(r);
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
+
+        int res = saRegistro.ficharSalida(tEmp, hSalida);
+        assertEquals(1, res);
+
+        // Verificar horas y salario en BD (propiedad DNI en mayúsculas)
+        EntityManager em2 = EMFContainer.getInstance().getEMF().createEntityManager();
+        try {
+            Empleado empBD = em2.createQuery(
+                            "SELECT e FROM Empleado e WHERE e.DNI = :DNI", Empleado.class)
+                    .setParameter("DNI", tEmp.getDNI())
+                    .getSingleResult();
+            Registro reg = em2.createQuery(
+                            "SELECT r FROM Registro r WHERE r.empleado.id = :id ORDER BY r.hInicio DESC",
+                            Registro.class)
+                    .setParameter("id", empBD.getId())
+                    .setMaxResults(1)
+                    .getSingleResult();
+
+            assertNotNull(reg.gethFin());
+            assertEquals(5.5, reg.getnHoras(), 0.01);
+            assertEquals(5.5 * 20.0, reg.getSalario(), 0.01);
+        } finally {
+            em2.close();
+        }
+    }
+
+    // — Tests para retorno -4 —
+
+    @Test
+    public void testFicharSalida_DentroVentana14Min59s() {
+        TEmpleado tEmp = new TEmpleado("66666666F","Luis","Navarro",
+                "luis@example.com","pass",true);
+        Timestamp hInicioRegistro = Timestamp.valueOf("2025-04-27 09:00:00");
+        Timestamp hFinTurno       = Timestamp.valueOf("2025-04-27 17:00:00");
+        Timestamp hSalidaOk       = new Timestamp(
+                hFinTurno.getTime()
+                        + TimeUnit.MINUTES.toMillis(14)
+                        + TimeUnit.SECONDS.toMillis(59)
+        );
+
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Empleado emp = new Empleado(tEmp); em.persist(emp);
+            Rol rol = new Rol(); rol.setNombre("R"); rol.setSalario(15.0); rol.setActivo(true);
+            em.persist(rol);
+            Turno turno = new Turno();
+            turno.setEmpleado(emp);
+            turno.setRol(rol);
+            turno.setFechaHoraInicio(hInicioRegistro);
+            turno.setFechaHoraFin(hFinTurno);
+            em.persist(turno);
+            Registro r = new Registro(emp, hInicioRegistro, 0);
+            r.setTurno(turno); em.persist(r);
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
+
+        int res = saRegistro.ficharSalida(tEmp, hSalidaOk);
+        assertEquals(1, res);
+    }
+
+    @Test
+    public void testFicharSalida_JustoEnLimite15Min() {
+        TEmpleado tEmp = new TEmpleado("77777777G","Ana","López",
+                "ana@example.com","pass",true);
+        Timestamp hInicioRegistro = Timestamp.valueOf("2025-04-27 09:00:00");
+        Timestamp hFinTurno       = Timestamp.valueOf("2025-04-27 17:00:00");
+        Timestamp hSalidaBad      = new Timestamp(
+                hFinTurno.getTime()
+                        + TimeUnit.MINUTES.toMillis(15)
+        );
+
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Empleado emp = new Empleado(tEmp); em.persist(emp);
+            Rol rol = new Rol(); rol.setNombre("R"); rol.setSalario(15.0); rol.setActivo(true);
+            em.persist(rol);
+            Turno turno = new Turno();
+            turno.setEmpleado(emp);
+            turno.setRol(rol);
+            turno.setFechaHoraInicio(hInicioRegistro);
+            turno.setFechaHoraFin(hFinTurno);
+            em.persist(turno);
+            Registro r = new Registro(emp, hInicioRegistro, 0);
+            r.setTurno(turno); em.persist(r);
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
+
+        int res = saRegistro.ficharSalida(tEmp, hSalidaBad);
+        assertEquals(-4, res);
+    }
+
+    @Test
+    public void testFicharSalida_MuchoTarde() {
+        TEmpleado tEmp = new TEmpleado("88888888H","Marta","García",
+                "marta@example.com","pass",true);
+        Timestamp hInicioRegistro = Timestamp.valueOf("2025-04-27 09:00:00");
+        Timestamp hFinTurno       = Timestamp.valueOf("2025-04-27 17:00:00");
+        Timestamp hSalidaTooLate  = new Timestamp(
+                hFinTurno.getTime()
+                        + TimeUnit.HOURS.toMillis(1)
+        );
+
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Empleado emp = new Empleado(tEmp); em.persist(emp);
+            Rol rol = new Rol(); rol.setNombre("R"); rol.setSalario(15.0); rol.setActivo(true);
+            em.persist(rol);
+            Turno turno = new Turno();
+            turno.setEmpleado(emp);
+            turno.setRol(rol);
+            turno.setFechaHoraInicio(hInicioRegistro);
+            turno.setFechaHoraFin(hFinTurno);
+            em.persist(turno);
+            Registro r = new Registro(emp, hInicioRegistro, 0);
+            r.setTurno(turno); em.persist(r);
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
+
+        int res = saRegistro.ficharSalida(tEmp, hSalidaTooLate);
+        assertEquals(-4, res);
+    }
+
+    // — Tests de calcular_nHoras por reflexión —
+
+    private double invokeCalcular(Timestamp llegada, Timestamp salida, Timestamp inicio, Timestamp fin) throws Exception {
+        Method m = SARegistroImp.class
+                .getDeclaredMethod("calcular_nHoras",
+                        Timestamp.class, Timestamp.class,
+                        Timestamp.class, Timestamp.class);
+        m.setAccessible(true);
+        return (Double) m.invoke(saRegistro, llegada, salida, inicio, fin);
+    }
+
+    @Test
+    public void testCalcularNHoras_LlegadaAntesInicio_SalidaEnTurno() throws Exception {
+        Timestamp llegada = Timestamp.valueOf("2025-04-29 09:50:00");
+        Timestamp inicio  = Timestamp.valueOf("2025-04-29 10:00:00");
+        Timestamp salida  = Timestamp.valueOf("2025-04-29 11:20:00");
+        Timestamp fin     = Timestamp.valueOf("2025-04-29 12:00:00");
+        double hrs = invokeCalcular(llegada, salida, inicio, fin);
+        assertEquals(1.5, hrs, 1e-6);
+    }
+
+    @Test
+    public void testCalcularNHoras_LlegadaEnTurno_SalidaDespuesFin() throws Exception {
+        Timestamp llegada = Timestamp.valueOf("2025-04-29 10:30:00");
+        Timestamp inicio  = Timestamp.valueOf("2025-04-29 10:00:00");
+        Timestamp fin     = Timestamp.valueOf("2025-04-29 12:00:00");
+        Timestamp salida  = Timestamp.valueOf("2025-04-29 12:10:00");
+        double hrs = invokeCalcular(llegada, salida, inicio, fin);
+        assertEquals(1.5, hrs, 1e-6);
+    }
+
+    @Test
+    public void testCalcularNHoras_RestoIgual15m() throws Exception {
+        Timestamp inicio  = Timestamp.valueOf("2025-04-29 10:00:00");
+        Timestamp llegada = Timestamp.valueOf("2025-04-29 10:00:00");
+        Timestamp salida  = new Timestamp(inicio.getTime() + TimeUnit.MINUTES.toMillis(75));
+        Timestamp fin     = Timestamp.valueOf("2025-04-29 12:00:00");
+        double hrs = invokeCalcular(llegada, salida, inicio, fin);
+        assertEquals(1.5, hrs, 1e-6);
+    }
+
+    @Test
+    public void testCalcularNHoras_MenosDe15m() throws Exception {
+        Timestamp inicio  = Timestamp.valueOf("2025-04-29 10:00:00");
+        Timestamp llegada = Timestamp.valueOf("2025-04-29 09:55:00");
+        Timestamp salida  = Timestamp.valueOf("2025-04-29 10:09:00");
+        Timestamp fin     = Timestamp.valueOf("2025-04-29 12:00:00");
+        double hrs = invokeCalcular(llegada, salida, inicio, fin);
+        assertEquals(0.0, hrs, 1e-6);
     }
 }
