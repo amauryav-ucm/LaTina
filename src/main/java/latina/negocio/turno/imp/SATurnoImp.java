@@ -246,7 +246,7 @@ public class SATurnoImp implements SATurno {
             turnos = q.getResultList();
             if (turnos != null) {
                 for (Turno turn : turnos) {
-                    tturnos.add(new TTurnoRolEmpleado(turn.toTransfer(), turn.getRol().toTransfer()));
+                    tturnos.add(new TTurnoRolEmpleado(turn.toTransfer(), turn.getRol().toTransfer(), turn.getEmpleado().toTransfer()));
                 }
                 em.getTransaction().commit();
                 return tturnos;

@@ -1,3 +1,5 @@
+let empleados = {};
+
 document.addEventListener('DOMContentLoaded', function() {
     const dateInput = document.getElementById('dateInput');
     const calendarDropdown = document.getElementById('calendarDropdown');
@@ -138,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var selectedValue = event.target.value;
         if(selectedValue != ""){
             document.getElementById("turn").classList.remove("error");
-            cargarEmpleados(selectedValue);
+            comboBoxEmpleados.value = empleados[selectedValue];
         }
         else{
             document.getElementById("name").disabled = true;
@@ -234,7 +236,7 @@ function recogerTurno() {
     enviarTurnoAJava(parametros);
 
     // Mostrar mensaje de éxito y limpiar el formulario (si es necesario)
-    mostrarMensaje("Turno asignado correctamente.");
+    mostrarMensaje("Turno desasignado correctamente.");
 
     // Forzar la recarga o redirección si es necesario
     setTimeout(() => location.reload(), 200);
@@ -259,36 +261,6 @@ function enviarTurnoAJava(turno_empleado) {
     }
 }
 
-function cargarEmpleados(idTurno)
-{
-    if(!idTurno) return;
-    document.getElementById("name").innerHTML = '<option value="" selected>Cargando empleados disponibles...</option>';
-    document.getElementById("name").disabled = true;
-    window.java.accion("OBTENER_EMPLEADOS_DISPONIBLES", idTurno);
-}
-
-function cargarEmpleadosAux(empleado, id) {
-     if (empleado) {
-         let option = document.createElement("option");
-         option.value = id;
-         option.textContent = empleado;
-         document.getElementById("name").appendChild(option);
-     } else {
-         document.getElementById("name").innerHTML = '<option value="" selected>No hay empleados disponibles</option>';
-     }
- }
-
- function terminadoDeCargar2()
-  {
-     document.getElementById("name").disabled = false; // Habilitar el comboBox
-     var firstOption = document.getElementById("name").querySelector("option"); // Obtiene el primer option
-
-     if (firstOption) {
-         firstOption.textContent = "Selecciona un empleado"; // Cambiar el texto de la cabecera
-         firstOption.value = ""; // Cambiar el valor si es necesario
-     }
-  }
-
 function cargarTurnos(fecha) {
      if (!fecha) return; // Si no hay fecha, no hacer nada
      document.getElementById("turn").innerHTML = '<option value="" selected>Cargando turnos...</option>';
@@ -300,11 +272,12 @@ function cargarTurnos(fecha) {
 
 
 
- function cargarTurnosAux(turno, id) {
+ function cargarTurnosAux(turno, id, empleado) {
      if (turno) {
          let option = document.createElement("option");
          option.value = id;
          option.textContent = turno;
+         empleados[id] = empleado;
          document.getElementById("turn").appendChild(option);
      } else {
          document.getElementById("turn").innerHTML = '<option value="" selected>No hay turnos disponibles</option>';

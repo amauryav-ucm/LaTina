@@ -45,13 +45,12 @@
             <select class="turn" id="turn" name="turn" disabled>
                 <option value="" selected>Selecciona una fecha antes que el turno</option>
             </select>
-            <label for="name">Empleado</label>
-            <select class="comboBox-empleado" id="name" name="name" disabled>
-                <option value="" selected>Selecciona un turno antes que el empleado</option>
-            </select>
+            <label for="name">Empleado asignado</label>
+            <input id="name" name="name" disabled placeholder="Selecciona un turno a desasignar">
+            </input>
 
             <div class="button-container">
-                <button class="accept-button" id="accept-button" type="submit"onclick="recogerTurno()">Asignar</button>
+                <button class="accept-button" id="accept-button" type="submit"onclick="recogerTurno()">Desasignar</button>
             </div>
         </form>
     </div>
