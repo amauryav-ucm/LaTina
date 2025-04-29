@@ -26,7 +26,8 @@ public class ObtenerTurnosAsignadosPorDiaInterfaz implements Comando {
                         + formatearHoras(turno.getFechaHoraFin()) + " | "
                         + turno.getNombreRol();
 
-                webEngine.executeScript(String.format("cargarTurnosAux('%s', %d)", parametroTurno, turno.getIdTurno()));
+                String parametroEmpleado = turno.getNombreEmpleado() + " " + turno.getApellidosEmpleado() + " | DNI: " + turno.getDNIEmpleado();
+                webEngine.executeScript(String.format("cargarTurnosAux('%s', %d, '%s')", parametroTurno, turno.getIdTurno()));
             }
             webEngine.executeScript("terminadoDeCargar();");
         } else {

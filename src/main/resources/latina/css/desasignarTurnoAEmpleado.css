@@ -1,0 +1,375 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    /*background-color: #4A90E2CC;*/
+    /*background-color: #616161;*/
+    background: #DDD;
+}
+.form-container{
+    margin-top: 30vh;
+    margin-left: 0;
+    /*background: linear-gradient(transparent, #05BC);*/
+    padding-bottom: 50px;
+    height: 100vh;
+    width: 100vw;
+    overflow: clip;
+}
+
+form {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 10px;
+    width: 100vh;
+    height: 400px;
+    margin-left: 25vw;;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 1s ease-out;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    animation: slideIn 1.5s ease-out;
+}
+
+label {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #555;
+    display: block;
+    transition: color 0.3s ease;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus {
+    border-color: #42a5f5;
+    box-shadow: 0 0 8px rgba(66, 165, 245, 0.6);
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.accept-button {
+    width: 48%;
+    padding: 12px;
+    /*background-color: #616161;*/
+    /*background-color: #4A90E2;*/
+    background: #555;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.accept-button:hover {
+    background-color: #6d6d6d; /* Un gris más claro */
+    transform: scale(1.05);
+}
+
+.accept-button:active {
+    background-color: #42a5f5;
+    transform: scale(1);
+}
+/* Estilos para campos con error */
+input.error {
+    border: 2px solid red;
+    background-color: #ffeeee;
+}
+
+/* Estilos para campos con error */
+input.error, .comboBox-empleado.error, .turn.error { /* Añadido para el select */
+    border: 2px solid red;
+    background-color: #ffeeee;
+}
+
+.comboBox-empleado, .turn{
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    appearance: none;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hace que el texto del select sea gris cuando el valor es vacío */
+.comboBox-empleado, .turn {
+    color: gray;
+}
+
+.comboBox-empleado option:first-child, .turn option:first-child{
+  color: gray;
+}
+
+.comboBox-empleado, .turn {
+  color: gray;
+}
+
+.comboBox-empleado:focus, .turn:focus {
+  color: black;
+}
+
+/* Cuando se selecciona un valor real */
+.comboBox-empleado.selected, .turn.selected {
+  color: black;
+}
+
+/* Contenedor para label y mensaje de error */
+.label-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+
+}
+
+/* Estilo para el mensaje de error */
+.error-message {
+    color: red;
+    font-size: 0.8em;
+    margin-left: 10px;
+    display: none;
+}
+
+/* Para mostrar el mensaje de error */
+.error-message.show {
+    display: inline-block;
+}
+
+/* Popup Styling */
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.popup-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.popup-box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transform: scale(0.8);
+    transition: transform 0.3s ease-in-out;
+}
+
+.popup-overlay.show .popup-box {
+    transform: scale(1);
+}
+
+.popup-button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.popup-button:hover {
+    background-color: #0056b3;
+}
+
+
+.calendar-container {
+    width: 320px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #4a6fa5;
+    color: white;
+}
+
+.month-year {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.nav-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 5px;
+    transition: transform 0.2s;
+}
+
+.nav-button:hover {
+    transform: scale(1.2);
+}
+
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: 600;
+    color: #4a6fa5;
+    padding: 10px 0;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.weekday {
+    padding: 5px 0;
+    font-size: 14px;
+}
+
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding: 10px;
+}
+
+.day {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.day:hover:not(.empty):not(.selected) {
+    background-color: #f0f0f0;
+}
+
+.day.today {
+    border: 2px solid #4a6fa5;
+    color: #4a6fa5;
+    font-weight: bold;
+}
+
+.day.selected {
+    background-color: #4a6fa5;
+    color: white;
+}
+
+.day.empty {
+    cursor: default;
+}
+
+.date-picker {
+    position: relative;
+    width: 100%;
+}
+
+.date-input {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: white;
+    transition: border-color 0.3s;
+}
+
+.date-input:focus {
+    outline: none;
+    border-color: #4a6fa5;
+}
+
+.calendar-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    display: none;
+}
+
+.calendar-dropdown.open {
+    display: block;
+    animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
