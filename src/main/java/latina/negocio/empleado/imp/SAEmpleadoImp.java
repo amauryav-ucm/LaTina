@@ -141,6 +141,32 @@ public class SAEmpleadoImp implements SAEmpleado {
             return null;
         }
     }
+    @Override
+    public TEmpleado readByDNI(String dni) {
+        EntityManager em = null;
+        TEmpleado empleadoTransfer = null;
+        try {
+            em = crearEntityManager();
+
+            Query query = em.createNamedQuery("Empleado.findByDNI");
+            query.setParameter("DNI", dni);
+            List<Empleado> empleados = query.getResultList();
+
+            if (empleados != null && !empleados.isEmpty()) {
+                Empleado empleado = empleados.get(0);
+                empleadoTransfer = empleado.toTransfer();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+
+        return empleadoTransfer;
+    }
+
 
     protected EntityManager crearEntityManager() {
         return EMFContainer.getInstance().getEMF().createEntityManager();
