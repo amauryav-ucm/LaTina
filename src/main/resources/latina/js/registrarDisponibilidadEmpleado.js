@@ -280,7 +280,7 @@ function recogerDisponibilidad() {
 
     // Recoger los datos de los campos
 
-    disponibilidad.empleado = localStorage.getItem("idEmpleado");
+    disponibilidad.idEmpleado = localStorage.getItem("idEmpleado");
     disponibilidad.fechaInicio = dateInput.value.trim();
     disponibilidad.fechaFin = dateOutput.value.trim();
     disponibilidad.horaInicio = startHourInput.value.trim();
@@ -371,7 +371,7 @@ function cerrarMensaje() {
 
 function enviarDisponibilidadAJava(disponibilidad) {
     if (window.java && window.java.accion) {
-        window.java.accion("REGISTRAR_DISPONIBILIDAD_EMPLEADO", disponibilidad);
+        window.java.accion("REGISTRAR_DISPONIBILIDAD", disponibilidad);
     }
 }
 
