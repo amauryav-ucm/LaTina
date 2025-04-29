@@ -232,7 +232,7 @@ function recogerTurno() {
 
     var parametros = [turno.turno, turno.empleado];
 
-    // Enviar los datos al backend Java (AsignarTurno.java)
+    // Enviar los datos al backend Java (DESAsignarTurno.java)
     enviarTurnoAJava(parametros);
 
     // Mostrar mensaje de éxito y limpiar el formulario (si es necesario)
@@ -257,7 +257,7 @@ function cerrarMensaje() {
 
 function enviarTurnoAJava(turno_empleado) {
     if (window.java && window.java.accion) {
-        window.java.accion("ASIGNAR_TURNO", turno_empleado);
+        window.java.accion("DESASIGNAR_TURNO", turno_empleado);
     }
 }
 
