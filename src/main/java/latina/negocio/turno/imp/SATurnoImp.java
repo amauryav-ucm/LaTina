@@ -168,10 +168,7 @@ public class SATurnoImp implements SATurno {
     }
 
     private void combinarDisponibilidad(int idDisponibilidad, EntityManager em) {
-        EntityTransaction tx = null;
-        try {
-            tx = em.getTransaction();
-            tx.begin();
+
 
             // Obtener la disponibilidad recién creada
             Disponibilidad nuevaDisponibilidad = em.find(Disponibilidad.class, idDisponibilidad);
@@ -196,17 +193,14 @@ public class SATurnoImp implements SATurno {
                 }
             }
 
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null && tx.isActive()) tx.rollback();
-            throw new RuntimeException(e);
-        }
+            em.persist(nuevaDisponibilidad);
     }
 
 
 
     @Override
     public List<TTurnoRolEmpleado> listarTurnosPorDia(String fecha) {
+        System.out.println(fecha);
         EntityTransaction tx = null;
         try (EntityManager em = createEntityManager()) {
             tx = em.getTransaction();
@@ -246,7 +240,7 @@ public class SATurnoImp implements SATurno {
             turnos = q.getResultList();
             if (turnos != null) {
                 for (Turno turn : turnos) {
-                    tturnos.add(new TTurnoRolEmpleado(turn.toTransfer(), turn.getRol().toTransfer()));
+                    tturnos.add(new TTurnoRolEmpleado(turn.toTransfer(), turn.getRol().toTransfer(),turn.getEmpleado().toTransfer()));
                 }
                 em.getTransaction().commit();
                 return tturnos;
