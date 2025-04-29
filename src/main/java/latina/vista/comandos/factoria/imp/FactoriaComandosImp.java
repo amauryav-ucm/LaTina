@@ -10,6 +10,7 @@ import latina.vista.comandos.turno.*;
 import latina.vista.comandos.factoria.FactoriaComandos;
 import latina.vista.comandos.rol.RegistrarRol;
 import latina.vista.comandos.usuario.Fichar;
+import latina.vista.comandos.usuario.InicializarGerente;
 import latina.vista.comandos.usuario.IniciarSesion;
 import latina.vista.comandos.usuario.ObtenerEstadoRegistro;
 
@@ -61,6 +62,8 @@ public class FactoriaComandosImp extends FactoriaComandos {
                 break;
             case BUSCAR_TURNO_A_FICHAR:
                 comando = new BuscarTurnoAFichar();
+            case INICIALIZAR_GERENTE:
+                comando = new InicializarGerente();
             default:
                 break;
         }
