@@ -27,6 +27,7 @@ form {
     gap: 1.5em;
     background-color: white;
     margin-inline: 10%;
+    animation: fadeIn 1s ease-out;
     padding: 2rem;
     border-radius: 1em;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
@@ -184,4 +185,16 @@ form {
 
 .popup-button:hover {
     background-color: #0056b3;
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
