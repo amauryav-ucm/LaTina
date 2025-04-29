@@ -285,4 +285,146 @@ public class SARegistroImpTestIT {
             em1.close();
         }
     }
+    @Test
+    public void testFicharSalida_EmpleadoNoExiste() {
+        TEmpleado tEmp = new TEmpleado("11111111A", "Alba", "Martínez", "alba@example.com", "pass", true);
+        Timestamp now = Timestamp.from(Instant.now());
+
+        int res = saRegistro.ficharSalida(tEmp, now);
+        assertEquals(-1, res);
+    }
+
+    @Test
+    public void testFicharSalida_SinRegistroAbierto() {
+        TEmpleado tEmp = new TEmpleado("22222222B", "Carlos", "Gómez", "carlos@example.com", "pass", true);
+        // crear empleado sin registros abiertos
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Empleado emp = new Empleado(tEmp);
+            em.persist(emp);
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
+
+        Timestamp now = Timestamp.from(Instant.now());
+        int res = saRegistro.ficharSalida(tEmp, now);
+        assertEquals(-2, res);
+    }
+
+    @Test
+    public void testFicharSalida_HoraAntesDeInicio() {
+        TEmpleado tEmp = new TEmpleado("33333333C", "Diana", "Ruiz", "diana@example.com", "pass", true);
+        Timestamp hInicio = Timestamp.valueOf("2025-04-27 10:00:00");
+        Timestamp hFinInvalid = Timestamp.valueOf("2025-04-27 09:00:00");
+        // crear empleado + registro abierto
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Empleado emp = new Empleado(tEmp);
+            em.persist(emp);
+
+            Registro r = new Registro(emp, hInicio, 0);
+            em.persist(r);
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
+
+        int res = saRegistro.ficharSalida(tEmp, hFinInvalid);
+        assertEquals(-3, res);
+    }
+
+    @Test
+    public void testFicharSalida_ExitoSinTurno() {
+        TEmpleado tEmp = new TEmpleado("44444444D", "Elena", "Sánchez", "elena@example.com", "pass", true);
+        Timestamp hInicio = Timestamp.valueOf("2025-04-27 08:00:00");
+        Timestamp hFin = Timestamp.valueOf("2025-04-27 12:30:00");
+        // crear empleado + registro abierto
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Empleado emp = new Empleado(tEmp);
+            em.persist(emp);
+
+            Registro r = new Registro(emp, hInicio, 0);
+            em.persist(r);
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
+
+        int res = saRegistro.ficharSalida(tEmp, hFin);
+        assertEquals(1, res);
+    }
+
+    @Test
+    public void testFicharSalida_ExitoConTurnoYSalario() {
+        TEmpleado tEmp = new TEmpleado("55555555E", "Francisco", "Torres", "francisco@example.com", "pass", true);
+        Timestamp hInicio = Timestamp.valueOf("2025-04-27 09:00:00");
+        Timestamp hFin = Timestamp.valueOf("2025-04-27 14:15:00");
+        // crear empleado + rol + turno + registro
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Empleado emp = new Empleado(tEmp);
+            em.persist(emp);
+
+            Rol rol = new Rol();
+            rol.setNombre("ROL_TEST");
+            rol.setSalario(20); // 20 euros la hora
+            rol.setActivo(true);
+            em.persist(rol);
+
+            Turno turno = new Turno();
+            turno.setEmpleado(emp);
+            turno.setRol(rol);
+            turno.setFechaHoraInicio(Timestamp.valueOf("2025-04-27 09:00:00"));
+            turno.setFechaHoraFin(Timestamp.valueOf("2025-04-27 17:00:00"));
+            em.persist(turno);
+
+            Registro r = new Registro(emp, hInicio, 0);
+            r.setTurno(turno);
+            em.persist(r);
+
+            tx.commit();
+        } finally {
+            if (tx.isActive()) tx.rollback();
+            em.close();
+        }
+
+        int res = saRegistro.ficharSalida(tEmp, hFin);
+        assertEquals(1, res);
+
+        // comprobar datos persistidos
+        EntityManager em1 = EMFContainer.getInstance().getEMF().createEntityManager();
+        try {
+            Query qEmp = em1.createQuery("SELECT e FROM Empleado e WHERE e.DNI=:dni");
+            qEmp.setParameter("dni", tEmp.getDNI());
+            Empleado empBD = (Empleado) qEmp.getSingleResult();
+
+            Query qReg = em1.createQuery("SELECT r FROM Registro r WHERE r.empleado.id=:id ORDER BY r.hInicio DESC");
+            qReg.setParameter("id", empBD.getId());
+            qReg.setMaxResults(1);
+            Registro reg = (Registro) qReg.getSingleResult();
+
+            assertNotNull(reg.gethFin());
+            assertTrue(reg.getnHoras() > 0);
+
+            double expectedHours = 5.5; // 5 horas 15 min => redondea a 5.5
+            double expectedSalary = expectedHours * 20; // salario por hora
+            assertEquals(expectedHours, reg.getnHoras(), 0.01);
+            assertEquals(expectedSalary, reg.getSalario(), 0.01);
+        } finally {
+            em1.close();
+        }
+    }
 }
