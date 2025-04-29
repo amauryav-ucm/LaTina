@@ -133,6 +133,7 @@ public class SAEmpleadoImp implements SAEmpleado {
             List<TEmpleado> resultado = new ArrayList<>();
             for (Empleado e : empleados)
                 resultado.add(e.toTransfer());
+            tx.commit();
             return resultado;
         } catch (Exception e) {
             e.printStackTrace();
