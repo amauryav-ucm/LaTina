@@ -6,28 +6,29 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.web.WebEngine;
 import latina.VistaPrincipal;
 import latina.integracion.emfc.EMFContainer;
-import latina.negocio.empleado.Empleado;
-import latina.negocio.factoria.SAFactory;
 import latina.negocio.disponibilidad.SADisponibilidad;
 import latina.negocio.disponibilidad.TDisponibilidad;
+import latina.negocio.empleado.Empleado;
+import latina.negocio.factoria.SAFactory;
 import latina.vista.comandos.Comando;
 import netscape.javascript.JSObject;
 import org.w3c.dom.Document;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-public class RegistrarDisponibilidad implements Comando {
+public class RegistrarDisponibilidadEmpleado implements Comando {
 
     @Override
     public void ejecutar(Object datos, VistaPrincipal vista) {
 
         try {
-            
-            JSObject jsData = (JSObject) datos;
 
-            int empleadoId = Integer.parseInt(jsData.getMember("empleado").toString());
+            JSObject jsData = (JSObject) datos;
+            int empleadoId = Integer.parseInt(vista.getWebView().getEngine().executeScript("localStorage.setItem('idEmpleado');").toString());
+
             String fechaInicio = jsData.getMember("fechaInicio").toString();
             String fechaFin = jsData.getMember("fechaFin").toString();
             String horaInicio = jsData.getMember("horaInicio").toString();
