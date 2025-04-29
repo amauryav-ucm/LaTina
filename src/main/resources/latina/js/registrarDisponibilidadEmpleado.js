@@ -279,7 +279,7 @@ function recogerDisponibilidad() {
     }
 
     // Recoger los datos de los campos
-    disponibilidad.empleado = localStorage.getItem("usuario");
+    disponibilidad.empleado = localStorage.getItem("idEmpleado");
     disponibilidad.fechaInicio = dateInput.value.trim();
     disponibilidad.fechaFin = dateOutput.value.trim();
     disponibilidad.horaInicio = startHourInput.value.trim();
