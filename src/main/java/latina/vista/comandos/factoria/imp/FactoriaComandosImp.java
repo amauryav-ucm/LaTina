@@ -63,6 +63,7 @@ public class FactoriaComandosImp extends FactoriaComandos {
                 break;
             case BUSCAR_TURNO_A_FICHAR:
                 comando = new BuscarTurnoAFichar();
+                break;
             case INICIALIZAR_GERENTE:
                 comando = new InicializarGerente();
                 break;
