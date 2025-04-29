@@ -8,7 +8,6 @@ function inicializarSidebar() {
             <ul class="sidebar-menu">
                 <li><a href="ventanaPrincipalEmpleado.html" onclick="java.changeScene('ventanaPrincipalEmpleado.html')">Inicio</a></li>
                 <li><a href="registrarDisponibilidadEmpleado.html" onclick="java.changeScene('registrarDisponibilidadEmpleado.html')">Registrar disponibilidad</a></li>
-                <li><a href="verTurnosParaEmpleado.html" onclick="java.changeScene('verTurnosParaEmpleado.html')">Ver turnos</a></li>
                 <li><a href="ficharEntradaParaEmpleado.html" onclick="java.changeScene('ficharEntradaParaEmpleado.html')">Fichar</a></li>
             </ul>
 
@@ -20,6 +19,12 @@ function inicializarSidebar() {
     `;
 
     sidebarContainer.innerHTML = sidebarHTML;
+
+    // Si estamos en una página desconocida o en la raíz, marcar "Inicio" como activo por defecto
+        if (paginaActual === '' || !paginaActual.includes('.html')) {
+            const inicioLink = document.querySelector('.sidebar-menu li:first-child a');
+            if (inicioLink) inicioLink.classList.add('active');
+        }
 
     // Añadir evento al botón para alternar la barra lateral
     document.getElementById("desplegarSidebar").addEventListener("click", desplazarSidebar);
