@@ -49,10 +49,8 @@ public class VistaPrincipal extends Application {
         HBox titleBar = createTitleBar(primaryStage);
         webView = new WebView();
         WebEngine webEngine = webView.getEngine();
-        URL htmlFile = VistaPrincipal.class.getResource("/latina/html/iniciarSesion.html");
         //URL htmlFile = VistaPrincipal.class.getResource("/latina/html/ventanaPrincipal.html");
-        assert htmlFile != null;
-        webEngine.load(htmlFile.toString());
+        webEngine.load("https://amauryav-ucm.github.io/LaTina/src/main/resources/latina/html/iniciarSesion.html");
         configureJavaScriptBridge(webEngine);
 
         // Hacer que el WebView sea responsivo
@@ -232,7 +230,7 @@ public class VistaPrincipal extends Application {
 
     public void changeScene(String nuevaEscena)
     {
-        webView.getEngine().load(VistaPrincipal.class.getResource("/latina/html/" + nuevaEscena).toString());
+        webView.getEngine().load("https://amauryav-ucm.github.io/LaTina/src/main/resources/latina/html/" + nuevaEscena);
     }
 
     public void accion(String eventoStr, Object datos) {
