@@ -167,7 +167,7 @@ public class SATurnoImp implements SATurno {
         }
     }
 
-    private void combinarDisponibilidad(int idDisponibilidad, EntityManager em) {
+    public void combinarDisponibilidad(int idDisponibilidad, EntityManager em) {
 
 
             // Obtener la disponibilidad recién creada

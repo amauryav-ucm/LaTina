@@ -652,5 +652,119 @@ class SATurnoImpTest {
         assertNull(resultado);
     }
 
+    //------------------------------------------------------------
+    // TESTS DE DESASIGNAR TURNO
 
+    @Test
+    void testDesasignarTurno_Exito() {
+        EntityManager em = mock(EntityManager.class);
+        EntityTransaction tx = mock(EntityTransaction.class);
+
+        Turno turno = mock(Turno.class);
+        Empleado empleado = mock(Empleado.class);
+        Disponibilidad disponibilidad = mock(Disponibilidad.class);
+
+        when(em.getTransaction()).thenReturn(tx);
+        when(em.find(Turno.class, 1)).thenReturn(turno);
+        when(em.find(Empleado.class, 2)).thenReturn(empleado);
+        when(turno.getEmpleado()).thenReturn(empleado);
+
+        doNothing().when(turno).setEmpleado(null);
+        when(turno.getFechaHoraInicio()).thenReturn(new Timestamp(System.currentTimeMillis()));
+        when(turno.getFechaHoraFin()).thenReturn(new Timestamp(System.currentTimeMillis() + 3600_000));
+
+        SATurnoImp sa = spy(new SATurnoImp());
+        doReturn(em).when(sa).createEntityManager();
+        doNothing().when(sa).combinarDisponibilidad(anyInt(), eq(em)); // simula la combinación
+
+        int resultado = sa.desasignarTurno(1, 2);
+
+        verify(tx).commit();
+        verify(em).persist(turno);
+        verify(em).persist(any(Disponibilidad.class));
+        verify(sa).combinarDisponibilidad(anyInt(), eq(em));
+        assertEquals(1, resultado);
+    }
+
+    @Test
+    void testDesasignarTurno_TurnoOEmpleadoNoExiste() {
+        EntityManager em = mock(EntityManager.class);
+        EntityTransaction tx = mock(EntityTransaction.class);
+
+        when(em.getTransaction()).thenReturn(tx);
+        when(em.find(Turno.class, 1)).thenReturn(null); // turno no existe
+
+        SATurnoImp sa = spy(new SATurnoImp());
+        doReturn(em).when(sa).createEntityManager();
+
+        int resultado = sa.desasignarTurno(1, 2);
+
+        verify(tx).rollback();
+        assertEquals(-4, resultado);
+    }
+
+    @Test
+    void testDesasignarTurno_TurnoNoAsignadoAlEmpleado() {
+        EntityManager em = mock(EntityManager.class);
+        EntityTransaction tx = mock(EntityTransaction.class);
+
+        Turno turno = mock(Turno.class);
+        Empleado empleado = mock(Empleado.class);
+        Empleado otroEmpleado = mock(Empleado.class);
+
+        when(em.getTransaction()).thenReturn(tx);
+        when(em.find(Turno.class, 1)).thenReturn(turno);
+        when(em.find(Empleado.class, 2)).thenReturn(empleado);
+        when(turno.getEmpleado()).thenReturn(otroEmpleado); // otro empleado asignado
+
+        SATurnoImp sa = spy(new SATurnoImp());
+        doReturn(em).when(sa).createEntityManager();
+
+        int resultado = sa.desasignarTurno(1, 2);
+
+        verify(tx).rollback();
+        assertEquals(-3, resultado);
+    }
+
+    @Test
+    void testDesasignarTurno_TurnoSinEmpleadoAsignado() {
+        EntityManager em = mock(EntityManager.class);
+        EntityTransaction tx = mock(EntityTransaction.class);
+
+        Turno turno = mock(Turno.class);
+        Empleado empleado = mock(Empleado.class);
+
+        when(em.getTransaction()).thenReturn(tx);
+        when(em.find(Turno.class, 1)).thenReturn(turno);
+        when(em.find(Empleado.class, 2)).thenReturn(empleado);
+        when(turno.getEmpleado()).thenReturn(null); // no tiene empleado asignado
+
+        SATurnoImp sa = spy(new SATurnoImp());
+        doReturn(em).when(sa).createEntityManager();
+
+        int resultado = sa.desasignarTurno(1, 2);
+
+        verify(tx).rollback();
+        assertEquals(-3, resultado);
+    }
+
+    @Test
+    void testDesasignarTurno_Excepcion() {
+        EntityManager em = mock(EntityManager.class);
+        EntityTransaction tx = mock(EntityTransaction.class);
+
+        when(em.getTransaction()).thenReturn(tx);
+        when(tx.isActive()).thenReturn(true);
+        when(em.find(Turno.class, 1)).thenThrow(new RuntimeException("DB error"));
+
+        SATurnoImp sa = spy(new SATurnoImp());
+        doReturn(em).when(sa).createEntityManager();
+
+        int resultado = sa.desasignarTurno(1, 2);
+
+        verify(tx).rollback();
+        assertEquals(-5, resultado);
+    }
 }
+
+
