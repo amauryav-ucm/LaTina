@@ -26,10 +26,8 @@ public class RegistrarDisponibilidad implements Comando {
         try {
             
             JSObject jsData = (JSObject) datos;
-            String hola = jsData.getMember("idEmpleado").toString();
-            String adios = jsData.getMember("usuario").toString();
 
-            int empleadoId = Integer.parseInt(jsData.getMember("idEmpleado").toString());
+            int empleadoId = Integer.parseInt(jsData.getMember("empleado").toString());
             String fechaInicio = jsData.getMember("fechaInicio").toString();
             String fechaFin = jsData.getMember("fechaFin").toString();
             String horaInicio = jsData.getMember("horaInicio").toString();
