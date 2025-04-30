@@ -99,6 +99,7 @@ const konamiCode = [
 let inputSequence = [];
 
 window.addEventListener("keydown", function (e) {
+    console.log(e.key);
   inputSequence.push(e.key);
 
   // Keep only the last n entries (length of konamiCode)
