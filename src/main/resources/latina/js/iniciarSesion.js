@@ -85,4 +85,34 @@ _inputUsuario.addEventListener('input', (key) => {
     _inputUsuario.value = _inputUsuario.value.replace(' ', '');
 });
 
-_inputPsswd.addEventListener('input', () => _inputPsswd.classList.remove('error'))
+_inputPsswd.addEventListener('input', () => _inputPsswd.classList.remove('error'));
+
+// Konami Code: Up, Up, Down, Down, Left, Right, Left, Right, B, A
+const konamiCode = [
+  "ArrowUp", "ArrowUp",
+  "ArrowDown", "ArrowDown",
+  "ArrowLeft", "ArrowRight",
+  "ArrowLeft", "ArrowRight",
+  "b", "a"
+];
+
+let inputSequence = [];
+
+window.addEventListener("keydown", function (e) {
+  inputSequence.push(e.key);
+
+  // Keep only the last n entries (length of konamiCode)
+  if (inputSequence.length > konamiCode.length) {
+    inputSequence.shift();
+  }
+
+  // Check if input matches the konami code
+  if (inputSequence.join("").toLowerCase() === konamiCode.join("").toLowerCase()) {
+    activateKonamiEasterEgg();
+    inputSequence = []; // Reset after successful code
+  }
+});
+
+function activateKonamiEasterEgg() {
+  window.location.href = 'https://www.google.com'
+}
