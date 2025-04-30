@@ -103,6 +103,7 @@ window.addEventListener("keydown", function (e) {
 
   // Keep only the last n entries (length of konamiCode)
   if (inputSequence.length > konamiCode.length) {
+      console.log('hola');
     inputSequence.shift();
   }
 
