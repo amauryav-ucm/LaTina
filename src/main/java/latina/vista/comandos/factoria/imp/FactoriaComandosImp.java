@@ -27,11 +27,17 @@ public class FactoriaComandosImp extends FactoriaComandos {
             case ASIGNAR_TURNO:
                 comando = new AsignarTurnoEmpleado();
                 break;
+            case DESASIGNAR_TURNO:
+                comando = new DesAsignarTurnoEmpleado();
+                break;
             case OBTENER_TURNOS_SEMANALES:
                 comando = new VerTurnosSemanales();
                 break;
             case OBTENER_TURNOS_POR_DIA:
                 comando = new ObtenerTurnosPorDiaInterfaz();
+                break;
+            case OBTENER_TURNOS_ASIGNADOS_POR_DIA:
+                comando = new ObtenerTurnosAsignadosPorDiaInterfaz();
                 break;
             case OBTENER_EMPLEADOS_DISPONIBLES:
                 comando = new ObtenerEmpleadosDisponiblesInterfaz();

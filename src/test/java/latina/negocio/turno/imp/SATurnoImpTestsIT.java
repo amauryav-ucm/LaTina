@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -678,5 +679,127 @@ public class SATurnoImpTestsIT {
         int result = sa.altaTurno(tTurno);
         assertEquals(-4, result); // Supongamos que -4 indica que se han excedido las 24 horas permitidas
     }
+
+    //-------------------------------------------------------------------
+    //TESTS DESASIGNAR TURNO
+
+    @Test
+    public void desasignacionTurnoExitosa() {
+        // Crear y persistir un empleado
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+        Empleado emp = new Empleado();
+        emp.setDNI("98765432B");
+        emp.setNombre("Empleado2");
+        emp.setCorreo("emp2@test.com");
+        emp.setActivo(true);
+        em.persist(emp);
+        em.getTransaction().commit();
+        em.close();
+
+        // Crear y persistir un rol y un turno
+        em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+        Rol rol = new Rol();
+        rol.setNombre("ROLTEST2");
+        rol.setSalario(15);
+        rol.setActivo(true);
+        em.persist(rol);
+
+        Timestamp inicio = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(14).truncatedTo(ChronoUnit.HOURS));
+        Timestamp fin = Timestamp.valueOf(LocalDateTime.now().plusDays(1).withHour(16).truncatedTo(ChronoUnit.HOURS));
+        Turno turno = new Turno();
+        turno.setFechaHoraInicio(inicio);
+        turno.setFechaHoraFin(fin);
+        turno.setRol(rol);
+        turno.setEmpleado(emp);
+        em.persist(turno);
+        em.getTransaction().commit();
+        int turnoId = turno.getId();
+        int empId = emp.getId();
+        em.close();
+
+        // Llamar al SA para desasignar el turno
+        int result = sa.desasignarTurno(turnoId, empId);
+        assertEquals(1, result);
+
+        // Verificar que el turno ya no tenga empleado
+        em = EMFContainer.getInstance().getEMF().createEntityManager();
+        Turno turnoDesasignado = em.find(Turno.class, turnoId);
+        assertNull(turnoDesasignado.getEmpleado());
+
+        // Verificar que se haya creado una nueva disponibilidad
+        Empleado empleadoRefrescado = em.find(Empleado.class, empId);
+        List<Disponibilidad> disponibilidades = empleadoRefrescado.getDisponibilidad();
+        assertEquals(1, disponibilidades.size());
+        assertEquals(inicio, disponibilidades.get(0).getFechaHoraInicio());
+        assertEquals(fin, disponibilidades.get(0).getFechaHoraFin());
+        em.close();
+    }
+
+    @Test
+    public void desasignacionTurnoNoExiste() {
+        // Crear y persistir un empleado válido
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+        Empleado emp = new Empleado();
+        emp.setDNI("11112222C");
+        emp.setNombre("Empleado3");
+        emp.setCorreo("emp3@test.com");
+        emp.setActivo(true);
+        em.persist(emp);
+        em.getTransaction().commit();
+        int empId = emp.getId();
+        em.close();
+
+        // Usar ID de turno inexistente
+        int result = sa.desasignarTurno(-999, empId);
+        assertEquals(-4, result);
+    }
+
+    @Test
+    public void desasignacionTurnoEmpleadoIncorrecto() {
+        // Crear dos empleados
+        EntityManager em = EMFContainer.getInstance().getEMF().createEntityManager();
+        em.getTransaction().begin();
+        Empleado emp1 = new Empleado();
+        emp1.setDNI("44445555D");
+        emp1.setNombre("Empleado4");
+        emp1.setCorreo("emp4@test.com");
+        emp1.setActivo(true);
+        em.persist(emp1);
+
+        Empleado emp2 = new Empleado();
+        emp2.setDNI("66667777E");
+        emp2.setNombre("Empleado5");
+        emp2.setCorreo("emp5@test.com");
+        emp2.setActivo(true);
+        em.persist(emp2);
+
+        Rol rol = new Rol();
+        rol.setNombre("ROLTEST3");
+        rol.setSalario(20);
+        rol.setActivo(true);
+        em.persist(rol);
+
+        Timestamp inicio = Timestamp.valueOf(LocalDateTime.now().plusDays(2).withHour(8).truncatedTo(ChronoUnit.HOURS));
+        Timestamp fin = Timestamp.valueOf(LocalDateTime.now().plusDays(2).withHour(10).truncatedTo(ChronoUnit.HOURS));
+        Turno turno = new Turno();
+        turno.setFechaHoraInicio(inicio);
+        turno.setFechaHoraFin(fin);
+        turno.setRol(rol);
+        turno.setEmpleado(emp1);
+        em.persist(turno);
+        em.getTransaction().commit();
+        int turnoId = turno.getId();
+        int emp2Id = emp2.getId();
+        em.close();
+
+        // Intentar desasignar con el empleado incorrecto
+        int result = sa.desasignarTurno(turnoId, emp2Id);
+        assertEquals(-3, result);
+    }
+
+
 
 }

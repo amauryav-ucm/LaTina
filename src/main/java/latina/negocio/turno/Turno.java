@@ -10,8 +10,12 @@ import java.sql.Timestamp;
 @Entity
 @NamedQueries({
         @NamedQuery(
-                name  = "Turno.findByDia",
+                name = "Turno.findByDia",
                 query = "SELECT t FROM Turno t WHERE CAST(t.fechaHoraInicio AS DATE) = :dia AND t.empleado IS NULL"
+        ),
+        @NamedQuery(
+                name = "Turno.findByDiaAsignados",
+                query = "SELECT t FROM Turno t WHERE CAST(t.fechaHoraInicio AS DATE) = :dia AND t.empleado IS NOT NULL"
         )
 })
 public class Turno {
