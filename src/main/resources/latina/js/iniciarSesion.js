@@ -1,9 +1,9 @@
 const _inputUsuario = document.getElementById('input-usuario');
 const _inputPsswd = document.getElementById('input-contrasenya')
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     waitForJavaBridge(() => {
-            window.java.accion("INICIALIZAR_GERENTE", null);
+        window.java.accion("INICIALIZAR_GERENTE", null);
     });
 });
 
@@ -44,7 +44,7 @@ function recogerDatos() {
 }
 
 // Añade esto a tu archivo JavaScript
-document.getElementById('toggle-password').addEventListener('click', function() {
+document.getElementById('toggle-password').addEventListener('click', function () {
     const passwordInput = document.getElementById('input-contrasenya');
     const icon = document.getElementById('icon-password');
 
@@ -89,32 +89,32 @@ _inputPsswd.addEventListener('input', () => _inputPsswd.classList.remove('error'
 
 // Konami Code: Up, Up, Down, Down, Left, Right, Left, Right, B, A
 const konamiCode = [
-  "ArrowUp", "ArrowUp",
-  "ArrowDown", "ArrowDown",
-  "ArrowLeft", "ArrowRight",
-  "ArrowLeft", "ArrowRight",
-  "b", "a"
+    "ArrowUp", "ArrowUp",
+    "ArrowDown", "ArrowDown",
+    "ArrowLeft", "ArrowRight",
+    "ArrowLeft", "ArrowRight",
+    "b", "a"
 ];
 
 let inputSequence = [];
 
 window.addEventListener("keydown", function (e) {
     console.log(e.key);
-  inputSequence.push(e.key);
+    inputSequence.push(e.key);
 
-  // Keep only the last n entries (length of konamiCode)
-  if (inputSequence.length > konamiCode.length) {
-      console.log('hola');
-    inputSequence.shift();
-  }
+    // Keep only the last n entries (length of konamiCode)
+    if (inputSequence.length > konamiCode.length) {
+        console.log('hola');
+        inputSequence.shift();
+    }
 
-  // Check if input matches the konami code
-  if (inputSequence.join("").toLowerCase() === konamiCode.join("").toLowerCase()) {
-    activateKonamiEasterEgg();
-    inputSequence = []; // Reset after successful code
-  }
+    // Check if input matches the konami code
+    if (inputSequence.join("").toLowerCase() === konamiCode.join("").toLowerCase()) {
+        activateKonamiEasterEgg();
+        inputSequence = []; // Reset after successful code
+    }
 });
 
 function activateKonamiEasterEgg() {
-  window.location.href = 'https://www.google.com'
+    window.location.href = 'https://www.google.com'
 }
